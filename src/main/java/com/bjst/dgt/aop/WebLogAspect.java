@@ -69,12 +69,13 @@ public class WebLogAspect {
 		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpServletRequest request = attributes.getRequest();
 		// 记录下请求内容，包含：url,请求方法，ip，类方法，参数
-		log.info("URL : " + request.getRequestURL().toString());
-		log.info("HTTP_METHOD : " + request.getMethod());
-		log.info("IP : " + request.getRemoteAddr());
-		log.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "."
-				+ joinPoint.getSignature().getName());
-		log.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
+		//log.info("URL : " + request.getRequestURL().toString());
+		//log.info("HTTP_METHOD : " + request.getMethod());
+		log.info("IP : " + request.getRemoteAddr() + "CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "."
+				+ joinPoint.getSignature().getName() + "ARGS : " + Arrays.toString(joinPoint.getArgs()));
+		//log.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "."
+		//		+ joinPoint.getSignature().getName());
+		//log.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
 
 	}
 
