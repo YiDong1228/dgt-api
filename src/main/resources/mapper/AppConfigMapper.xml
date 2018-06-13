@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.AppConfigMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.AppConfig">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="platform_type" jdbcType="TINYINT" property="platformType" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="version_code" jdbcType="INTEGER" property="versionCode" />
+    <result column="apk_url" jdbcType="VARCHAR" property="apkUrl" />
+    <result column="explanation" jdbcType="VARCHAR" property="explanation" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="is_rape" jdbcType="TINYINT" property="isRape" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <sql id="baseSql">
+    id, platform_type, version,
+    version_code, apk_url, explanation,
+    img_url, is_rape, create_time,
+    update_time
+  </sql>
+
+  <!--&lt;select id="getAppConfig2" parameterType="java.lang.String" resultType="com.bjst.dgt.model.AppConfig"&gt;-->
+    <select id="getAppConfig" resultMap="BaseResultMap">
+      select <include refid="baseSql" /> from app_config
+      where version=#{version}
+    </select>
+
+</mapper>

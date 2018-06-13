@@ -39,9 +39,7 @@ public class CodeGenerator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//@date
 
     public static void main(String[] args) {
-        genCode("s_user","bank_card","j_stock_datas", "j_stock_datas_k", "question", "question_type", "s_bank_card_type", "s_extension",
-                "s_message_quotation", "s_message_system", "s_news", "s_product", "s_promotion", "s_remind", "s_rule", "s_stock_datas", "s_transaction",
-                "s_user_balance_log");
+        genCode("app_config");
         //genCodeByCustomModelName("输入表名","输入自定义Model名称");
     }
 
@@ -64,8 +62,8 @@ public class CodeGenerator {
      */
     public static void genCodeByCustomModelName(String tableName, String modelName) {
         genModelAndMapper(tableName, modelName);
-        genService(tableName, modelName);
-        genController(tableName, modelName);
+       // genService(tableName, modelName);
+        //genController(tableName, modelName);
     }
 
 
