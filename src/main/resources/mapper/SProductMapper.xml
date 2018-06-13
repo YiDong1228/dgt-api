@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.SProductMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.SProduct">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="code" jdbcType="VARCHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="exchange" jdbcType="VARCHAR" property="exchange" />
+    <result column="last_price" jdbcType="DECIMAL" property="lastPrice" />
+    <result column="market" jdbcType="VARCHAR" property="market" />
+    <result column="is_domestic" jdbcType="TINYINT" property="isDomestic" />
+    <result column="data_status" jdbcType="TINYINT" property="dataStatus" />
+    <result column="change_count" jdbcType="DECIMAL" property="changeCount" />
+    <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
+    <result column="categroy_code" jdbcType="VARCHAR" property="categroyCode" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

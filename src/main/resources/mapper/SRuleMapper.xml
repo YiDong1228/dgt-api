@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.SRuleMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.SRule">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="code" jdbcType="VARCHAR" property="code" />
+    <result column="is_domestic" jdbcType="VARCHAR" property="isDomestic" />
+    <result column="monetaryunit" jdbcType="VARCHAR" property="monetaryunit" />
+    <result column="tradingunit" jdbcType="VARCHAR" property="tradingunit" />
+    <result column="exchange" jdbcType="VARCHAR" property="exchange" />
+    <result column="minimumfluctuation" jdbcType="VARCHAR" property="minimumfluctuation" />
+    <result column="Fluctuatingprofitandloss" jdbcType="VARCHAR" property="fluctuatingprofitandloss" />
+    <result column="performancebond" jdbcType="VARCHAR" property="performancebond" />
+    <result column="tradingtime" jdbcType="VARCHAR" property="tradingtime" />
+    <result column="clearingtime" jdbcType="VARCHAR" property="clearingtime" />
+    <result column="comprehensivefee" jdbcType="VARCHAR" property="comprehensivefee" />
+    <result column="exchangerate" jdbcType="VARCHAR" property="exchangerate" />
+    <result column="start_time" jdbcType="VARCHAR" property="startTime" />
+    <result column="end_time" jdbcType="VARCHAR" property="endTime" />
+    <result column="start_time_1" jdbcType="VARCHAR" property="startTime1" />
+    <result column="end_time_1" jdbcType="VARCHAR" property="endTime1" />
+  </resultMap>
+</mapper>

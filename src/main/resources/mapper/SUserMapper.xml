@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.SUserMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.SUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="availableFund" jdbcType="VARCHAR" property="availablefund" />
+    <result column="marginFund" jdbcType="VARCHAR" property="marginfund" />
+    <result column="baseCurrency" jdbcType="VARCHAR" property="basecurrency" />
+    <result column="execRate" jdbcType="VARCHAR" property="execrate" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+    <result column="subAccountID" jdbcType="VARCHAR" property="subaccountid" />
+  </resultMap>
+</mapper>

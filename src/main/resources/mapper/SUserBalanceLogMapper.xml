@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.SUserBalanceLogMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.SUserBalanceLog">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="data_type" jdbcType="TINYINT" property="dataType" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="money" jdbcType="DECIMAL" property="money" />
+    <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="data_desc" jdbcType="VARCHAR" property="dataDesc" />
+  </resultMap>
+</mapper>

@@ -20,7 +20,7 @@ import static com.bjst.dgt.core.ProjectConstant.*;
  */
 public class CodeGenerator {
     //JDBC配置，请修改为你项目的实际配置
-    private static final String JDBC_URL = "jdbc:mysql://192.168.0.101:3306/test";
+    private static final String JDBC_URL = "jdbc:mysql://192.168.0.101:3306/dgt_api_test";
     private static final String JDBC_USERNAME = "root";
     private static final String JDBC_PASSWORD = "123456";
     private static final String JDBC_DIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
@@ -35,11 +35,13 @@ public class CodeGenerator {
     private static final String PACKAGE_PATH_SERVICE_IMPL = packageConvertPath(SERVICE_IMPL_PACKAGE);//生成的Service实现存放路径
     private static final String PACKAGE_PATH_CONTROLLER = packageConvertPath(CONTROLLER_PACKAGE);//生成的Controller存放路径
 
-    private static final String AUTHOR = "zll";//@author
+    private static final String AUTHOR = "bjst";//@author
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//@date
 
     public static void main(String[] args) {
-        genCode("tb_user");
+        genCode("s_user","bank_card","j_stock_datas", "j_stock_datas_k", "question", "question_type", "s_bank_card_type", "s_extension",
+                "s_message_quotation", "s_message_system", "s_news", "s_product", "s_promotion", "s_remind", "s_rule", "s_stock_datas", "s_transaction",
+                "s_user_balance_log");
         //genCodeByCustomModelName("输入表名","输入自定义Model名称");
     }
 

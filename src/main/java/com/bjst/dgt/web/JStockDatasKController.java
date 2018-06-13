@@ -1,8 +1,8 @@
 package com.bjst.dgt.web;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultGenerator;
-import com.bjst.dgt.model.TbUser;
-import com.bjst.dgt.service.TbUserService;
+import com.bjst.dgt.model.JStockDatasK;
+import com.bjst.dgt.service.JStockDatasKService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,42 +16,42 @@ import com.bjst.dgt.model.BaseM;
 import com.bjst.dgt.model.PageM;
 
 /**
-* Created by zll on 2018/06/13.
+* Created by bjst on 2018/06/13.
 */
 @RestController
-@RequestMapping("/tb/user")
-public class TbUserController {
+@RequestMapping("/j/stock/datas/k")
+public class JStockDatasKController {
     @Resource
-    private TbUserService tbUserService;
+    private JStockDatasKService jStockDatasKService;
 
     @PostMapping("/add")
-    public Result add(@RequestBody TbUser tbUser) {
-        tbUserService.save(tbUser);
+    public Result add(@RequestBody JStockDatasK jStockDatasK) {
+        jStockDatasKService.save(jStockDatasK);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/delete")
     public Result delete(@RequestBody BaseM baseM) {
-        tbUserService.deleteById(baseM.getId());
+        jStockDatasKService.deleteById(baseM.getId());
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/update")
-    public Result update(@RequestBody TbUser tbUser) {
-        tbUserService.update(tbUser);
+    public Result update(@RequestBody JStockDatasK jStockDatasK) {
+        jStockDatasKService.update(jStockDatasK);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/detail")
     public Result detail(@RequestBody BaseM baseM) {
-        TbUser tbUser = tbUserService.findById(baseM.getId());
-        return ResultGenerator.genSuccessResult(tbUser);
+        JStockDatasK jStockDatasK = jStockDatasKService.findById(baseM.getId());
+        return ResultGenerator.genSuccessResult(jStockDatasK);
     }
 
     @PostMapping("/list")
     public Result list(@RequestBody PageM pageM) {
         PageHelper.startPage(pageM.getPage(), pageM.getSize());
-        List<TbUser> list = tbUserService.findAll();
+        List<JStockDatasK> list = jStockDatasKService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
