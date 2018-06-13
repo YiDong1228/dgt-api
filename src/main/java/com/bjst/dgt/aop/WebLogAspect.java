@@ -36,7 +36,7 @@ public class WebLogAspect {
 	 * public表示访问权限是公有方法，第一个*表示返回类型，第二 *表示类名，第三个*表示方法(..)表示任何参数，包含子包
 	 *
 	 */
-	@Pointcut("execution(public * com.bjst.dgt.web..*.*(..))")
+	@Pointcut("execution(public * com.bjst.dgt.controller.*.*(..))")
 	public void webLog() {
 	}
 
