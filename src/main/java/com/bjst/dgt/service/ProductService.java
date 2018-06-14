@@ -5,6 +5,7 @@ import com.bjst.dgt.dao.ProductMapper;
 import com.bjst.dgt.dao.UserProductOrderMapper;
 import com.bjst.dgt.model.Product;
 import com.bjst.dgt.model.UserProductOrder;
+import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,22 +78,26 @@ public class ProductService {
         return productList;
     }
 
-    public List<Product> setOrder(UserProductOrder userProductOrder) {
-        /*for (int i=0;i<15;i++) {
+    public List<Product> setOrder(Map<String,String> map) {
+        UserProductOrder userProductOrder=new UserProductOrder();
+        String order=map.get("order");
+        order=order.substring(1,order.length()-1);
+        String orders[] = order.split(",");
+        for (int i=0;i<15;i++) {
             userProductOrder.setUserId(1);
-            userProductOrder.setOrder(Byte.valueOf(codes.get(i)));
+            userProductOrder.setOrder(Byte.valueOf(orders[i]));
             userProductOrder.setCode("SCag0001");
             int add=userProductOrderMapper.insertUserProductOrderByUserId(userProductOrder);
         }
-        List<UserProductOrder> userProductOrderList=userProductOrderMapper.getUserProductOrderByUserId()*/
-        List<Product> productList = productMapper.getProduct();
+        List<Product> userProductOrderList=userProductOrderMapper.getUserProductOrderByUserId(userProductOrder);
+        /*List<Product> productList = productMapper.getProduct();
 
         if (productList != null) {
 
         } else {
             return null;
-        }
-        return productList;
+        }*/
+        return userProductOrderList;
     }
 
 }

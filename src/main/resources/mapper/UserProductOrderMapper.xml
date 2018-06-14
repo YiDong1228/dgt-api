@@ -12,16 +12,30 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  
+
+  <resultMap id="getResultMap" type="com.bjst.dgt.model.Product">
+    <id column="code" jdbcType="VARCHAR" property="code"/>
+    <result column="code_show" jdbcType="VARCHAR" property="codeShow"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
+    <result column="last_price" jdbcType="DECIMAL" property="lastPrice"/>
+    <result column="market" jdbcType="VARCHAR" property="market"/>
+    <result column="is_domestic" jdbcType="TINYINT" property="isDomestic"/>
+    <result column="data_status" jdbcType="TINYINT" property="dataStatus"/>
+    <result column="change_count" jdbcType="DECIMAL" property="changeCount"/>
+    <result column="categroy_code" jdbcType="VARCHAR" property="categroyCode"/>
+    <result column="order" jdbcType="TINYINT" property="order"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+  </resultMap>
+
   <insert id="insertUserProductOrderByUserId" parameterType="com.bjst.dgt.model.UserProductOrder">
     insert into `user_product_order`(`user_id`,`code`,`order`)
-    values(#{user_id},#{code},#{order})
+    values(#{userId},#{code},#{order})
   </insert>
   
-  <select id="getUserProductOrderByUserId" resultMap="BaseResultMap">
-    SELECT `order` FROM `user_product_order`
-    <if test="#{userId}!=null">
-      where user_id = #{userId}
-    </if>
+  <select id="getUserProductOrderByUserId" resultMap="getResultMap" parameterType="com.bjst.dgt.model.UserProductOrder">
+    SELECT u.`order` as `order`,p.categroy_code as categroy_code,p.change_count as change_count,p.`code` as `code`,p.code_show as code_show,p.create_time as create_time,p.data_status as data_status,p.exchange as exchange,p.is_domestic as is_domestic,p.last_price as last_price,p.market as market,p.`name` as `name`,p.update_time as update_time FROM `user_product_order` u,`product` p	where u.`code`=p.`code`
+      and u.user_id = #{userId}
   </select>
 </mapper>

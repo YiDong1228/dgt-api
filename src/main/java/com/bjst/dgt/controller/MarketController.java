@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: 行情模块
@@ -45,8 +46,9 @@ public class MarketController {
         return ResultGenerator.genSuccessResult(productList);
     }
 
-    public Result setOrder(@RequestBody UserProductOrder userProductOrder){
-        List<Product> productList = productService.setOrder(userProductOrder);
+    @PostMapping("/setOrder")
+    public Result setOrder(HttpServletRequest request, @RequestBody Map<String,String> map){
+        List<Product> productList = productService.setOrder(map);
         return ResultGenerator.genSuccessResult(productList);
     }
 }

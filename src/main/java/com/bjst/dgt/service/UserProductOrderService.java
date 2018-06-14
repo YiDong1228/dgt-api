@@ -21,4 +21,7 @@ import java.util.List;
 @Transactional
 public class UserProductOrderService {
 
+    @Resource
+    private UserProductOrderMapper userProductOrderMapper;
+
 }

@@ -25,7 +25,7 @@ public class QuotationSchedule {
      */
     @Scheduled(cron = "1/1 * * * * 2-7")
     public void quotationTimer() {
-        System.out.println("here" + new Random().nextInt(1000));
+        //System.out.println("here" + new Random().nextInt(1000));
         stockDatasService.getProdects();
     }
 }
