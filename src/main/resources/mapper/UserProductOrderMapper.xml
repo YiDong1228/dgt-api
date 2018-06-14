@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.UserProductOrderMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.UserProductOrder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  
+  <insert id="insertUserProductOrderByUserId" parameterType="com.bjst.dgt.model.UserProductOrder">
+    insert into `user_product_order`(`user_id`,`code`,`order`)
+    values(#{user_id},#{code},#{order})
+  </insert>
+  
+  <select id="getUserProductOrderByUserId" resultMap="BaseResultMap">
+    SELECT `order` FROM `user_product_order`
+    <if test="#{userId}!=null">
+      where user_id = #{userId}
+    </if>
+  </select>
+</mapper>

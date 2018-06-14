@@ -4,7 +4,7 @@
 
     <resultMap id="getResultMap" type="com.bjst.dgt.model.Product">
         <id column="code" jdbcType="VARCHAR" property="code"/>
-        <result column="code_look" jdbcType="VARCHAR" property="codeLook"/>
+        <result column="code_show" jdbcType="VARCHAR" property="codeShow"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
         <result column="last_price" jdbcType="DECIMAL" property="lastPrice"/>
@@ -20,7 +20,7 @@
 
 
     <sql id="getProductSql">
-      `code`, `code_look`, `name`, `exchange`, `last_price`, `market`, `is_domestic`, `data_status`,
+      `code`, `code_show`, `name`, `exchange`, `last_price`, `market`, `is_domestic`, `data_status`,
       `change_count`, `categroy_code`, `order`, `create_time`, `update_time`
     </sql>
 
@@ -29,6 +29,10 @@
         <include refid="getProductSql"/>
         FROM `product`
     </select>
+
+    <update id="updatePriceByCode" parameterType="com.bjst.dgt.model.StockDatas">
+        update product set last_price = #{lastPrice} , change_count = #{changeCount} , update_time = now() where code=#{code}
+    </update>
 
 
 </mapper>

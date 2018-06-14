@@ -87,6 +87,13 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.47</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20180130</version>
+		</dependency>
+
 		<!--阿里 Druid Spring Boot Starter依赖-->
 		<dependency>
 			<groupId>com.alibaba</groupId>

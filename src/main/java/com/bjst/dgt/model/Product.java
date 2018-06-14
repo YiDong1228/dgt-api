@@ -14,8 +14,8 @@ public class Product {
     /**
      * 用于app显示的code
      */
-    @Column(name = "code_look")
-    private String codeLook;
+    @Column(name = "code_show")
+    private String codeShow;
 
     /**
      * 产品名称
@@ -88,19 +88,19 @@ public class Product {
     /**
      * 获取用于app显示的code
      *
-     * @return code_look - 用于app显示的code
+     * @return code_show - 用于app显示的code
      */
-    public String getCodeLook() {
-        return codeLook;
+    public String getCodeShow() {
+        return codeShow;
     }
 
     /**
      * 设置用于app显示的code
      *
-     * @param codeLook 用于app显示的code
+     * @param codeShow 用于app显示的code
      */
-    public void setCodeLook(String codeLook) {
-        this.codeLook = codeLook;
+    public void setCodeShow(String codeShow) {
+        this.codeShow = codeShow;
     }
 
     /**
@@ -283,5 +283,24 @@ public class Product {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    private String token;
+    private int userId;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

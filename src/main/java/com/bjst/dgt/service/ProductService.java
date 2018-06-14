@@ -1,12 +1,15 @@
 package com.bjst.dgt.service;
 
+import com.bjst.dgt.core.ProjectConstant;
 import com.bjst.dgt.dao.ProductMapper;
+import com.bjst.dgt.dao.UserProductOrderMapper;
 import com.bjst.dgt.model.Product;
+import com.bjst.dgt.model.UserProductOrder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description: 行情模块service层
@@ -22,13 +25,74 @@ import java.util.List;
 public class ProductService {
 
     @Resource
-   private ProductMapper productMapper;
+    private ProductMapper productMapper;
+
+    @Resource
+    private UserProductOrderMapper userProductOrderMapper;
 
     /**
      * 获取行情列表
+     *
      * @return
      */
-    public List<Product> getProduct(){
-        return productMapper.getProduct();
+    public List<Product> getProduct(Product products) {
+        List<Product> productList = productMapper.getProduct();
+        if (products.getOrder() == ProjectConstant.SORT_DEFAULT) {
+            //默认排序
+            Collections.sort(productList, new Comparator<Product>() {
+                @Override
+                public int compare(Product p1, Product p2) {
+                    if (p1.getOrder() > p2.getOrder()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+        } else if (products.getOrder() == ProjectConstant.SORT_ZHENGXU) {
+            //正序
+            Collections.sort(productList, new Comparator<Product>() {
+                @Override
+                public int compare(Product p1, Product p2) {
+                    if (p1.getOrder() > p2.getOrder()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+        } else if (products.getOrder() == ProjectConstant.SORT_DAOXU) {
+            //倒序
+            Collections.sort(productList, new Comparator<Product>() {
+                @Override
+                public int compare(Product p1, Product p2) {
+                    if (p1.getOrder() < p2.getOrder()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+        }
+        return productList;
     }
+
+    public List<Product> setOrder(UserProductOrder userProductOrder) {
+        /*for (int i=0;i<15;i++) {
+            userProductOrder.setUserId(1);
+            userProductOrder.setOrder(Byte.valueOf(codes.get(i)));
+            userProductOrder.setCode("SCag0001");
+            int add=userProductOrderMapper.insertUserProductOrderByUserId(userProductOrder);
+        }
+        List<UserProductOrder> userProductOrderList=userProductOrderMapper.getUserProductOrderByUserId()*/
+        List<Product> productList = productMapper.getProduct();
+
+        if (productList != null) {
+
+        } else {
+            return null;
+        }
+        return productList;
+    }
+
 }

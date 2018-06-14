@@ -1,15 +1,23 @@
 package com.bjst.dgt.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.model.Product;
+import com.bjst.dgt.model.UserProductOrder;
 import com.bjst.dgt.service.ProductService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.bjst.dgt.service.StockDatasService;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,13 +36,17 @@ public class MarketController {
     @Resource
     private ProductService productService;
 
+    @Resource
+    private StockDatasService stockDatasService;
+
     @PostMapping("/getList")
-    public Result getProducts(@RequestBody List<Product> productList) {
-        productList = productService.getProduct();
-        if (productList != null) {
-            return ResultGenerator.genSuccessResult(productList);
-        } else {
-            return  ResultGenerator.genFailResult("查询信息为空！");
-        }
+    public Result getProducts(@RequestBody Product products) {
+        List<Product> productList = productService.getProduct(products);
+        return ResultGenerator.genSuccessResult(productList);
+    }
+
+    public Result setOrder(@RequestBody UserProductOrder userProductOrder){
+        List<Product> productList = productService.setOrder(userProductOrder);
+        return ResultGenerator.genSuccessResult(productList);
     }
 }

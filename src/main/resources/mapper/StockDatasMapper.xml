@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.StockDatasMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.StockDatas">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="last_price" jdbcType="DECIMAL" property="lastPrice" />
+    <result column="high" jdbcType="DECIMAL" property="high" />
+    <result column="low" jdbcType="DECIMAL" property="low" />
+    <result column="open" jdbcType="DECIMAL" property="open" />
+    <result column="close" jdbcType="DECIMAL" property="close" />
+    <result column="volume" jdbcType="DECIMAL" property="volume" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="BV" jdbcType="VARCHAR" property="bv" />
+    <result column="BP" jdbcType="VARCHAR" property="bp" />
+    <result column="SP" jdbcType="VARCHAR" property="sp" />
+    <result column="SV" jdbcType="VARCHAR" property="sv" />
+    <result column="data_status" jdbcType="TINYINT" property="dataStatus" />
+    <result column="change_count" jdbcType="DECIMAL" property="changeCount" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+  </resultMap>
+  <update id="updateDataByCode" parameterType="com.bjst.dgt.model.StockDatas">
+    update stock_datas set last_price = #{lastPrice} , high = #{high} , low = #{low} , open = #{open} , close = #{close} , volume = #{volume} , amount = #{amount} , BV = #{bv} , SV = #{sv} , BP = #{bp} , SP = #{sp} , data_status = 2 , change_count = #{changeCount} , add_time = now() where code = #{code}
+  </update>
+</mapper>

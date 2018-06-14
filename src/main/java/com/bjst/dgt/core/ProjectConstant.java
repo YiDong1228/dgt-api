@@ -17,4 +17,8 @@ public final class ProjectConstant {
     public static final int PLATFORM_ANDROID = 1;  // android 平台类型
     public static final int PLATFORM_IOS = 2;   // ios 平台类型
     public static final int PLATFORM_RAPE = 1;   // 强制更新
+
+    public static final int SORT_DEFAULT = 0;   // 默认顺序
+    public static final int SORT_ZHENGXU = 1;   // 正序
+    public static final int SORT_DAOXU = 2;   // 倒序
 }
