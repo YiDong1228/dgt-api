@@ -4,7 +4,6 @@ import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.model.AppConfig;
 import com.bjst.dgt.service.SystemService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -31,6 +30,5 @@ public class SystemController {
         appConfig = systemService.getAppConfig(appConfig);
         return ResultGenerator.genSuccessResult(appConfig);
     }
-
 
 }
