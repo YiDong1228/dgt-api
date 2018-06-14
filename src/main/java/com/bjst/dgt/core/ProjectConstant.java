@@ -13,4 +13,8 @@ public final class ProjectConstant {
     public static final String CONTROLLER_PACKAGE = BASE_PACKAGE + ".web";//生成的Controller所在包
 
     public static final String MAPPER_INTERFACE_REFERENCE = BASE_PACKAGE + ".core.Mapper";//Mapper插件基础接口的完全限定名
+
+    public static final int PLATFORM_ANDROID = 1;  // android 平台类型
+    public static final int PLATFORM_IOS = 2;   // ios 平台类型
+    public static final int PLATFORM_RAPE = 1;   // 强制更新
 }

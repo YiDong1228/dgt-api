@@ -27,7 +27,14 @@
   <!--&lt;select id="getAppConfig2" parameterType="java.lang.String" resultType="com.bjst.dgt.model.AppConfig"&gt;-->
     <select id="getAppConfig" resultMap="BaseResultMap">
       select <include refid="baseSql" /> from app_config
-      where version=#{version}
+      where platform_type = #{platformType}
+      <if test="platformType == 1">
+        and version > #{version,jdbcType=VARCHAR}
+      </if>
+      <if test="platformType == 2">
+        and version_code > #{versionCode,jdbcType=INTEGER}
+      </if>
+      ORDER BY create_time DESC
     </select>
 
 </mapper>

@@ -4,13 +4,10 @@ import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.model.AppConfig;
 import com.bjst.dgt.service.SystemService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 
 /**
  * Created by zll on 2018/6/13.
@@ -18,7 +15,7 @@ import java.util.Arrays;
  * app 基础模块
  */
 @RestController
-@RequestMapping("sys")
+@RequestMapping("/sys")
 public class SystemController {
 
     @Resource
@@ -31,8 +28,9 @@ public class SystemController {
      */
     @PostMapping("/getAppConfig")
     public Result getAppConfig(@RequestBody AppConfig appConfig) {
-        //appConfig = systemService.findById(appConfig.getId());
-        appConfig = systemService.getAppConfig(appConfig.getVersion());
+        appConfig = systemService.getAppConfig(appConfig);
         return ResultGenerator.genSuccessResult(appConfig);
     }
+
+
 }
