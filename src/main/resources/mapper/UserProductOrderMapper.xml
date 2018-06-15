@@ -1,41 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bjst.dgt.dao.UserProductOrderMapper">
-  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.UserProductOrder">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="order" jdbcType="TINYINT" property="order" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
 
-  <resultMap id="getResultMap" type="com.bjst.dgt.model.Product">
-    <id column="code" jdbcType="VARCHAR" property="code"/>
-    <result column="code_show" jdbcType="VARCHAR" property="codeShow"/>
-    <result column="name" jdbcType="VARCHAR" property="name"/>
-    <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
-    <result column="last_price" jdbcType="DECIMAL" property="lastPrice"/>
-    <result column="market" jdbcType="VARCHAR" property="market"/>
-    <result column="is_domestic" jdbcType="TINYINT" property="isDomestic"/>
-    <result column="data_status" jdbcType="TINYINT" property="dataStatus"/>
-    <result column="change_count" jdbcType="DECIMAL" property="changeCount"/>
-    <result column="categroy_code" jdbcType="VARCHAR" property="categroyCode"/>
-    <result column="order" jdbcType="TINYINT" property="order"/>
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.bjst.dgt.model.UserProductOrder">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="order" jdbcType="TINYINT" property="order"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
 
-  <insert id="insertUserProductOrderByUserId" parameterType="com.bjst.dgt.model.UserProductOrder">
-    insert into `user_product_order`(`user_id`,`code`,`order`)
-    values(#{userId},#{code},#{order})
+    <resultMap id="getResultMap" type="com.bjst.dgt.model.Product">
+        <id column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="code_show" jdbcType="VARCHAR" property="codeShow"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
+        <result column="last_price" jdbcType="DECIMAL" property="lastPrice"/>
+        <result column="market" jdbcType="VARCHAR" property="market"/>
+        <result column="is_domestic" jdbcType="TINYINT" property="isDomestic"/>
+        <result column="data_status" jdbcType="TINYINT" property="dataStatus"/>
+        <result column="change_count" jdbcType="DECIMAL" property="changeCount"/>
+        <result column="categroy_code" jdbcType="VARCHAR" property="categroyCode"/>
+        <result column="order" jdbcType="TINYINT" property="order"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="getUserProductOrder">
+      `id`,`user_id`,`order`
+  </sql>
+
+    <insert id="insertUserProductOrderByUserId" parameterType="com.bjst.dgt.model.UserProductOrder">
+    INSERT INTO `user_product_order`(`user_id`,`order`)
+    VALUES(#{userId},#{order})
   </insert>
-  
-  <select id="getUserProductOrderByUserId" resultMap="getResultMap" parameterType="com.bjst.dgt.model.UserProductOrder">
-    SELECT u.`order` as `order`,p.categroy_code as categroy_code,p.change_count as change_count,p.`code` as `code`,p.code_show as code_show,p.create_time as create_time,p.data_status as data_status,p.exchange as exchange,p.is_domestic as is_domestic,p.last_price as last_price,p.market as market,p.`name` as `name`,p.update_time as update_time FROM `user_product_order` u,`product` p	where u.`code`=p.`code`
-      and u.user_id = #{userId}
+
+    <select id="getUserProductOrderByUserId" resultMap="getResultMap"
+            parameterType="com.bjst.dgt.model.UserProductOrder">
+    SELECT u.`order` AS `order`,p.categroy_code AS categroy_code,p.change_count AS change_count,p.`code` AS `code`,p.code_show AS code_show,p.create_time AS create_time,p.data_status AS data_status,p.exchange AS exchange,p.is_domestic AS is_domestic,p.last_price AS last_price,p.market AS market,p.`name` AS `name`,p.update_time AS update_time FROM `user_product_order` u,`product` p	WHERE u.`order`=p.`order`
+    AND u.user_id = #{userId}
   </select>
+
+    <select id="getUserProducByUserId" resultType="int" parameterType="com.bjst.dgt.model.UserProductOrder">
+       SELECT COUNT(1) FROM `user_product_order` WHERE `user_id` = #{userId}
+    </select>
+
+    <update id="updateUserProductOrderByUserId" parameterType="com.bjst.dgt.model.UserProductOrder">
+    UPDATE `user_product_order` SET `order` = #{order}  WHERE `user_id` = #{userId} and `order` = #{order}
+  </update>
+
 </mapper>

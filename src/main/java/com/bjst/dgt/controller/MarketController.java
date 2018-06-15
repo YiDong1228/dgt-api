@@ -37,9 +37,6 @@ public class MarketController {
     @Resource
     private ProductService productService;
 
-    @Resource
-    private StockDatasService stockDatasService;
-
     @PostMapping("/getList")
     public Result getProducts(@RequestBody Product products) {
         List<Product> productList = productService.getProduct(products);
@@ -47,7 +44,7 @@ public class MarketController {
     }
 
     @PostMapping("/setOrder")
-    public Result setOrder(HttpServletRequest request, @RequestBody Map<String,String> map){
+    public Result setOrder(@RequestBody Map<String,String> map){
         List<Product> productList = productService.setOrder(map);
         return ResultGenerator.genSuccessResult(productList);
     }

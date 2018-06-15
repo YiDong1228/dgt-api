@@ -15,12 +15,12 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 
 /**
- * @Description: StockDatas
+ * @Description: 第三方实时行情接口
  * @Author: yd
  * @CreateDate: 2018/06/14 02:30 PM
  * @UpdateUser: yd
  * @UpdateDate: 2018/06/14 02:30 PM
- * @UpdateRemark: StockDatas
+ * @UpdateRemark: 第三方实时行情接口
  * @Version: 1.0
  */
 @Service
