@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.model.Product;
+import com.bjst.dgt.model.StockDatas;
 import com.bjst.dgt.model.UserProductOrder;
 import com.bjst.dgt.service.ProductService;
 import com.bjst.dgt.service.StockDatasService;
@@ -37,15 +38,36 @@ public class MarketController {
     @Resource
     private ProductService productService;
 
+    @Resource
+    private StockDatasService stockDatasService;
+
     @PostMapping("/getList")
     public Result getProducts(@RequestBody Product products) {
         List<Product> productList = productService.getProduct(products);
-        return ResultGenerator.genSuccessResult(productList);
+        if (productList != null && productList.size() > 0) {
+            return ResultGenerator.genSuccessResult(productList);
+        }else{
+            return ResultGenerator.genFailResult("产品列表为空！");
+        }
     }
 
     @PostMapping("/setOrder")
-    public Result setOrder(@RequestBody Map<String,String> map){
+    public Result setOrder(@RequestBody Map<String, String> map) {
         List<Product> productList = productService.setOrder(map);
-        return ResultGenerator.genSuccessResult(productList);
+        if (productList != null && productList.size() > 0) {
+            return ResultGenerator.genSuccessResult(productList);
+        } else {
+            return ResultGenerator.genFailResult("产品列表为空！");
+        }
+    }
+
+    @PostMapping("/getDetail")
+    public Result getDetail(@RequestBody StockDatas stockDatas) {
+        StockDatas datas = stockDatasService.getStockDatas(stockDatas);
+        if (datas != null) {
+            return ResultGenerator.genSuccessResult(datas);
+        } else {
+            return ResultGenerator.genFailResult("所查询的产品不存在！");
+        }
     }
 }

@@ -369,4 +369,60 @@ public class StockDatas {
     public void setAddTime(Date addTime) {
         this.addTime = addTime;
     }
+
+    private String token;
+    private int userId;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * 波动  日内最高减日内最低
+     */
+    private BigDecimal undulate ;
+    /**
+     * 涨跌  最新价格减昨收
+     */
+    private BigDecimal upsDowns;
+    /**
+     * 涨速  1分钟K线涨跌幅*10000（保留整数）
+     */
+    private int velocity;
+
+    public BigDecimal getUndulate() {
+        return undulate;
+    }
+
+    public void setUndulate(BigDecimal undulate) {
+        this.undulate = undulate;
+    }
+
+    public BigDecimal getUpsDowns() {
+        return upsDowns;
+    }
+
+    public void setUpsDowns(BigDecimal upsDowns) {
+        this.upsDowns = upsDowns;
+    }
+
+    public int getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(int velocity) {
+        this.velocity = velocity;
+    }
 }

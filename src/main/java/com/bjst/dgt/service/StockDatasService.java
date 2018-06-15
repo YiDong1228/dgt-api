@@ -60,4 +60,16 @@ public class StockDatasService {
             stockDatasMapper.updateDataByCode(stockDatas);
         }
     }
+
+    public StockDatas getStockDatas(StockDatas stockDatas){
+        StockDatas datas=stockDatasMapper.getStockDatas(stockDatas);
+        if(stockDatas != null ){
+            datas.setUndulate(datas.getHigh().subtract(datas.getLow()));
+            datas.setUpsDowns(datas.getLastPrice().subtract(datas.getClose()));
+            datas.setVelocity(datas.getChangeCount().setScale(2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)).intValue());
+            return datas;
+        }else{
+            return null;
+        }
+    }
 }
