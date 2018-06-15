@@ -7,6 +7,7 @@ import com.bjst.dgt.model.AppConfig;
 import com.google.common.collect.MoreCollectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Comparator;
@@ -29,6 +30,9 @@ public class SystemService {
      */
     public AppConfig getAppConfig(AppConfig appConfig) {
         AppConfig result = null;
+        if (null == appConfig || StringUtils.isEmpty(appConfig.getPlatformType()) || StringUtils.isEmpty(appConfig.getVersion())) {
+            return  result;
+        }
         List<AppConfig> configs =  appConfigMapper.getAppConfig(appConfig);
         if (null != configs && configs.size() > 0 ){
             result = configs.get(0);

@@ -19,16 +19,9 @@ public class AppConfig {
     private Byte platformType;
 
     /**
-     * 版本号,iOS用到
+     * 版本号,iOS、Android平台
      */
     private String version;
-
-    /**
-     * 安卓用到的,版本code
-     */
-    @Column(name = "version_code")
-    private Integer versionCode;
-
     /**
      * apk下载地址
      */
@@ -95,39 +88,21 @@ public class AppConfig {
     }
 
     /**
-     * 获取版本号,iOS用到
+     * 获取版本号,版本号,iOS、Android平台
      *
-     * @return version - 版本号,iOS用到
+     * @return version - 版本号,版本号,iOS、Android平台
      */
     public String getVersion() {
         return version;
     }
 
     /**
-     * 设置版本号,iOS用到
+     * 设置版本号,版本号,iOS、Android平台
      *
-     * @param version 版本号,iOS用到
+     * @param version 版本号,iOS、Android平台
      */
     public void setVersion(String version) {
         this.version = version;
-    }
-
-    /**
-     * 获取安卓用到的,版本code
-     *
-     * @return version_code - 安卓用到的,版本code
-     */
-    public Integer getVersionCode() {
-        return versionCode;
-    }
-
-    /**
-     * 设置安卓用到的,版本code
-     *
-     * @param versionCode 安卓用到的,版本code
-     */
-    public void setVersionCode(Integer versionCode) {
-        this.versionCode = versionCode;
     }
 
     /**
