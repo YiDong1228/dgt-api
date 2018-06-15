@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.RemindMapper">
+
+    <resultMap id="BaseResultMap" type="com.bjst.dgt.model.Remind">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="max_price" jdbcType="DECIMAL" property="maxPrice"/>
+        <result column="min_price" jdbcType="DECIMAL" property="minPrice"/>
+        <result column="max_count" jdbcType="DECIMAL" property="maxCount"/>
+        <result column="min_count" jdbcType="DECIMAL" property="minCount"/>
+        <result column="remind" jdbcType="TINYINT" property="remind"/>
+    </resultMap>
+
+    <sql id="getRemindSql">
+      `id`,`user_id`,`code`,`max_price`,`min_price`,`max_count`,`min_price`,`remind`
+    </sql>
+
+    <select id="getRemindById" resultMap="BaseResultMap" parameterType="com.bjst.dgt.model.Remind">
+        SELECT
+        <include refid="getRemindSql"/>
+        FROM `remind` WHERE `user_id` = #{userId}
+    </select>
+
+</mapper>

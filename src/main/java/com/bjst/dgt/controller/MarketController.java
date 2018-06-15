@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.model.Product;
+import com.bjst.dgt.model.Remind;
 import com.bjst.dgt.model.StockDatas;
 import com.bjst.dgt.model.UserProductOrder;
 import com.bjst.dgt.service.ProductService;
+import com.bjst.dgt.service.RemindService;
 import com.bjst.dgt.service.StockDatasService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,9 @@ public class MarketController {
     @Resource
     private StockDatasService stockDatasService;
 
+    @Resource
+    private RemindService remindService;
+
     @PostMapping("/getList")
     public Result getProducts(@RequestBody Product products) {
         List<Product> productList = productService.getProduct(products);
@@ -68,6 +73,16 @@ public class MarketController {
             return ResultGenerator.genSuccessResult(datas);
         } else {
             return ResultGenerator.genFailResult("所查询的产品不存在！");
+        }
+    }
+
+    @PostMapping("/GetPrewarning")
+    public Result GetPrewarning(@RequestBody Remind remind){
+        Remind remin=remindService.getRemindById(remind);
+        if(remin != null){
+            return ResultGenerator.genSuccessResult(remin);
+        }else{
+            return ResultGenerator.genFailResult("用户未设定价格预警！");
         }
     }
 }
