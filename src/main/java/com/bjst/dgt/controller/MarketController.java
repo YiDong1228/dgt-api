@@ -4,12 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultGenerator;
-import com.bjst.dgt.model.Product;
-import com.bjst.dgt.model.Remind;
-import com.bjst.dgt.model.StockDatas;
-import com.bjst.dgt.model.UserProductOrder;
+import com.bjst.dgt.model.*;
 import com.bjst.dgt.service.ProductService;
 import com.bjst.dgt.service.RemindService;
+import com.bjst.dgt.service.RuleService;
 import com.bjst.dgt.service.StockDatasService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +43,9 @@ public class MarketController {
 
     @Resource
     private RemindService remindService;
+
+    @Resource
+    private RuleService ruleService;
 
     @PostMapping("/getList")
     public Result getProducts(@RequestBody Product products) {
@@ -93,6 +94,16 @@ public class MarketController {
             return ResultGenerator.genSuccessResult("设置价格预警成功！");
         } else {
             return ResultGenerator.genFailResult("设置价格预警失败！");
+        }
+    }
+
+    @PostMapping("/getStatusAndRule")
+    public Result getStatusAndRule(@RequestBody Rule rule) {
+        Rule ru = ruleService.getRuleById(rule);
+        if (ru != null) {
+            return ResultGenerator.genSuccessResult(ru);
+        } else {
+            return ResultGenerator.genFailResult("所查询的产品状态规则不存在！");
         }
     }
 }
