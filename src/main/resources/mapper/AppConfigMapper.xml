@@ -8,7 +8,6 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="platform_type" jdbcType="TINYINT" property="platformType" />
     <result column="version" jdbcType="VARCHAR" property="version" />
-    <result column="version_code" jdbcType="INTEGER" property="versionCode" />
     <result column="apk_url" jdbcType="VARCHAR" property="apkUrl" />
     <result column="explanation" jdbcType="VARCHAR" property="explanation" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
@@ -19,7 +18,7 @@
 
   <sql id="baseSql">
     id, platform_type, version,
-    version_code, apk_url, explanation,
+    apk_url, explanation,
     img_url, is_rape, create_time,
     update_time
   </sql>
@@ -27,13 +26,7 @@
   <!--&lt;select id="getAppConfig2" parameterType="java.lang.String" resultType="com.bjst.dgt.model.AppConfig"&gt;-->
     <select id="getAppConfig" resultMap="BaseResultMap">
       select <include refid="baseSql" /> from app_config
-      where platform_type = #{platformType}
-      <if test="platformType == 1">
-        and version > #{version,jdbcType=VARCHAR}
-      </if>
-      <if test="platformType == 2">
-        and version_code > #{versionCode,jdbcType=INTEGER}
-      </if>
+      where platform_type = #{platformType} and version > #{version,jdbcType=VARCHAR}
       ORDER BY create_time DESC
     </select>
 
