@@ -31,4 +31,32 @@ public class RemindService {
             return null;
         }
     }
+
+    public boolean insertRemindByUserId(Remind remind) {
+        Remind remin = getRemindById(remind);
+        if (remin != null) {
+            int i = remindMapper.updateRemindByUserId(remind);
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            int i = remindMapper.insertRemindByUserId(remind);
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public boolean updateRemindByUserId(Remind remind) {
+        int i = remindMapper.updateRemindByUserId(remind);
+        if (i > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

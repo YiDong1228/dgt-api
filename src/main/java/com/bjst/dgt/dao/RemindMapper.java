@@ -12,4 +12,18 @@ public interface RemindMapper extends Mapper<Remind> {
      */
     Remind getRemindById(Remind remind);
 
+    /**
+     * 设置价格预警
+     * @param remind Remind对象
+     * @return 受影响行数
+     */
+    int insertRemindByUserId(Remind remind);
+
+    /**
+     * 更新价格预警
+     * @param remind Remind对象
+     * @return 受影响行数
+     */
+    int updateRemindByUserId(Remind remind);
+
 }

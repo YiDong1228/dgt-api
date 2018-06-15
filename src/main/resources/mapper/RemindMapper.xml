@@ -14,13 +14,25 @@
     </resultMap>
 
     <sql id="getRemindSql">
-      `id`,`user_id`,`code`,`max_price`,`min_price`,`max_count`,`min_price`,`remind`
+        `id`,`user_id`,`code`,`max_price`,`min_price`,`max_count`,`min_count`,`remind`
     </sql>
 
     <select id="getRemindById" resultMap="BaseResultMap" parameterType="com.bjst.dgt.model.Remind">
         SELECT
         <include refid="getRemindSql"/>
-        FROM `remind` WHERE `user_id` = #{userId}
+        FROM `remind`
+        WHERE `user_id` = #{userId} AND `code` = #{code}
     </select>
+
+    <insert id="insertRemindByUserId" parameterType="com.bjst.dgt.model.Remind">
+      INSERT INTO `remind`(`user_id`,`code`,`max_price`,`min_price`,`max_count`,`min_count`,`remind`)
+      VALUES(#{userId},#{code},#{maxPrice},#{minPrice},#{maxCount},#{minCount},#{remind})
+    </insert>
+
+    <update id="updateRemindByUserId" parameterType="com.bjst.dgt.model.Remind">
+        UPDATE `remind`
+        SET `code` = #{code},`max_price` = #{maxPrice},`min_price` = #{minPrice},`max_count` = #{maxCount},`min_count` = #{minCount}
+        WHERE `user_id` = #{userId} AND `code` = #{code}
+    </update>
 
 </mapper>

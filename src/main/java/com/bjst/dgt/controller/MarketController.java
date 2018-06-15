@@ -51,7 +51,7 @@ public class MarketController {
         List<Product> productList = productService.getProduct(products);
         if (productList != null && productList.size() > 0) {
             return ResultGenerator.genSuccessResult(productList);
-        }else{
+        } else {
             return ResultGenerator.genFailResult("产品列表为空！");
         }
     }
@@ -77,12 +77,22 @@ public class MarketController {
     }
 
     @PostMapping("/GetPrewarning")
-    public Result GetPrewarning(@RequestBody Remind remind){
-        Remind remin=remindService.getRemindById(remind);
-        if(remin != null){
+    public Result GetPrewarning(@RequestBody Remind remind) {
+        Remind remin = remindService.getRemindById(remind);
+        if (remin != null) {
             return ResultGenerator.genSuccessResult(remin);
-        }else{
-            return ResultGenerator.genFailResult("用户未设定价格预警！");
+        } else {
+            return ResultGenerator.genFailResult("用户未设定该产品的价格预警！");
+        }
+    }
+
+    @PostMapping("/SetPrewarning")
+    public Result SetPrewarning(@RequestBody Remind remind) {
+        boolean falg = remindService.insertRemindByUserId(remind);
+        if (falg) {
+            return ResultGenerator.genSuccessResult("设置价格预警成功！");
+        } else {
+            return ResultGenerator.genFailResult("设置价格预警失败！");
         }
     }
 }
