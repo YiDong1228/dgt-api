@@ -22,17 +22,20 @@
     </resultMap>
 
     <sql id="getStockDatasSql">
-      id,code,last_price,high,low,open,close,volume,amount,BV,BP,SP,SV,data_status,change_count,add_time
+      `id`,`code`,`last_price`,`high`,`low`,`open`,`close`,`volume`,`amount`,`BV`,`BP`,`SP`,`SV`,`data_status`,`change_count`,`add_time`
   </sql>
 
     <update id="updateDataByCode" parameterType="com.bjst.dgt.model.StockDatas">
-    update stock_datas set last_price = #{lastPrice} , high = #{high} , low = #{low} , open = #{open} , close = #{close} , volume = #{volume} , amount = #{amount} , BV = #{bv} , SV = #{sv} , BP = #{bp} , SP = #{sp} , data_status = 2 , change_count = #{changeCount} , add_time = now() where code = #{code}
+    UPDATE `stock_datas`
+    SET `last_price` = #{lastPrice} , `high` = #{high} , `low` = #{low} , `open` = #{open} , `close` = #{close} , `volume` = #{volume} , `amount` = #{amount} , `BV` = #{bv} , `SV` = #{sv} , `BP` = #{bp} , `SP` = #{sp} , `data_status` = 2 , `change_count` = #{changeCount} , `add_time` = now()
+    WHERE `code` = #{code}
   </update>
 
     <select id="getStockDatas" resultMap="BaseResultMap" parameterType="com.bjst.dgt.model.StockDatas">
     SELECT
     <include refid="getStockDatasSql" />
-    FROM `stock_datas` WHERE `code` = #{code}
+    FROM `stock_datas`
+    WHERE `code` = #{code}
   </select>
 
 </mapper>

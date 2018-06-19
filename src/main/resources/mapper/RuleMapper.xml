@@ -28,7 +28,8 @@
     <select id="getRuleById" parameterType="com.bjst.dgt.model.Rule" resultMap="BaseResultMap">
     SELECT 
     <include refid="getRuleSql" />
-    FROM `rule` WHERE `code` = #{code}
+    FROM `rule`
+    WHERE `code` = #{code}
   </select>
 
 </mapper>

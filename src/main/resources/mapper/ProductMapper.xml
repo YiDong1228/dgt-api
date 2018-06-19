@@ -31,7 +31,9 @@
     </select>
 
     <update id="updatePriceByCode" parameterType="com.bjst.dgt.model.StockDatas">
-        update product set last_price = #{lastPrice} , change_count = #{changeCount} , update_time = now() where code=#{code}
+        UPDATE `product`
+        SET `last_price` = #{lastPrice} , `change_count` = #{changeCount} , `update_time` = now()
+        WHERE `code` = #{code}
     </update>
 
 

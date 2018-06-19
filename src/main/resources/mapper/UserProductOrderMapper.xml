@@ -38,16 +38,19 @@
 
     <select id="getUserProductOrderByUserId" resultMap="getResultMap"
             parameterType="com.bjst.dgt.model.UserProductOrder">
-    SELECT u.`order` AS `order`,p.categroy_code AS categroy_code,p.change_count AS change_count,p.`code` AS `code`,p.code_show AS code_show,p.create_time AS create_time,p.data_status AS data_status,p.exchange AS exchange,p.is_domestic AS is_domestic,p.last_price AS last_price,p.market AS market,p.`name` AS `name`,p.update_time AS update_time FROM `user_product_order` u,`product` p	WHERE u.`order`=p.`order`
+    SELECT u.`order` AS `order`,p.categroy_code AS categroy_code,p.change_count AS change_count,p.`code` AS `code`,p.code_show AS code_show,p.create_time AS create_time,p.data_status AS data_status,p.exchange AS exchange,p.is_domestic AS is_domestic,p.last_price AS last_price,p.market AS market,p.`name` AS `name`,p.update_time AS update_time
+    FROM `user_product_order` u,`product` p	WHERE u.`order`=p.`order`
     AND u.user_id = #{userId}
   </select>
 
     <select id="getUserProducByUserId" resultType="int" parameterType="com.bjst.dgt.model.UserProductOrder">
-       SELECT COUNT(1) FROM `user_product_order` WHERE `user_id` = #{userId}
+       SELECT COUNT(1)
+       FROM `user_product_order`
+       WHERE `user_id` = #{userId}
     </select>
 
     <update id="updateUserProductOrderByUserId" parameterType="com.bjst.dgt.model.UserProductOrder">
-    UPDATE `user_product_order` SET `order` = #{order}  WHERE `user_id` = #{userId} and `order` = #{order}
+    UPDATE `user_product_order` SET `order` = #{order}  WHERE `user_id` = #{userId} AND `order` = #{order}
   </update>
 
 </mapper>
