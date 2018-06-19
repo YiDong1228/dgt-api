@@ -27,6 +27,11 @@ public class Product {
      */
     private String exchange;
 
+    /**
+     * 1:内盘 2:外盘
+     */
+    private String system_type;
+
     @Column(name = "last_price")
     private BigDecimal lastPrice;
 
@@ -137,6 +142,14 @@ public class Product {
      */
     public void setExchange(String exchange) {
         this.exchange = exchange;
+    }
+
+    public String getSystem_type() {
+        return system_type;
+    }
+
+    public void setSystem_type(String system_type) {
+        this.system_type = system_type;
     }
 
     /**

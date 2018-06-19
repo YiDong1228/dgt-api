@@ -7,6 +7,7 @@
         <result column="code_show" jdbcType="VARCHAR" property="codeShow"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
+        <result column="system_type" jdbcType="VARCHAR" property="system_type"/>
         <result column="last_price" jdbcType="DECIMAL" property="lastPrice"/>
         <result column="market" jdbcType="VARCHAR" property="market"/>
         <result column="is_domestic" jdbcType="TINYINT" property="isDomestic"/>
@@ -20,7 +21,7 @@
 
 
     <sql id="getProductSql">
-      `code`, `code_show`, `name`, `exchange`, `last_price`, `market`, `is_domestic`, `data_status`,
+      `code`, `code_show`, `name`, `exchange`, `system_type`,`last_price`, `market`, `is_domestic`, `data_status`,
       `change_count`, `categroy_code`, `order`, `create_time`, `update_time`
     </sql>
 
