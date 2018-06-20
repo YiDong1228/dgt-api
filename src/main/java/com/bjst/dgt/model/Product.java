@@ -30,7 +30,8 @@ public class Product {
     /**
      * 1:内盘 2:外盘
      */
-    private String system_type;
+    @Column(name="system_type")
+    private String systemType;
 
     @Column(name = "last_price")
     private BigDecimal lastPrice;
@@ -144,12 +145,12 @@ public class Product {
         this.exchange = exchange;
     }
 
-    public String getSystem_type() {
-        return system_type;
+    public String getSystemType() {
+        return systemType;
     }
 
-    public void setSystem_type(String system_type) {
-        this.system_type = system_type;
+    public void setSystemType(String systemType) {
+        this.systemType = systemType;
     }
 
     /**
