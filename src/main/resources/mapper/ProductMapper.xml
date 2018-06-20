@@ -7,7 +7,7 @@
         <result column="code_show" jdbcType="VARCHAR" property="codeShow"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
-        <result column="system_type" jdbcType="VARCHAR" property="systemType"/>
+        <result column="system_type" jdbcType="TINYINT" property="systemType"/>
         <result column="last_price" jdbcType="DECIMAL" property="lastPrice"/>
         <result column="market" jdbcType="VARCHAR" property="market"/>
         <result column="is_domestic" jdbcType="TINYINT" property="isDomestic"/>

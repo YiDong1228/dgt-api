@@ -16,6 +16,7 @@
         <result column="code_show" jdbcType="VARCHAR" property="codeShow"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
+        <result column="system_type" jdbcType="TINYINT" property="systemType"/>
         <result column="last_price" jdbcType="DECIMAL" property="lastPrice"/>
         <result column="market" jdbcType="VARCHAR" property="market"/>
         <result column="is_domestic" jdbcType="TINYINT" property="isDomestic"/>
@@ -38,7 +39,7 @@
 
     <select id="getUserProductOrderByUserId" resultMap="getResultMap"
             parameterType="com.bjst.dgt.model.UserProductOrder">
-    SELECT u.`order` AS `order`,p.categroy_code AS categroy_code,p.change_count AS change_count,p.`code` AS `code`,p.code_show AS code_show,p.create_time AS create_time,p.data_status AS data_status,p.exchange AS exchange,p.is_domestic AS is_domestic,p.last_price AS last_price,p.market AS market,p.`name` AS `name`,p.update_time AS update_time
+    SELECT u.`order` AS `order`,p.categroy_code AS categroy_code,p.change_count AS change_count,p.`code` AS `code`,p.code_show AS code_show,p.create_time AS create_time,p.data_status AS data_status,p.exchange AS exchange,p.is_domestic AS is_domestic,p.last_price AS last_price,p.system_type AS system_type,p.market AS market,p.`name` AS `name`,p.update_time AS update_time
     FROM `user_product_order` u,`product` p	WHERE u.`order`=p.`order`
     AND u.user_id = #{userId}
   </select>

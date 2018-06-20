@@ -31,7 +31,7 @@ public class Product {
      * 1:内盘 2:外盘
      */
     @Column(name="system_type")
-    private String systemType;
+    private Byte systemType;
 
     @Column(name = "last_price")
     private BigDecimal lastPrice;
@@ -72,6 +72,14 @@ public class Product {
 
     @Column(name = "update_time")
     private Date updateTime;
+
+    public Byte getSystemType() {
+        return systemType;
+    }
+
+    public void setSystemType(Byte systemType) {
+        this.systemType = systemType;
+    }
 
     /**
      * 获取产品CODE
@@ -144,15 +152,6 @@ public class Product {
     public void setExchange(String exchange) {
         this.exchange = exchange;
     }
-
-    public String getSystemType() {
-        return systemType;
-    }
-
-    public void setSystemType(String systemType) {
-        this.systemType = systemType;
-    }
-
     /**
      * @return last_price
      */
