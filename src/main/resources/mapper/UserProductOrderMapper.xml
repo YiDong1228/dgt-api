@@ -33,8 +33,8 @@
   </sql>
 
     <insert id="insertUserProductOrderByUserId" parameterType="com.bjst.dgt.model.UserProductOrder">
-    INSERT INTO `user_product_order`(`user_id`,`order`)
-    VALUES(#{userId},#{order})
+    INSERT INTO `user_product_order`(`user_id`,`order`,`code`)
+    VALUES(#{userId},#{order},#{code})
   </insert>
 
     <select id="getUserProductOrderByUserId" resultMap="getResultMap"
@@ -51,7 +51,7 @@
     </select>
 
     <update id="updateUserProductOrderByUserId" parameterType="com.bjst.dgt.model.UserProductOrder">
-    UPDATE `user_product_order` SET `order` = #{order}  WHERE `user_id` = #{userId} AND `order` = #{order}
+    UPDATE `user_product_order` SET `order` = #{order} , `code` = #{code}  WHERE `user_id` = #{userId} AND `order` = #{order} AND `code` = #{code}
   </update>
 
 </mapper>

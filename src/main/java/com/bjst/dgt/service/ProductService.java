@@ -52,7 +52,7 @@ public class ProductService {
             } else {
                 //没有进行了自定义排序的则返回默认排序的产品列表
                 Collections.sort(productList, (p1, p2) -> {
-                    if (p1.getOrder() > p2.getOrder()){
+                    if (p1.getOrder() > p2.getOrder()) {
                         return 1;
                     } else {
                         return -1;
@@ -91,12 +91,16 @@ public class ProductService {
         UserProductOrder userProductOrder = new UserProductOrder();
         String token = map.get("token");
         int userId = Integer.parseInt(map.get("userId"));
-        String order = map.get("codes");
+        String order = map.get("orders");
+        String code = map.get("codes");
         order = order.substring(1, order.length() - 1);
+        code = code.substring(1, code.length() - 1);
         String orders[] = order.split(",");
+        String codes[] = code.split(",");
         for (int i = 0; i < 15; i++) {
             userProductOrder.setUserId(userId);
             userProductOrder.setOrder(Byte.valueOf(orders[i]));
+            userProductOrder.setCode(codes[i].substring(1, codes[i].length() - 1));
             //判断是否用户已经进行了自定义排序
             boolean falg = userProductOrderService.getUserProducByUserId(userProductOrder);
             if (falg) {
