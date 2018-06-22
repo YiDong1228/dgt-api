@@ -31,7 +31,7 @@
 
     <update id="updateRemindByUserId" parameterType="com.bjst.dgt.model.Remind">
         UPDATE `remind`
-        SET `code` = #{code},`max_price` = #{maxPrice},`min_price` = #{minPrice},`max_count` = #{maxCount},`min_count` = #{minCount}
+        SET `code` = #{code},`max_price` = #{maxPrice},`min_price` = #{minPrice},`max_count` = #{maxCount},`min_count` = #{minCount} , `remind` = #{remind}
         WHERE `user_id` = #{userId} AND `code` = #{code}
     </update>
 
