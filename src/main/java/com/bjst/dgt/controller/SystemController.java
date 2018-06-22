@@ -4,6 +4,7 @@ import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.model.AppConfig;
 import com.bjst.dgt.service.SystemService;
+import com.bjst.dgt.service.TradeService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,6 +20,8 @@ public class SystemController {
 
     @Resource
     private SystemService systemService;
+    @Resource
+    private TradeService tradeService;
 
     /**
      * 获得对应平台的版本信息
@@ -29,6 +32,14 @@ public class SystemController {
     public Result getAppConfig(@RequestBody AppConfig appConfig) {
         appConfig = systemService.getAppConfig(appConfig);
         return ResultGenerator.genSuccessResult(appConfig);
+    }
+
+    @GetMapping("test")
+    public String test(@RequestParam String name, @RequestParam String pwd) {
+       tradeService.tradeInnerLogin(name,pwd);
+       //tradeService.tradeOuterLogin(name,pwd);
+
+        return "dd";
     }
 
 }

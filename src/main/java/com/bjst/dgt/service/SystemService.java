@@ -1,16 +1,14 @@
 package com.bjst.dgt.service;
 
-import com.bjst.dgt.core.AbstractService;
 import com.bjst.dgt.core.ProjectConstant;
 import com.bjst.dgt.dao.AppConfigMapper;
 import com.bjst.dgt.model.AppConfig;
-import com.google.common.collect.MoreCollectors;
+import com.bjst.dgt.model.TradeClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +20,8 @@ import java.util.stream.Collectors;
 public class SystemService {
     @Resource
     private AppConfigMapper appConfigMapper;
+    @Resource
+    private TradeClient tradeClient;
 
     /**
      * 获得app配置信息
@@ -51,4 +51,5 @@ public class SystemService {
 
         return result;
     }
+
 }

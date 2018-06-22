@@ -2,12 +2,9 @@ package com.bjst.dgt.schedules;
 
 import com.bjst.dgt.service.StockDatasService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.Random;
 
 /**
  * Created by zll on 2018/6/14.

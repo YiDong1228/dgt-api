@@ -21,4 +21,5 @@ public final class ProjectConstant {
     public static final int SORT_DEFAULT = 0;   // 默认顺序
     public static final int SORT_ZHENGXU = 1;   // 正序
     public static final int SORT_DAOXU = 2;   // 倒序
+    public static final String OUTER_DISC_ENDING = "_";   // 外盘末尾
 }
