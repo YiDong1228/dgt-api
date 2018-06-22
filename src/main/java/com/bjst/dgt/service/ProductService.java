@@ -34,6 +34,7 @@ public class ProductService {
 
     /**
      * 获取行情列表
+     *
      * @param products ajax发送过来的数据
      * @return 产品列表
      */
@@ -51,7 +52,7 @@ public class ProductService {
             } else {
                 //没有进行了自定义排序的则返回默认排序的产品列表
                 Collections.sort(productList, (p1, p2) -> {
-                    if (p1.getOrder() > p2.getOrder()) {
+                    if (p1.getOrder() > p2.getOrder()){
                         return 1;
                     } else {
                         return -1;
@@ -61,7 +62,7 @@ public class ProductService {
         } else if (products.getOrder() == ProjectConstant.SORT_ZHENGXU) {
             //正序
             Collections.sort(productList, (p1, p2) -> {
-                if (p1.getOrder() > p2.getOrder()) {
+                if (p1.getChangeCount().compareTo(p2.getChangeCount()) == 1) {
                     return 1;
                 } else {
                     return -1;
@@ -70,7 +71,7 @@ public class ProductService {
         } else if (products.getOrder() == ProjectConstant.SORT_DAOXU) {
             //倒序
             Collections.sort(productList, (p1, p2) -> {
-                if (p1.getOrder() < p2.getOrder()) {
+                if (p1.getChangeCount().compareTo(p2.getChangeCount()) == -1) {
                     return 1;
                 } else {
                     return -1;
@@ -82,6 +83,7 @@ public class ProductService {
 
     /**
      * 用户产品自定义排序
+     *
      * @param map ajax发送过来的数据
      * @return 自定义产品列表
      */

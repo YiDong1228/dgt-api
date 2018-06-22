@@ -29,6 +29,7 @@
         SELECT
         <include refid="getProductSql"/>
         FROM `product`
+        ORDER BY `change_count` DESC
     </select>
 
     <update id="updatePriceByCode" parameterType="com.bjst.dgt.model.StockDatas">
