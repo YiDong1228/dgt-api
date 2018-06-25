@@ -1,6 +1,8 @@
 package com.bjst.dgt.third.yifu;
 
 
+import com.bjst.dgt.core.ProjectConstant;
+import com.bjst.dgt.model.Trade;
 import com.bjst.dgt.model.TradeClient;
 import com.bjst.dgt.third.yifu.JNA.TradeApi;
 import com.bjst.dgt.third.yifu.struct.*;
@@ -9,10 +11,12 @@ import com.sun.jna.Native;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 
-public class Trade {
+public class TradeAPI {
 	private  String name;//userID
 	private  String pwd; // user password
 	private  String brokerID;//经纪公司代码
@@ -23,7 +27,10 @@ public class Trade {
 
 	private boolean systemStarted = false;
 	private int orderRef = 0;
-	private int requestID = new Random().nextInt();
+
+	private Random random = new Random();
+	private int requestID = random.nextInt();
+	private Map<String, Object> requestIDManager = new HashMap<>();
 
 	private String tcpUrl; // tcp 连接url
 
@@ -34,7 +41,7 @@ public class Trade {
 	private TradeApi instance;
 	private long handle;
 
-	public Trade(String userId, String password, String brokerID, String tcpUrl) {
+	public TradeAPI(String userId, String password, String brokerID, String tcpUrl) {
 		this.name = userId;
 		this.pwd = password;
 		this.brokerID = brokerID;
@@ -91,7 +98,7 @@ public class Trade {
 			setBytesData(pReqUserLoginField.UserID, name);
 			setBytesData(pReqUserLoginField.Password, pwd);
 			setBytesData(pReqUserLoginField.UserProductInfo, " ");
-			int reqUserLogin = instance.ReqUserLogin(handle, pReqUserLoginField, requestID);
+			int reqUserLogin = instance.ReqUserLogin(handle, pReqUserLoginField, random.nextInt());
 		}
 	};
 	TradeApi.cbOnFrontDisconnected fOnFrontDisconnected = new TradeApi.cbOnFrontDisconnected() {
@@ -120,7 +127,7 @@ public class Trade {
 				System.out.println("===================登录成功====================" + ByteToString(pRspUserLogin.BrokerID));
 				System.out.println("UserID:" + ByteToString(pRspUserLogin.UserID));
 				// 登录成功将其加入管理器
-				tradeClientWeakReference.get().put(ByteToString(pRspUserLogin.UserID), Trade.this);
+				tradeClientWeakReference.get().put(ByteToString(pRspUserLogin.UserID), TradeAPI.this);
 				orderRef = bytesToInt(pRspUserLogin.MaxOrderRef, 0);
 				
 			 	CThostFtdcQryInvestorPositionDetailField.ByReference positionDetail  =new CThostFtdcQryInvestorPositionDetailField.ByReference();
@@ -1024,7 +1031,7 @@ public class Trade {
 	}
 
 	//报单
-	public void plcaeOrder() {
+	public int plcaeOrder(Trade trade) {
 		CThostFtdcInputOrderField.ByReference  pInputOrder = new CThostFtdcInputOrderField.ByReference();
 		setBytesData(pInputOrder.BrokerID, brokerID);//经济公司代码
 		setBytesData(pInputOrder.InstrumentID, instrumentID);//合约代码 InstrumentID
@@ -1036,6 +1043,10 @@ public class Trade {
 		pInputOrder.OrderPriceType=(byte)ThostFtdcUserApiDataTypeLibrary.THOST_FTDC_OPT_LimitPrice;
 		//买卖方向（买）
 		pInputOrder.Direction=(byte)ThostFtdcUserApiDataTypeLibrary.THOST_FTDC_D_Buy ;
+		// 判断 买卖方向
+		if (trade.getDirection() == ProjectConstant.TRADE_DIRECTION_SELL) {
+			pInputOrder.Direction = (byte)ThostFtdcUserApiDataTypeLibrary.THOST_FTDC_D_Sell;
+		}
 		//有效期类型 THOST_FTDC_TC_GF（当日有效）
 		pInputOrder.TimeCondition=(byte)ThostFtdcUserApiDataTypeLibrary. THOST_FTDC_TC_GFD;
 		 //成交类型（任何数量）
@@ -1048,6 +1059,9 @@ public class Trade {
 		setBytesData(pInputOrder.CombHedgeFlag,"1");
 		//组合开平标志（开仓）
 		setBytesData(pInputOrder.CombOffsetFlag,"0");
+		if (trade.getCombOffsetFlag() == ProjectConstant.TRADE_COMB_OFFSET_FLAG_CLOSE) {
+			setBytesData(pInputOrder.CombOffsetFlag,"1"); // 平仓
+		}
 		setBytesData(pInputOrder.GTDDate, "");
 
 		///自动挂起标志
@@ -1055,11 +1069,11 @@ public class Trade {
 
 
 		pInputOrder.MinVolume=1;//最小数量
-		pInputOrder.LimitPrice=3709;//价格
-		pInputOrder.VolumeTotalOriginal=1; //数量
-		pInputOrder.StopPrice=90;//止损价
+		pInputOrder.LimitPrice=trade.getLimitPrice() + ProjectConstant.TRADE_LIMIT_PRICE_RANGE;//价格范围
+		pInputOrder.VolumeTotalOriginal= trade.getVolumeTotalOriginal(); //数量
+		pInputOrder.StopPrice= trade.getStopPrice();//止损价
 
-		int reqOrderInsert = instance.ReqOrderInsert(handle,pInputOrder, requestID);
+		return instance.ReqOrderInsert(handle,pInputOrder, requestID);
 	}
 
 	//查询资金账号

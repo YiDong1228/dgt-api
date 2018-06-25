@@ -21,5 +21,10 @@ public final class ProjectConstant {
     public static final int SORT_DEFAULT = 0;   // 默认顺序
     public static final int SORT_ZHENGXU = 1;   // 正序
     public static final int SORT_DAOXU = 2;   // 倒序
-    public static final String OUTER_DISC_ENDING = "_";   // 外盘末尾
+    public static final int TRADE_DIRECTION_BUY = 0; // 买
+    public static final int TRADE_DIRECTION_SELL = 1; // 卖
+    public static final int TRADE_COMB_OFFSET_FLAG_OPEN = 0; // 开
+    public static final int TRADE_COMB_OFFSET_FLAG_CLOSE = 1; // 平
+    public static final int TRADE_LIMIT_PRICE_RANGE = 100; // 委托限价范围
+
 }

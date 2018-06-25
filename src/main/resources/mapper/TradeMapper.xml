@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.TradeMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.Trade">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="aggregate" jdbcType="REAL" property="aggregate" />
+    <result column="break_even_num" jdbcType="SMALLINT" property="breakEvenNum" />
+    <result column="comb_offset_flag" jdbcType="TINYINT" property="combOffsetFlag" />
+    <result column="commission" jdbcType="REAL" property="commission" />
+    <result column="deposit" jdbcType="REAL" property="deposit" />
+    <result column="direction" jdbcType="TINYINT" property="direction" />
+    <result column="inner_outer_disc" jdbcType="TINYINT" property="innerOuterDisc" />
+    <result column="instrument_id" jdbcType="VARCHAR" property="instrumentId" />
+    <result column="is_move_break_even" jdbcType="TINYINT" property="isMoveBreakEven" />
+    <result column="is_profit" jdbcType="TINYINT" property="isProfit" />
+    <result column="is_stop" jdbcType="TINYINT" property="isStop" />
+    <result column="limit_price" jdbcType="REAL" property="limitPrice" />
+    <result column="move_num" jdbcType="INTEGER" property="moveNum" />
+    <result column="profit_num" jdbcType="INTEGER" property="profitNum" />
+    <result column="profit_price" jdbcType="REAL" property="profitPrice" />
+    <result column="stop_num" jdbcType="INTEGER" property="stopNum" />
+    <result column="stop_price" jdbcType="REAL" property="stopPrice" />
+    <result column="volume_total_original" jdbcType="INTEGER" property="volumeTotalOriginal" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="order_sys_id" jdbcType="CHAR" property="orderSysId" />
+    <result column="trade_status" jdbcType="TINYINT" property="tradeStatus" />
+    <result column="transaction_price" jdbcType="REAL" property="transactionPrice" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="exchange_id" jdbcType="VARCHAR" property="exchangeId" />
+    <result column="buy_remaining_volume" jdbcType="INTEGER" property="buyRemainingVolume" />
+    <result column="sell_remaining_volume" jdbcType="INTEGER" property="sellRemainingVolume" />
+  </resultMap>
+</mapper>

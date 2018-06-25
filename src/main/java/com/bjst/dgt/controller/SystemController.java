@@ -3,6 +3,7 @@ package com.bjst.dgt.controller;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.model.AppConfig;
+import com.bjst.dgt.service.RedisService;
 import com.bjst.dgt.service.SystemService;
 import com.bjst.dgt.service.TradeService;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,8 @@ public class SystemController {
     private SystemService systemService;
     @Resource
     private TradeService tradeService;
+    @Resource
+    private RedisService redisService;
 
     /**
      * 获得对应平台的版本信息
@@ -42,4 +45,13 @@ public class SystemController {
         return "dd";
     }
 
+    @GetMapping("redis")
+    public String testRedis() {
+        boolean exist = redisService.exists("z101");
+        System.out.println(exist);
+        redisService.add("z101", "q111");
+        exist = redisService.exists("z101");
+        System.out.println(exist);
+        return "success";
+    }
 }

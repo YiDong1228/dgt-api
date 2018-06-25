@@ -1,7 +1,9 @@
 package com.bjst.dgt.service;
 
+import com.bjst.dgt.dao.TradeMapper;
+import com.bjst.dgt.model.Trade;
 import com.bjst.dgt.model.TradeClient;
-import com.bjst.dgt.third.yifu.Trade;
+import com.bjst.dgt.third.yifu.TradeAPI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ public class TradeService {
 
     @Resource
     private TradeClient tradeClient;
+    @Resource
+    private TradeMapper tradeMapper;
 
     /**
      *  内盘登录
@@ -40,9 +44,9 @@ public class TradeService {
     @Async
     public void tradeInnerLogin(String userId, String pwd) {
         if (!tradeClient.containsKey(userId)) {
-            Trade trade = new Trade(userId, pwd, innerDisc, innerUrl);
-            trade.setTradeClientWeakReference(new WeakReference<TradeClient>(tradeClient));
-            trade.login();
+            TradeAPI tradeAPI = new TradeAPI(userId, pwd, innerDisc, innerUrl);
+            tradeAPI.setTradeClientWeakReference(new WeakReference<TradeClient>(tradeClient));
+            tradeAPI.login();
         }
     }
 
@@ -54,9 +58,9 @@ public class TradeService {
     @Async
     public void tradeOuterLogin(String userId, String pwd) {
         if (!tradeClient.getTradeClient().containsKey(userId)) {
-            Trade trade = new Trade(userId, pwd, outerDisc, outerUrl);
-            trade.setTradeClientWeakReference(new WeakReference<TradeClient>(tradeClient));
-            trade.login();
+            TradeAPI tradeAPI = new TradeAPI(userId, pwd, outerDisc, outerUrl);
+            tradeAPI.setTradeClientWeakReference(new WeakReference<TradeClient>(tradeClient));
+            tradeAPI.login();
         }
     }
 
@@ -68,5 +72,21 @@ public class TradeService {
         if (tradeClient.containsKey(userId)) {
             tradeClient.get(userId).goOut();
         }
+    }
+
+    /**
+     *
+     * @param userId 内外盘 用户id
+     * @param trade 交易model
+     * @return
+     */
+    public int placeOrder(String userId,Trade trade) {
+            int result = -1;
+            if (tradeClient.containsKey(userId)) {
+                result = tradeClient.get(userId).plcaeOrder(trade);
+                tradeMapper.insert(trade);
+            }
+
+            return result;
     }
 }

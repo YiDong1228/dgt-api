@@ -1,6 +1,6 @@
 package com.bjst.dgt.model;
 
-import com.bjst.dgt.third.yifu.Trade;
+import com.bjst.dgt.third.yifu.TradeAPI;
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -17,21 +17,21 @@ import java.util.Map;
 public class TradeClient {
 
     // 记录用户登录交易系统的实例
-    private Map<String,Trade> tradeClient = new HashMap<>();
+    private Map<String,TradeAPI> tradeClient = new HashMap<>();
 
     /**
      *  簡化操作
      * @param key
      * @param trade
      */
-    public void put(String key, Trade trade) {
+    public void put(String key, TradeAPI trade) {
         tradeClient.put(key, trade);
     }
     /**
      *  簡化操作
      * @param key
      */
-    public Trade get(String key) {
+    public TradeAPI get(String key) {
         return tradeClient.get(key);
     }
     /**
@@ -42,7 +42,7 @@ public class TradeClient {
         return tradeClient.containsKey(key);
     }
 
-    public Trade remove(String key) {
+    public TradeAPI remove(String key) {
         return tradeClient.remove(key);
     }
 }
