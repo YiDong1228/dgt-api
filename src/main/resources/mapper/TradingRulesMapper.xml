@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.TradingRulesMapper">
+
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.TradingRules">
+    <id column="code" jdbcType="VARCHAR" property="code" />
+    <result column="volatility_price" jdbcType="DECIMAL" property="volatilityPrice" />
+    <result column="exchangerate" jdbcType="DECIMAL" property="exchangerate" />
+    <result column="single_transaction_costs" jdbcType="DECIMAL" property="singleTransactionCosts" />
+    <result column="single_default_margin" jdbcType="DECIMAL" property="singleDefaultMargin" />
+    <result column="default_points" jdbcType="DECIMAL" property="defaultPoints" />
+  </resultMap>
+
+  <sql id="getTradingRulesSql">
+      `code`,`volatility_price`,`exchangerate`,`single_transaction_costs`,`single_default_margin`,`default_points`
+  </sql>
+
+  <select id="getTradingRulesByCode" resultMap="BaseResultMap" parameterType="com.bjst.dgt.model.TradingRules">
+    SELECT
+    <include refid="getTradingRulesSql"/>
+    FROM `trading_rules`
+    WHERE `code` = #{code}
+  </select>
+
+</mapper>
