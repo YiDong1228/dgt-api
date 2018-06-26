@@ -9,10 +9,11 @@
     <result column="single_transaction_costs" jdbcType="DECIMAL" property="singleTransactionCosts" />
     <result column="single_default_margin" jdbcType="DECIMAL" property="singleDefaultMargin" />
     <result column="default_points" jdbcType="DECIMAL" property="defaultPoints" />
+    <result column="min_volatility" jdbcType="DECIMAL" property="minVolatility" />
   </resultMap>
 
   <sql id="getTradingRulesSql">
-      `code`,`volatility_price`,`exchangerate`,`single_transaction_costs`,`single_default_margin`,`default_points`
+      `code`,`volatility_price`,`exchangerate`,`single_transaction_costs`,`single_default_margin`,`default_points`,`min_volatility`
   </sql>
 
   <select id="getTradingRulesByCode" resultMap="BaseResultMap" parameterType="com.bjst.dgt.model.TradingRules">

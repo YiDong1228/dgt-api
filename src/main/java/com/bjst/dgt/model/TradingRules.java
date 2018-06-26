@@ -11,6 +11,9 @@ public class TradingRules {
     @Id
     private String code;
 
+    @Column(name = "min_volatility")
+    private BigDecimal minVolatility;
+
     /**
      * 波动价值
      */
@@ -39,6 +42,14 @@ public class TradingRules {
      */
     @Column(name = "default_points")
     private BigDecimal defaultPoints;
+
+    public BigDecimal getMinVolatility() {
+        return minVolatility;
+    }
+
+    public void setMinVolatility(BigDecimal minVolatility) {
+        this.minVolatility = minVolatility;
+    }
 
     /**
      * 获取产品code
