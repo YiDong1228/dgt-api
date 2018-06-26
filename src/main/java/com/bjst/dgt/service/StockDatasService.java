@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description: 第三方实时行情接口
@@ -72,43 +73,21 @@ public class StockDatasService {
 
     public StockDatas getStockDatas(StockDatas stockDatas) {
         StockDatas datas = new StockDatas();
-        /*boolean exists = redisService.exists("getStockDatas");
+        boolean exists = redisService.exists("getStockDatas");
         if (exists) {
-            List list = (List) redisService.get("getStockDatas");
-            Object[] objects = (Object[]) list.get(0);
-            datas.setId((Integer) objects[0]);
-            datas.setCode((String) objects[1]);
-            datas.setLastPrice((BigDecimal) objects[2]);
-            datas.setHigh((BigDecimal) objects[3]);
-            datas.setLow((BigDecimal) objects[4]);
-            datas.setOpen((BigDecimal) objects[5]);
-            datas.setClose((BigDecimal) objects[6]);
-            datas.setVolume((BigDecimal) objects[7]);
-            datas.setAmount((BigDecimal) objects[8]);
-            datas.setBv((String) objects[9]);
-            datas.setBp((String) objects[10]);
-            datas.setSp((String) objects[11]);
-            datas.setSv((String) objects[12]);
-            datas.setDataStatus((Byte) objects[13]);
-            datas.setChangeCount((BigDecimal) objects[14]);
-            datas.setAddTime((Date) objects[15]);
-            datas.setToken((String) objects[16]);
-            datas.setUserId((Integer) objects[17]);
-            datas.setUndulate((BigDecimal) objects[18]);
-            datas.setUpsDowns((BigDecimal) objects[19]);
-            datas.setVelocity((Integer) objects[20]);
-            return datas;
-        } else {*/
-        datas = stockDatasMapper.getStockDatas(stockDatas);
-        if (stockDatas != null) {
-            datas.setUndulate(datas.getHigh().subtract(datas.getLow()));
-            datas.setUpsDowns(datas.getLastPrice().subtract(datas.getClose()));
-            datas.setVelocity(datas.getChangeCount().setScale(2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)).intValue());
-            //redisService.lPush("getStockDatas", stockDatas);
+            datas = (StockDatas) redisService.get("getStockDatas");
             return datas;
         } else {
-            return null;
+            datas = stockDatasMapper.getStockDatas(stockDatas);
+            if (stockDatas != null) {
+                datas.setUndulate(datas.getHigh().subtract(datas.getLow()));
+                datas.setUpsDowns(datas.getLastPrice().subtract(datas.getClose()));
+                datas.setVelocity(datas.getChangeCount().setScale(2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)).intValue());
+                redisService.set("getStockDatas", stockDatas,new Long(900), TimeUnit.MILLISECONDS);
+                return datas;
+            } else {
+                return null;
+            }
         }
-        //}
     }
 }

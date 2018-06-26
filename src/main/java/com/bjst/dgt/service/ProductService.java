@@ -5,6 +5,7 @@ import com.bjst.dgt.dao.ProductMapper;
 import com.bjst.dgt.dao.UserProductOrderMapper;
 import com.bjst.dgt.model.Product;
 import com.bjst.dgt.model.UserProductOrder;
+import org.aspectj.weaver.patterns.PerObject;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description: 行情模块service层
@@ -46,37 +48,14 @@ public class ProductService {
         UserProductOrder userProductOrder = new UserProductOrder();
         userProductOrder.setUserId(products.getUserId());
         List<Product> productList = new ArrayList<Product>();
-
-        /*boolean exists = redisService.exists("getProduct");
+        boolean exists = redisService.exists("getProduct");
         if (exists) {
-            Set<Object> objSet = redisService.setMembers("getProduct");
-            for (int i = 0; i < objSet.size(); i++) {
-                Product product = new Product();
-                Object[] objects = (Object[]) objSet.iterator().next();
-                product.setCode((String) objects[0]);
-                product.setCodeShow((String) objects[1]);
-                product.setName((String) objects[2]);
-                product.setExchange((String) objects[3]);
-                product.setSystemType((Byte) objects[4]);
-                product.setLastPrice((BigDecimal) objects[5]);
-                product.setMarket((String) objects[6]);
-                product.setIsDomestic((Byte) objects[7]);
-                product.setDataStatus((Byte) objects[8]);
-                product.setChangeCount((BigDecimal) objects[9]);
-                product.setCategroyCode((String) objects[10]);
-                product.setOrder((Byte) objects[11]);
-                product.setCreateTime((Date) objects[12]);
-                product.setUpdateTime((Date) objects[13]);
-                product.setToken((String) objects[14]);
-                product.setUserId((Integer) objects[15]);
-                productList.add(product);
-            }
-        } else {*/
-        productList = productMapper.getProduct();
-        //redisService.lPush("getProduct", productList);
-
-        //redisService.add("getProduct", new HashSet(productList));
-        //}
+            productList = (List<Product>) redisService.get("getProduct");
+            return productList;
+        } else {
+            productList = productMapper.getProduct();
+            redisService.set("getProduct", productList, new Long(900), TimeUnit.MILLISECONDS);
+        }
         if (products.getOrder() == ProjectConstant.SORT_DEFAULT) {
             //默认排序
             //判断用户是否已经进行自定义排序

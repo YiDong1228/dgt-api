@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description: 规则
@@ -30,40 +31,19 @@ public class RuleService {
 
     public Rule getRuleById(Rule rule) {
         Rule ru = new Rule();
-        /*boolean exists = redisService.exists("getRuleById");
+        boolean exists = redisService.exists("getRuleById");
         if (exists) {
-            List list = (List) redisService.get("getRuleById");
-            Object[] objects = (Object[]) list.get(0);
-            ru.setCode((String) objects[0]);
-            ru.setIsDomestic((String) objects[1]);
-            ru.setMonetaryunit((String) objects[2]);
-            ru.setTradingunit((String) objects[3]);
-            ru.setExchange((String) objects[4]);
-            ru.setMinimumfluctuation((String) objects[5]);
-            ru.setFluctuatingprofitandloss((String) objects[6]);
-            ru.setPerformancebond((String) objects[7]);
-            ru.setTradingtime((String) objects[8]);
-            ru.setClearingtime((String) objects[9]);
-            ru.setComprehensivefee((String) objects[10]);
-            ru.setExchangerate((String) objects[11]);
-            ru.setStartTime((String) objects[12]);
-            ru.setEndTime((String) objects[13]);
-            ru.setStartTime1((String) objects[14]);
-            ru.setEndTime1((String) objects[15]);
-            ru.setTradeStatus((String) objects[16]);
-            ru.setShuoming1((String) objects[17]);
-            ru.setShuoming2((String) objects[18]);
-            ru.setShuoming1Moon((String) objects[19]);
+            ru = (Rule) redisService.get("getRuleById");
             return ru;
-        } else {*/
+        } else {
         ru = ruleMapper.getRuleById(rule);
         if (ru != null) {
             ru.setTradeStatus(DateUtil.isBelong(Integer.parseInt(ru.getIsDomestic()), ru.getCode(), ru.getStartTime(), ru.getEndTime()));
-            //redisService.lPush("getRuleById", ru);
+            redisService.set("getRuleById", ru,new Long(1*30), TimeUnit.HOURS);
             return ru;
         } else {
             return null;
         }
-        //}
+        }
     }
 }

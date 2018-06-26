@@ -11,14 +11,15 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description: 用户产品自定义排序
  * @Author: yd
  * @CreateDate: 2018/06/14 01:45 PM
  * @UpdateUser: yd
- * @UpdateDate: 2018/06/14 01:45 PM
- * @UpdateRemark: 用户产品自定义排序
+ * @UpdateDate: 2018年6月26日17:37:10
+ * @UpdateRemark: 添加Redis缓存
  * @Version: 1.0
  */
 @Service
@@ -72,35 +73,13 @@ public class UserProductOrderService {
 
     public List<Product> getUserProductOrderByUserId(UserProductOrder userProductOrder) {
         List<Product> productList = new ArrayList<Product>();
-        /*boolean exists = redisService.exists("getUserProductOrderByUserId");
+        boolean exists = redisService.exists("getUserProductOrderByUserId");
         if (exists) {
-            List<Object> objList = redisService.lRange("getUserProductOrderByUserId", 0, 15);
-            for (int i = 0; i < objList.size(); i++) {
-                Product product = new Product();
-                Object[] objects = (Object[]) objList.get(i);
-                product.setCode((String) objects[0]);
-                product.setCodeShow((String) objects[1]);
-                product.setName((String) objects[2]);
-                product.setExchange((String) objects[3]);
-                product.setSystemType((Byte) objects[4]);
-                product.setLastPrice((BigDecimal) objects[5]);
-                product.setMarket((String) objects[6]);
-                product.setIsDomestic((Byte) objects[7]);
-                product.setDataStatus((Byte) objects[8]);
-                product.setChangeCount((BigDecimal) objects[9]);
-                product.setCategroyCode((String) objects[10]);
-                product.setOrder((Byte) objects[11]);
-                product.setCreateTime((Date) objects[12]);
-                product.setUpdateTime((Date) objects[13]);
-                product.setToken((String) objects[14]);
-                product.setUserId((Integer) objects[15]);
-                productList.add(product);
-            }
-        } else {*/
-        productList = userProductOrderMapper.getUserProductOrderByUserId(userProductOrder);
-        //redisService.lPush("getUserProductOrderByUserId", productList);
-        //}
-
+            productList = (List<Product>) redisService.get("getUserProductOrderByUserId");
+        } else {
+            productList = userProductOrderMapper.getUserProductOrderByUserId(userProductOrder);
+            redisService.set("getUserProductOrderByUserId", productList, new Long(900), TimeUnit.MILLISECONDS);
+        }
         if (productList != null && productList.size() > 0) {
             return productList;
         } else {
