@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -31,6 +32,9 @@ public class ProductService {
     @Resource
     private UserProductOrderService userProductOrderService;
 
+    @Resource
+    private RedisService redisService;
+
 
     /**
      * 获取行情列表
@@ -40,8 +44,29 @@ public class ProductService {
      */
     public List<Product> getProduct(Product products) {
         UserProductOrder userProductOrder = new UserProductOrder();
-        List<Product> productList = productMapper.getProduct();
         userProductOrder.setUserId(products.getUserId());
+        List<Product> productList = new ArrayList<Product>();
+
+       /* boolean exists = redisService.exists("updateDataByCode");
+        if (exists) {
+            System.err.println("updateDataByCode缓存存在！");
+            List<Object> objList = redisService.lRange("updateDataByCode", 0, 15);
+            for (int i = 0; i < objList.size(); i++) {
+                Product product = new Product();
+                Object[] objects = (Object[]) objList.get(i);
+                product.setCode((String) objects[0]);
+                product.setCodeShow((String) objects[1]);
+                product.setName((String) objects[2]);
+                product.setLastPrice((BigDecimal) objects[3]);
+                product.setChangeCount((BigDecimal) objects[4]);
+                product.setExchange((String) objects[5]);
+                product.setSystemType((Byte) objects[6]);
+                productList.add(product);
+            }
+        } else {*/
+        //System.err.println("updateDataByCode缓存不存在！");
+        productList = productMapper.getProduct();
+        //}
         if (products.getOrder() == ProjectConstant.SORT_DEFAULT) {
             //默认排序
             //判断用户是否已经进行自定义排序

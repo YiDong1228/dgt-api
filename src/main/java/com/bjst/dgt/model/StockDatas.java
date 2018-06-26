@@ -425,4 +425,31 @@ public class StockDatas {
     public void setVelocity(int velocity) {
         this.velocity = velocity;
     }
+
+    @Override
+    public String toString() {
+        return "StockDatas{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", lastPrice=" + lastPrice +
+                ", high=" + high +
+                ", low=" + low +
+                ", open=" + open +
+                ", close=" + close +
+                ", volume=" + volume +
+                ", amount=" + amount +
+                ", bv='" + bv + '\'' +
+                ", bp='" + bp + '\'' +
+                ", sp='" + sp + '\'' +
+                ", sv='" + sv + '\'' +
+                ", dataStatus=" + dataStatus +
+                ", changeCount=" + changeCount +
+                ", addTime=" + addTime +
+                ", token='" + token + '\'' +
+                ", userId=" + userId +
+                ", undulate=" + undulate +
+                ", upsDowns=" + upsDowns +
+                ", velocity=" + velocity +
+                '}';
+    }
 }

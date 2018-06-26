@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,35 +27,87 @@ public class UserProductOrderService {
     @Resource
     private UserProductOrderMapper userProductOrderMapper;
 
+    @Resource
+    private RedisService redisService;
+
     public boolean getUserProducByUserId(UserProductOrder userProductOrder) {
-        int i = userProductOrderMapper.getUserProducByUserId(userProductOrder);
-        if (i == 15) {
-            return true;
+        boolean exists = redisService.exists("order");
+        int i = 0;
+        if (exists) {
+            i = (int) redisService.get("order");
+            if (i == 15) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            i = userProductOrderMapper.getUserProducByUserId(userProductOrder);
+            redisService.set("order", i);
+            if (i == 15) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
     public boolean updateUserProductOrderByUserId(UserProductOrder userProductOrder) {
-        int i = userProductOrderMapper.updateUserProductOrderByUserId(userProductOrder);
-        if (i > 0) {
-            return true;
+        boolean exists = redisService.exists("updateOrderByUserId");
+        int j = 0;
+        if (exists) {
+            j = (int) redisService.get("updateOrderByUserId");
+            if (j > 0) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            j = userProductOrderMapper.updateUserProductOrderByUserId(userProductOrder);
+            redisService.set("updateOrderByUserId", j);
+            if (j > 0) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
     public boolean insertUserProductOrderByUserId(UserProductOrder userProductOrder) {
-        int i = userProductOrderMapper.insertUserProductOrderByUserId(userProductOrder);
-        if (i > 0) {
-            return true;
+        boolean exists = redisService.exists("insertUserProductOrderByUserId");
+        int i = 0;
+        if (exists) {
+            i = (int) redisService.get("insertUserProductOrderByUserId");
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            i = userProductOrderMapper.insertUserProductOrderByUserId(userProductOrder);
+            redisService.set("insertUserProductOrderByUserId", i);
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
     public List<Product> getUserProductOrderByUserId(UserProductOrder userProductOrder) {
-        List<Product> productList = userProductOrderMapper.getUserProductOrderByUserId(userProductOrder);
+        List<Product> productList = new ArrayList<Product>();
+        /*boolean exists = redisService.exists("getUserProductOrderByUserId");
+        if (exists) {
+            List<Object> objList = redisService.lRange("getUserProductOrderByUserId", 0, 15);
+            for (int i = 0; i < objList.size(); i++) {
+                Product product = new Product();
+                Object[] objects = (Object[]) objList.get(i);
+                productList.add(product);
+            }
+        } else {*/
+        productList = userProductOrderMapper.getUserProductOrderByUserId(userProductOrder);
+        /*    redisService.lPush("getUserProductOrderByUserId", productList);
+        }*/
+
         if (productList != null && productList.size() > 0) {
             return productList;
         } else {

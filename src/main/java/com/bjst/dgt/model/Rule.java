@@ -368,4 +368,41 @@ public class Rule {
     public void setTradeStatus(String tradeStatus) {
         this.tradeStatus = tradeStatus;
     }
+
+    /**
+     * 交易窗口用于显示说明1
+     */
+    private String shuoming1;
+
+    /**
+     * 交易窗口用于显示说明2
+     */
+    private String shuoming2;
+
+    @Column(name = "shuoming1_moon")
+    private String shuoming1Moon;
+
+    public String getShuoming1Moon() {
+        return shuoming1Moon;
+    }
+
+    public void setShuoming1Moon(String shuoming1Moon) {
+        this.shuoming1Moon = shuoming1Moon;
+    }
+
+    public String getShuoming1() {
+        return shuoming1;
+    }
+
+    public void setShuoming1(String shuoming1) {
+        this.shuoming1 = shuoming1;
+    }
+
+    public String getShuoming2() {
+        return shuoming2;
+    }
+
+    public void setShuoming2(String shuoming2) {
+        this.shuoming2 = shuoming2;
+    }
 }

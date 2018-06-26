@@ -19,10 +19,13 @@
         <result column="end_time" jdbcType="VARCHAR" property="endTime" />
         <result column="start_time_1" jdbcType="VARCHAR" property="startTime1" />
         <result column="end_time_1" jdbcType="VARCHAR" property="endTime1" />
+        <result column="shuoming1" jdbcType="VARCHAR" property="shuoming1" />
+        <result column="shuoming2" jdbcType="VARCHAR" property="shuoming2" />
+        <result column="shuoming1_moon" jdbcType="VARCHAR" property="shuoming1Moon" />
     </resultMap>
 
     <sql id="getRuleSql">
-        `code`,`is_domestic`,`monetaryunit`,`tradingunit`,`exchange`,`minimumfluctuation`,`fluctuatingprofitandloss`,`performancebond`,`tradingtime`,`clearingtime`,`comprehensivefee`,`exchangerate`,`start_time`,`end_time`
+        `code`,`is_domestic`,`monetaryunit`,`tradingunit`,`exchange`,`minimumfluctuation`,`fluctuatingprofitandloss`,`performancebond`,`tradingtime`,`clearingtime`,`comprehensivefee`,`exchangerate`,`start_time`,`end_time`,`shuoming1`,`shuoming1_moon`,`shuoming2`
     </sql>
 
     <select id="getRuleById" parameterType="com.bjst.dgt.model.Rule" resultMap="BaseResultMap">
