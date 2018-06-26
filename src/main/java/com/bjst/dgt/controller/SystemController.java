@@ -47,10 +47,10 @@ public class SystemController {
 
     @GetMapping("redis")
     public String testRedis() {
-        boolean exist = redisService.exists("z101");
+        boolean exist = redisService.exists("z1021");
         System.out.println(exist);
-        redisService.add("z101", "q111");
-        exist = redisService.exists("z101");
+        redisService.add("z1021", "q111");
+        exist = redisService.exists("z1021");
         System.out.println(exist);
         return "success";
     }

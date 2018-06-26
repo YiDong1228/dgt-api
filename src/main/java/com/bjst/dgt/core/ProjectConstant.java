@@ -26,5 +26,14 @@ public final class ProjectConstant {
     public static final int TRADE_COMB_OFFSET_FLAG_OPEN = 0; // 开
     public static final int TRADE_COMB_OFFSET_FLAG_CLOSE = 1; // 平
     public static final int TRADE_LIMIT_PRICE_RANGE = 100; // 委托限价范围
+    public static final int TRADE_INNER_DISC_FLAG = 0; // 內盤表示
+    public static final int TRADE_OUTER_DISC_FLAG = 1; // 外盤表示
+    public static final String DGT_LOGIN_TOKEN_KEY = "DGT_LOGIN_TOKEN_KEY"; // TOKEN
+    public static final String DGT_LOGIN_USER_ID_KEY = "DGT_LOGIN_USER_ID_KEY"; // USERID
+    public static final String DGT_LOGIN_INNER_USER_KEY = "DGT_LOGIN_INNER_USER_KEY"; // 内盘用户 key
+    public static final String DGT_LOGIN_INNER_PASSWORD_KEY = "DGT_LOGIN_INNER_PASSWORD_KEY"; // 内盘用户 password key
+    public static final String DGT_LOGIN_OUTER_USER_KEY = "DGT_LOGIN_OUTTER_USER_KEY"; // 外盘用户 key
+    public static final String DGT_LOGIN_OUTER_PASSWORD_KEY = "DGT_LOGIN_OUTER_PASSWORD_KEY"; // 外盘用户 password key
+
 
 }
