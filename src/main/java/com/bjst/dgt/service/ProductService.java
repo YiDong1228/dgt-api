@@ -18,8 +18,8 @@ import java.util.*;
  * @Author: yd
  * @CreateDate: 2018/06/13 04:59 PM
  * @UpdateUser: yd
- * @UpdateDate: 2018/06/13 04:59 PM
- * @UpdateRemark: 行情模块service层
+ * @UpdateDate: 2018年6月26日13:35:29
+ * @UpdateRemark: 添加Redis缓存
  * @Version: 1.0
  */
 @Service
@@ -39,7 +39,7 @@ public class ProductService {
     /**
      * 获取行情列表
      *
-     * @param products ajax发送过来的数据
+     * @param products products对象
      * @return 产品列表
      */
     public List<Product> getProduct(Product products) {
@@ -47,25 +47,35 @@ public class ProductService {
         userProductOrder.setUserId(products.getUserId());
         List<Product> productList = new ArrayList<Product>();
 
-       /* boolean exists = redisService.exists("updateDataByCode");
+        /*boolean exists = redisService.exists("getProduct");
         if (exists) {
-            System.err.println("updateDataByCode缓存存在！");
-            List<Object> objList = redisService.lRange("updateDataByCode", 0, 15);
-            for (int i = 0; i < objList.size(); i++) {
+            Set<Object> objSet = redisService.setMembers("getProduct");
+            for (int i = 0; i < objSet.size(); i++) {
                 Product product = new Product();
-                Object[] objects = (Object[]) objList.get(i);
+                Object[] objects = (Object[]) objSet.iterator().next();
                 product.setCode((String) objects[0]);
                 product.setCodeShow((String) objects[1]);
                 product.setName((String) objects[2]);
-                product.setLastPrice((BigDecimal) objects[3]);
-                product.setChangeCount((BigDecimal) objects[4]);
-                product.setExchange((String) objects[5]);
-                product.setSystemType((Byte) objects[6]);
+                product.setExchange((String) objects[3]);
+                product.setSystemType((Byte) objects[4]);
+                product.setLastPrice((BigDecimal) objects[5]);
+                product.setMarket((String) objects[6]);
+                product.setIsDomestic((Byte) objects[7]);
+                product.setDataStatus((Byte) objects[8]);
+                product.setChangeCount((BigDecimal) objects[9]);
+                product.setCategroyCode((String) objects[10]);
+                product.setOrder((Byte) objects[11]);
+                product.setCreateTime((Date) objects[12]);
+                product.setUpdateTime((Date) objects[13]);
+                product.setToken((String) objects[14]);
+                product.setUserId((Integer) objects[15]);
                 productList.add(product);
             }
         } else {*/
-        //System.err.println("updateDataByCode缓存不存在！");
         productList = productMapper.getProduct();
+        //redisService.lPush("getProduct", productList);
+
+        //redisService.add("getProduct", new HashSet(productList));
         //}
         if (products.getOrder() == ProjectConstant.SORT_DEFAULT) {
             //默认排序
