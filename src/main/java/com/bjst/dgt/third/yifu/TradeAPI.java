@@ -1034,7 +1034,7 @@ public class TradeAPI {
 	public int plcaeOrder(Trade trade) {
 		CThostFtdcInputOrderField.ByReference  pInputOrder = new CThostFtdcInputOrderField.ByReference();
 		setBytesData(pInputOrder.BrokerID, brokerID);//经济公司代码
-		setBytesData(pInputOrder.InstrumentID, instrumentID);//合约代码 InstrumentID
+		setBytesData(pInputOrder.InstrumentID, trade.getInstrumentId());//合约代码 InstrumentID
 		setBytesData(pInputOrder.OrderRef, Integer.toString(++orderRef));//报单引用
 		setBytesData(pInputOrder.UserID, name);////用户代码
 		setBytesData( pInputOrder.InvestorID, name);//投资者代码

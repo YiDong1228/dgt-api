@@ -20,7 +20,7 @@ public class QuotationSchedule {
     /**
      * 每秒一次，周一到周六
      */
-    @Scheduled(cron = "1/1 * * * * 1-7")
+    @Scheduled(cron = "1/1 * * * * 2-7")
     public void quotationTimer() {
         //System.out.println("here" + new Random().nextInt(1000));
         stockDatasService.getProdects();
