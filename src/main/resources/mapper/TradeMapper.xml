@@ -6,32 +6,65 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="aggregate" jdbcType="REAL" property="aggregate" />
-    <result column="break_even_num" jdbcType="SMALLINT" property="breakEvenNum" />
+    <result column="aggregate" jdbcType="DOUBLE" property="aggregate" />
     <result column="comb_offset_flag" jdbcType="TINYINT" property="combOffsetFlag" />
-    <result column="commission" jdbcType="REAL" property="commission" />
-    <result column="deposit" jdbcType="REAL" property="deposit" />
+    <result column="commission" jdbcType="DOUBLE" property="commission" />
+    <result column="deposit" jdbcType="DOUBLE" property="deposit" />
     <result column="direction" jdbcType="TINYINT" property="direction" />
     <result column="inner_outer_disc" jdbcType="TINYINT" property="innerOuterDisc" />
     <result column="instrument_id" jdbcType="VARCHAR" property="instrumentId" />
     <result column="is_move_break_even" jdbcType="TINYINT" property="isMoveBreakEven" />
     <result column="is_profit" jdbcType="TINYINT" property="isProfit" />
     <result column="is_stop" jdbcType="TINYINT" property="isStop" />
-    <result column="limit_price" jdbcType="REAL" property="limitPrice" />
-    <result column="move_num" jdbcType="INTEGER" property="moveNum" />
+    <result column="limit_price" jdbcType="DOUBLE" property="limitPrice" />
     <result column="profit_num" jdbcType="INTEGER" property="profitNum" />
-    <result column="profit_price" jdbcType="REAL" property="profitPrice" />
+    <result column="profit_price" jdbcType="DOUBLE" property="profitPrice" />
+    <result column="profit_spread_price" jdbcType="DOUBLE" property="profitSpreadPrice" />
     <result column="stop_num" jdbcType="INTEGER" property="stopNum" />
-    <result column="stop_price" jdbcType="REAL" property="stopPrice" />
+    <result column="stop_spread_price" jdbcType="DOUBLE" property="stopSpreadPrice" />
+    <result column="stop_price" jdbcType="DOUBLE" property="stopPrice" />
     <result column="volume_total_original" jdbcType="INTEGER" property="volumeTotalOriginal" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="order_sys_id" jdbcType="CHAR" property="orderSysId" />
+    <result column="order_sys_id" jdbcType="VARCHAR" property="orderSysId" />
     <result column="trade_status" jdbcType="TINYINT" property="tradeStatus" />
-    <result column="transaction_price" jdbcType="REAL" property="transactionPrice" />
+    <result column="transaction_price" jdbcType="DOUBLE" property="transactionPrice" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="exchange_id" jdbcType="VARCHAR" property="exchangeId" />
     <result column="buy_remaining_volume" jdbcType="INTEGER" property="buyRemainingVolume" />
     <result column="sell_remaining_volume" jdbcType="INTEGER" property="sellRemainingVolume" />
+    <result column="break_even_price" jdbcType="DOUBLE" property="breakEvenPrice" />
+    <result column="break_even_num" jdbcType="SMALLINT" property="breakEvenNum" />
+    <result column="break_even_spread_price" jdbcType="DOUBLE" property="breakEvenSpreadPrice" />
+    <result column="move_price" jdbcType="DOUBLE" property="movePrice" />
+    <result column="move_spread_price" jdbcType="DOUBLE" property="moveSpreadPrice" />
+    <result column="move_num" jdbcType="INTEGER" property="moveNum" />
   </resultMap>
+
+  <sql id="baseSql">
+    id,aggregate,break_even_num,
+    comb_offset_flag,commission,
+    deposit,direction,
+    inner_outer_disc,stop_spread_price,
+    instrument_id,break_even_price,
+    is_move_break_even,
+    is_profit,is_stop,profit_spread_price,
+    limit_price,move_num,move_price,
+    move_spread_price,break_even_spread_price,
+    profit_num,profit_price,
+    stop_num,stop_price,
+    volume_total_original,
+    create_time,update_time,
+    order_sys_id,trade_status,
+    transaction_price,
+    user_id,exchange_id,
+    buy_remaining_volume,
+    sell_remaining_volume
+  </sql>
+
+  <!--&amp;amp;amp;amp;amp;lt;select id="getAppConfig2" parameterType="java.lang.String" resultType="com.bjst.dgt.model.AppConfig"&amp;amp;amp;amp;amp;gt;-->
+  <select id="getTradeByExchangeIdAndOrderSysId" resultMap="BaseResultMap">
+    select <include refid="baseSql" /> from trade
+    where exchange_id = #{exchangeId} and order_sys_id = #{orderSysId,jdbcType=VARCHAR}
+  </select>
 </mapper>

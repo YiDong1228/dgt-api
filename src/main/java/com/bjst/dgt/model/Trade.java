@@ -14,13 +14,7 @@ public class Trade {
     /**
      * 总计
      */
-    private Float aggregate;
-
-    /**
-     * 保本点数
-     */
-    @Column(name = "break_even_num")
-    private Short breakEvenNum;
+    private Double aggregate;
 
     /**
      * 组合开平标志（0:开仓、1:平仓）
@@ -31,12 +25,12 @@ public class Trade {
     /**
      * 手续费
      */
-    private Float commission;
+    private Double commission;
 
     /**
      * 保证金
      */
-    private Float deposit;
+    private Double deposit;
 
     /**
      * 买卖方向（0:买、1:卖）
@@ -77,13 +71,7 @@ public class Trade {
      * 委托价格
      */
     @Column(name = "limit_price")
-    private Float limitPrice;
-
-    /**
-     * 移动点数
-     */
-    @Column(name = "move_num")
-    private Integer moveNum;
+    private Double limitPrice;
 
     /**
      * 止盈点数
@@ -95,7 +83,13 @@ public class Trade {
      * 止盈价格
      */
     @Column(name = "profit_price")
-    private Float profitPrice;
+    private Double profitPrice;
+
+    /**
+     * 止盈差价
+     */
+    @Column(name = "profit_spread_price")
+    private Double profitSpreadPrice;
 
     /**
      * 止损点数
@@ -104,10 +98,16 @@ public class Trade {
     private Integer stopNum;
 
     /**
+     * 止损差价
+     */
+    @Column(name = "stop_spread_price")
+    private Double stopSpreadPrice;
+
+    /**
      * 止损价
      */
     @Column(name = "stop_price")
-    private Float stopPrice;
+    private Double stopPrice;
 
     /**
      * 下单数量
@@ -143,7 +143,7 @@ public class Trade {
      * 实际成交价格
      */
     @Column(name = "transaction_price")
-    private Float transactionPrice;
+    private Double transactionPrice;
 
     /**
      * 用户id
@@ -170,6 +170,42 @@ public class Trade {
     private Integer sellRemainingVolume;
 
     /**
+     * 保本价
+     */
+    @Column(name = "break_even_price")
+    private Double breakEvenPrice;
+
+    /**
+     * 保本点数
+     */
+    @Column(name = "break_even_num")
+    private Short breakEvenNum;
+
+    /**
+     * 保本差价
+     */
+    @Column(name = "break_even_spread_price")
+    private Double breakEvenSpreadPrice;
+
+    /**
+     * 移动价格
+     */
+    @Column(name = "move_price")
+    private Double movePrice;
+
+    /**
+     * 移动差价
+     */
+    @Column(name = "move_spread_price")
+    private Double moveSpreadPrice;
+
+    /**
+     * 移动点数
+     */
+    @Column(name = "move_num")
+    private Integer moveNum;
+
+    /**
      * 获取交易id
      *
      * @return id - 交易id
@@ -192,7 +228,7 @@ public class Trade {
      *
      * @return aggregate - 总计
      */
-    public Float getAggregate() {
+    public Double getAggregate() {
         return aggregate;
     }
 
@@ -201,26 +237,8 @@ public class Trade {
      *
      * @param aggregate 总计
      */
-    public void setAggregate(Float aggregate) {
+    public void setAggregate(Double aggregate) {
         this.aggregate = aggregate;
-    }
-
-    /**
-     * 获取保本点数
-     *
-     * @return break_even_num - 保本点数
-     */
-    public Short getBreakEvenNum() {
-        return breakEvenNum;
-    }
-
-    /**
-     * 设置保本点数
-     *
-     * @param breakEvenNum 保本点数
-     */
-    public void setBreakEvenNum(Short breakEvenNum) {
-        this.breakEvenNum = breakEvenNum;
     }
 
     /**
@@ -246,7 +264,7 @@ public class Trade {
      *
      * @return commission - 手续费
      */
-    public Float getCommission() {
+    public Double getCommission() {
         return commission;
     }
 
@@ -255,7 +273,7 @@ public class Trade {
      *
      * @param commission 手续费
      */
-    public void setCommission(Float commission) {
+    public void setCommission(Double commission) {
         this.commission = commission;
     }
 
@@ -264,7 +282,7 @@ public class Trade {
      *
      * @return deposit - 保证金
      */
-    public Float getDeposit() {
+    public Double getDeposit() {
         return deposit;
     }
 
@@ -273,7 +291,7 @@ public class Trade {
      *
      * @param deposit 保证金
      */
-    public void setDeposit(Float deposit) {
+    public void setDeposit(Double deposit) {
         this.deposit = deposit;
     }
 
@@ -390,7 +408,7 @@ public class Trade {
      *
      * @return limit_price - 委托价格
      */
-    public Float getLimitPrice() {
+    public Double getLimitPrice() {
         return limitPrice;
     }
 
@@ -399,26 +417,8 @@ public class Trade {
      *
      * @param limitPrice 委托价格
      */
-    public void setLimitPrice(Float limitPrice) {
+    public void setLimitPrice(Double limitPrice) {
         this.limitPrice = limitPrice;
-    }
-
-    /**
-     * 获取移动点数
-     *
-     * @return move_num - 移动点数
-     */
-    public Integer getMoveNum() {
-        return moveNum;
-    }
-
-    /**
-     * 设置移动点数
-     *
-     * @param moveNum 移动点数
-     */
-    public void setMoveNum(Integer moveNum) {
-        this.moveNum = moveNum;
     }
 
     /**
@@ -444,7 +444,7 @@ public class Trade {
      *
      * @return profit_price - 止盈价格
      */
-    public Float getProfitPrice() {
+    public Double getProfitPrice() {
         return profitPrice;
     }
 
@@ -453,8 +453,26 @@ public class Trade {
      *
      * @param profitPrice 止盈价格
      */
-    public void setProfitPrice(Float profitPrice) {
+    public void setProfitPrice(Double profitPrice) {
         this.profitPrice = profitPrice;
+    }
+
+    /**
+     * 获取止盈差价
+     *
+     * @return profit_spread_price - 止盈差价
+     */
+    public Double getProfitSpreadPrice() {
+        return profitSpreadPrice;
+    }
+
+    /**
+     * 设置止盈差价
+     *
+     * @param profitSpreadPrice 止盈差价
+     */
+    public void setProfitSpreadPrice(Double profitSpreadPrice) {
+        this.profitSpreadPrice = profitSpreadPrice;
     }
 
     /**
@@ -476,11 +494,29 @@ public class Trade {
     }
 
     /**
+     * 获取止损差价
+     *
+     * @return stop_spread_price - 止损差价
+     */
+    public Double getStopSpreadPrice() {
+        return stopSpreadPrice;
+    }
+
+    /**
+     * 设置止损差价
+     *
+     * @param stopSpreadPrice 止损差价
+     */
+    public void setStopSpreadPrice(Double stopSpreadPrice) {
+        this.stopSpreadPrice = stopSpreadPrice;
+    }
+
+    /**
      * 获取止损价
      *
      * @return stop_price - 止损价
      */
-    public Float getStopPrice() {
+    public Double getStopPrice() {
         return stopPrice;
     }
 
@@ -489,7 +525,7 @@ public class Trade {
      *
      * @param stopPrice 止损价
      */
-    public void setStopPrice(Float stopPrice) {
+    public void setStopPrice(Double stopPrice) {
         this.stopPrice = stopPrice;
     }
 
@@ -588,7 +624,7 @@ public class Trade {
      *
      * @return transaction_price - 实际成交价格
      */
-    public Float getTransactionPrice() {
+    public Double getTransactionPrice() {
         return transactionPrice;
     }
 
@@ -597,7 +633,7 @@ public class Trade {
      *
      * @param transactionPrice 实际成交价格
      */
-    public void setTransactionPrice(Float transactionPrice) {
+    public void setTransactionPrice(Double transactionPrice) {
         this.transactionPrice = transactionPrice;
     }
 
@@ -671,5 +707,113 @@ public class Trade {
      */
     public void setSellRemainingVolume(Integer sellRemainingVolume) {
         this.sellRemainingVolume = sellRemainingVolume;
+    }
+
+    /**
+     * 获取保本价
+     *
+     * @return break_even_price - 保本价
+     */
+    public Double getBreakEvenPrice() {
+        return breakEvenPrice;
+    }
+
+    /**
+     * 设置保本价
+     *
+     * @param breakEvenPrice 保本价
+     */
+    public void setBreakEvenPrice(Double breakEvenPrice) {
+        this.breakEvenPrice = breakEvenPrice;
+    }
+
+    /**
+     * 获取保本点数
+     *
+     * @return break_even_num - 保本点数
+     */
+    public Short getBreakEvenNum() {
+        return breakEvenNum;
+    }
+
+    /**
+     * 设置保本点数
+     *
+     * @param breakEvenNum 保本点数
+     */
+    public void setBreakEvenNum(Short breakEvenNum) {
+        this.breakEvenNum = breakEvenNum;
+    }
+
+    /**
+     * 获取保本差价
+     *
+     * @return break_even_spread_price - 保本差价
+     */
+    public Double getBreakEvenSpreadPrice() {
+        return breakEvenSpreadPrice;
+    }
+
+    /**
+     * 设置保本差价
+     *
+     * @param breakEvenSpreadPrice 保本差价
+     */
+    public void setBreakEvenSpreadPrice(Double breakEvenSpreadPrice) {
+        this.breakEvenSpreadPrice = breakEvenSpreadPrice;
+    }
+
+    /**
+     * 获取移动价格
+     *
+     * @return move_price - 移动价格
+     */
+    public Double getMovePrice() {
+        return movePrice;
+    }
+
+    /**
+     * 设置移动价格
+     *
+     * @param movePrice 移动价格
+     */
+    public void setMovePrice(Double movePrice) {
+        this.movePrice = movePrice;
+    }
+
+    /**
+     * 获取移动差价
+     *
+     * @return move_spread_price - 移动差价
+     */
+    public Double getMoveSpreadPrice() {
+        return moveSpreadPrice;
+    }
+
+    /**
+     * 设置移动差价
+     *
+     * @param moveSpreadPrice 移动差价
+     */
+    public void setMoveSpreadPrice(Double moveSpreadPrice) {
+        this.moveSpreadPrice = moveSpreadPrice;
+    }
+
+    /**
+     * 获取移动点数
+     *
+     * @return move_num - 移动点数
+     */
+    public Integer getMoveNum() {
+        return moveNum;
+    }
+
+    /**
+     * 设置移动点数
+     *
+     * @param moveNum 移动点数
+     */
+    public void setMoveNum(Integer moveNum) {
+        this.moveNum = moveNum;
     }
 }

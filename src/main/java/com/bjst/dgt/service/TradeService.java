@@ -35,19 +35,16 @@ public class TradeService {
     private TradeClient tradeClient;
     @Resource
     private TradeMapper tradeMapper;
+    @Resource
+    private RedisService redisService;
 
     /**
      *  内盘登录
      * @param userId 用户id
      * @param pwd 用户密码
      */
-    @Async
     public void tradeInnerLogin(String userId, String pwd) {
-        if (!tradeClient.containsKey(userId)) {
-            TradeAPI tradeAPI = new TradeAPI(userId, pwd, innerDisc, innerUrl);
-            tradeAPI.setTradeClientWeakReference(new WeakReference<TradeClient>(tradeClient));
-            tradeAPI.login();
-        }
+        tradeLogin(userId, pwd, false);
     }
 
     /**
@@ -55,13 +52,26 @@ public class TradeService {
      * @param userId 用户id
      * @param pwd 用户密码
      */
-    @Async
     public void tradeOuterLogin(String userId, String pwd) {
+        tradeLogin(userId, pwd, true);
+    }
+
+    @Async
+    public void tradeLogin(String userId, String pwd, boolean isOuter) {
         if (!tradeClient.getTradeClient().containsKey(userId)) {
-            TradeAPI tradeAPI = new TradeAPI(userId, pwd, outerDisc, outerUrl);
+            TradeAPI tradeAPI = null;
+            if (isOuter) {
+                tradeAPI = new TradeAPI(userId, pwd, outerDisc, outerUrl);
+
+            } else {
+                tradeAPI = new TradeAPI(userId, pwd, innerDisc, innerUrl);
+            }
             tradeAPI.setTradeClientWeakReference(new WeakReference<TradeClient>(tradeClient));
+            tradeAPI.setRedisService(redisService);
+            tradeAPI.setTradeMapper(tradeMapper);
             tradeAPI.login();
         }
+
     }
 
     /**
@@ -81,12 +91,12 @@ public class TradeService {
      * @return
      */
     public int placeOrder(String userId,Trade trade) {
+        //tradeOuterLogin("testwai001","123456");
             int result = -1;
             if (tradeClient.containsKey(userId)) {
-                result = tradeClient.get(userId).plcaeOrder(trade);
                 tradeMapper.insert(trade);
+                result = tradeClient.get(userId).plcaeOrder(trade);
             }
-
             return result;
     }
 }
