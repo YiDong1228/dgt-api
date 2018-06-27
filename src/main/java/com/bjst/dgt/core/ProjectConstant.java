@@ -34,6 +34,8 @@ public final class ProjectConstant {
     public static final String DGT_LOGIN_INNER_PASSWORD_KEY = "DGT_LOGIN_INNER_PASSWORD_KEY"; // 内盘用户 password key
     public static final String DGT_LOGIN_OUTER_USER_KEY = "DGT_LOGIN_OUTTER_USER_KEY"; // 外盘用户 key
     public static final String DGT_LOGIN_OUTER_PASSWORD_KEY = "DGT_LOGIN_OUTER_PASSWORD_KEY"; // 外盘用户 password key
+    public static final String DGT_TRADE_INVESTOR_POSITION_KEY = "DGT_TRADE_INVESTOR_POSITION_KEY"; // 持仓key redis
+    public static final String DGT_TRADE_INVESTOR_POSITION_DETAIL_KEY = "DGT_TRADE_INVESTOR_POSITION_DETAIL_KEY"; // 持仓明细key redis
 
 
 }

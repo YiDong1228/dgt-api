@@ -76,7 +76,6 @@ public class UserProductOrderService {
         boolean exists = redisService.exists("getUserProductOrder");
         if (exists) {
             productList = (List<Product>) redisService.get("getUserProductOrder");
-            productList.get(0).setUserId(1);
         } else {
             productList = userProductOrderMapper.getUserProductOrderByUserId(userProductOrder);
             redisService.set("getUserProductOrder", productList, new Long(800), TimeUnit.MILLISECONDS);

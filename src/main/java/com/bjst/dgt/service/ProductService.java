@@ -51,7 +51,6 @@ public class ProductService {
         boolean exists = redisService.exists("getProduct");
         if (exists) {
             productList = (List<Product>) redisService.get("getProduct");
-            return productList;
         } else {
             productList = productMapper.getProduct();
             redisService.set("getProduct", productList, new Long(100), TimeUnit.MILLISECONDS);

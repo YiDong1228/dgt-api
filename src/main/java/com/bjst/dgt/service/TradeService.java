@@ -3,6 +3,8 @@ package com.bjst.dgt.service;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultCode;
 import com.bjst.dgt.core.ResultGenerator;
+import com.bjst.dgt.dao.InvestorPositionDetailMapper;
+import com.bjst.dgt.dao.InvestorPositionMapper;
 import com.bjst.dgt.dao.TradeMapper;
 import com.bjst.dgt.model.Trade;
 import com.bjst.dgt.model.TradeClient;
@@ -40,6 +42,10 @@ public class TradeService {
     private TradeMapper tradeMapper;
     @Resource
     private RedisService redisService;
+    @Resource
+    private InvestorPositionMapper investorPositionMapper;
+    @Resource
+    private InvestorPositionDetailMapper investorPositionDetailMapper;
 
     /**
      *  内盘登录
@@ -72,6 +78,8 @@ public class TradeService {
             tradeAPI.setTradeClientWeakReference(new WeakReference<TradeClient>(tradeClient));
             tradeAPI.setRedisService(redisService);
             tradeAPI.setTradeMapper(tradeMapper);
+            tradeAPI.setInvestorPositionMapper(investorPositionMapper);
+            tradeAPI.setInvestorPositionDetailMapper(investorPositionDetailMapper);
             tradeAPI.login();
         }
 
