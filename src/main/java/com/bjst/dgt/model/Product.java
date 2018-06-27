@@ -1,10 +1,11 @@
 package com.bjst.dgt.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
 
-public class Product {
+public class Product{
     /**
      * 产品CODE
      */
