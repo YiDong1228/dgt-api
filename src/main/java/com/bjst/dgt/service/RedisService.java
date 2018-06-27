@@ -125,6 +125,16 @@ public class RedisService {
         HashOperations<String, Object, Object>  hash = redisTemplate.opsForHash();
         return hash.get(key,hashKey);
     }
+    /**
+     * 删除指定哈希数据
+     * @param key
+     * @param hashKey
+     * @return
+     */
+    public void hmDel(String key, Object hashKey){
+        HashOperations<String, Object, Object>  hash = redisTemplate.opsForHash();
+        hash.delete(key, hashKey);
+    }
 
     /**
      * 列表添加

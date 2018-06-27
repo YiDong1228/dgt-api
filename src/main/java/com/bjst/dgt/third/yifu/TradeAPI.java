@@ -2,11 +2,14 @@ package com.bjst.dgt.third.yifu;
 
 
 import com.bjst.dgt.core.ProjectConstant;
+import com.bjst.dgt.dao.TradeMapper;
 import com.bjst.dgt.model.Trade;
 import com.bjst.dgt.model.TradeClient;
+import com.bjst.dgt.service.RedisService;
 import com.bjst.dgt.third.yifu.JNA.TradeApi;
 import com.bjst.dgt.third.yifu.struct.*;
 import com.sun.jna.Native;
+import lombok.Setter;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -17,6 +20,7 @@ import java.util.Random;
 
 
 public class TradeAPI {
+	private String localUserId; // 本地系统标识，主要用redis存储key
 	private  String name;//userID
 	private  String pwd; // user password
 	private  String brokerID;//经纪公司代码
@@ -34,12 +38,16 @@ public class TradeAPI {
 
 	private String tcpUrl; // tcp 连接url
 
+	@Setter
 	private WeakReference<TradeClient> tradeClientWeakReference;
-	
-	//static String filePath = TradeApi.class.getResource("").getPath().replaceFirst("/","").replaceAll("%20"," ")+"EFThostTradeApi_C.dll";
-	//final static TradeApi instance = (TradeApi) Native.loadLibrary(filePath, TradeApi.class);
+
 	private TradeApi instance;
 	private long handle;
+
+	@Setter
+	private TradeMapper tradeMapper;
+	@Setter
+	private RedisService redisService;
 
 	public TradeAPI(String userId, String password, String brokerID, String tcpUrl) {
 		this.name = userId;
@@ -638,6 +646,13 @@ public class TradeAPI {
 			System.out.println("$$$报单编号-->返回 : " + ByteToString(pOrder.OrderSysID));
 			System.out.println("$$$报单编号-->交易所代码 : " + ByteToString(pOrder.ExchangeID));
 			System.out.println("$$$报单编号-->请求编号 : " + pOrder.RequestID);
+			if (requestIDManager.containsKey(String.valueOf(pOrder.RequestID))) {
+				Trade trade = (Trade)requestIDManager.get(String.valueOf(pOrder.RequestID));
+				trade.setExchangeId(ByteToString(pOrder.ExchangeID));
+				trade.setOrderSysId(ByteToString(pOrder.OrderSysID));
+				tradeMapper.updateByPrimaryKey(trade);
+				requestIDManager.remove(String.valueOf(pOrder.RequestID));
+			}
 		};
 	};
 
@@ -645,6 +660,34 @@ public class TradeAPI {
 		///成交通知
 		public void OnRtnTrade(CThostFtdcTradeField.ByReference pTrade) {
 			System.out.println("$$$成交通知-->合约编号 : " + ByteToString(pTrade.InstrumentID) + "， 数量:" + pTrade.Volume + "， 报单编号 ： " + ByteToString(pTrade.OrderSysID));
+
+//			Trade trade = null;
+//			// key localuserId hashkey exchangeid+OrderSysID
+//			String hashKey = ByteToString(pTrade.ExchangeID)+ByteToString(pTrade.OrderSysID);
+//			if (pTrade.OffsetFlag == ProjectConstant.TRADE_COMB_OFFSET_FLAG_CLOSE){
+//				trade = (Trade) redisService.hmGet(localUserId,hashKey);
+//				if (trade != null) {
+//					 // 是否全部平仓，如果是移除，部分平仓显示剩余量
+//					int lastCount = trade.getVolumeTotalOriginal() - pTrade.Volume;
+//					// 已经全部平仓，移除
+//					if (lastCount == 0) {
+//						redisService.hmDel(localUserId, hashKey);
+//					} else {
+//						// 部分
+//						trade.setVolumeTotalOriginal(lastCount);
+//						redisService.hmSet(localUserId, hashKey, trade);
+//					}
+//				}
+//
+//			} else {
+//				trade = tradeMapper.getTradeByExchangeIdAndOrderSysId(ByteToString(pTrade.ExchangeID), ByteToString(pTrade.OrderSysID));
+//				trade.setTransactionPrice(pTrade.Price);
+//				trade.setVolumeTotalOriginal(pTrade.Volume);
+//				redisService.hmSet(localUserId, hashKey, trade);
+//
+//			}
+			// 查询投资者持仓
+			queryPos();
 		};
 	};
 
@@ -1072,8 +1115,8 @@ public class TradeAPI {
 		pInputOrder.LimitPrice=trade.getLimitPrice() + ProjectConstant.TRADE_LIMIT_PRICE_RANGE;//价格范围
 		pInputOrder.VolumeTotalOriginal= trade.getVolumeTotalOriginal(); //数量
 		pInputOrder.StopPrice= trade.getStopPrice();//止损价
-
-		return instance.ReqOrderInsert(handle,pInputOrder, requestID);
+		requestIDManager.put(String.valueOf(trade.getId()), trade);
+		return instance.ReqOrderInsert(handle,pInputOrder, trade.getId());
 	}
 
 	//查询资金账号
@@ -1100,7 +1143,7 @@ public class TradeAPI {
 		CThostFtdcQryInvestorPositionDetailField.ByReference pQryInvestorPositionDetail = new CThostFtdcQryInvestorPositionDetailField.ByReference ();
 		pQryInvestorPositionDetail.BrokerID = brokerID.getBytes();//经纪公司代码
 		pQryInvestorPositionDetail.InvestorID = name.getBytes();///合约代码
-		pQryInvestorPositionDetail.InstrumentID = instrumentID.getBytes();///合约代码
+		//pQryInvestorPositionDetail.InstrumentID = instrumentID.getBytes();///合约代码
 		//pQryInvestorPositionDetail.ExchangeID = ExchangeID.getBytes();//交易所代码
 		//pQryInvestorPositionDetail.InvestUnitID = InvestUnitID.getBytes();//投资单元代码
 		int result =  instance.ReqQryInvestorPositionDetail(handle, pQryInvestorPositionDetail, requestID);
@@ -1156,7 +1199,7 @@ public class TradeAPI {
 		CThostFtdcQryInvestorPositionField.ByReference pQryInvestorPosition = new CThostFtdcQryInvestorPositionField.ByReference();
 		pQryInvestorPosition.BrokerID = brokerID.getBytes();//经纪公司代码
 		pQryInvestorPosition.InvestorID = name.getBytes();///投资者代码
-		pQryInvestorPosition.InstrumentID = instrumentID.getBytes();///合约代码
+		//pQryInvestorPosition.InstrumentID = instrumentID.getBytes();///合约代码
 		//pQryInvestorPosition.ExchangeID = ExchangeID.getBytes();///交易所代码
 		//pQryInvestorPosition.InvestUnitID = InvestUnitID.getBytes();///交易所代码
 
@@ -1188,10 +1231,6 @@ public class TradeAPI {
 		System.out.println("###请求查询成交 : " + result);
 	}
 
-	public void setTradeClientWeakReference(WeakReference<TradeClient> tradeClientWeakReference) {
-		this.tradeClientWeakReference = tradeClientWeakReference;
-	}
-
 	public static int bytesToInt(byte[] src, int offset) {
 		int value;
 		value = (int) ((src[offset] & 0xFF)
@@ -1200,6 +1239,8 @@ public class TradeAPI {
 				| ((src[offset+3] & 0xFF)<<24));
 		return value;
 	}
+
+
 }
 
 
