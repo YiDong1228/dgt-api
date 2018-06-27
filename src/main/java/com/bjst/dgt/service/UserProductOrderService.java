@@ -73,12 +73,13 @@ public class UserProductOrderService {
 
     public List<Product> getUserProductOrderByUserId(UserProductOrder userProductOrder) {
         List<Product> productList = new ArrayList<Product>();
-        boolean exists = redisService.exists("getUserProductOrderByUserId");
+        boolean exists = redisService.exists("getUserProductOrder");
         if (exists) {
-            productList = (List<Product>) redisService.get("getUserProductOrderByUserId");
+            productList = (List<Product>) redisService.get("getUserProductOrder");
+            productList.get(0).setUserId(1);
         } else {
             productList = userProductOrderMapper.getUserProductOrderByUserId(userProductOrder);
-            redisService.set("getUserProductOrderByUserId", productList, new Long(900), TimeUnit.MILLISECONDS);
+            redisService.set("getUserProductOrder", productList, new Long(800), TimeUnit.MILLISECONDS);
         }
         if (productList != null && productList.size() > 0) {
             return productList;

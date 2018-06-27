@@ -49,13 +49,12 @@ public class ProductService {
         userProductOrder.setUserId(products.getUserId());
         List<Product> productList = new ArrayList<Product>();
         boolean exists = redisService.exists("getProduct");
-        System.err.println(exists);
         if (exists) {
             productList = (List<Product>) redisService.get("getProduct");
             return productList;
         } else {
             productList = productMapper.getProduct();
-            redisService.set("getProduct", productList, new Long(700), TimeUnit.MILLISECONDS);
+            redisService.set("getProduct", productList, new Long(100), TimeUnit.MILLISECONDS);
         }
         if (products.getOrder() == ProjectConstant.SORT_DEFAULT) {
             //默认排序
