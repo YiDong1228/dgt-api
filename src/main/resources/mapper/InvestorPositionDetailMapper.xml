@@ -8,7 +8,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="instrument_id" jdbcType="VARCHAR" property="instrumentId" />
     <result column="direction" jdbcType="TINYINT" property="direction" />
-    <result column="open_date" jdbcType="DATE" property="openDate" />
+    <result column="open_date" jdbcType="VARCHAR" property="openDate" />
     <result column="trade_id" jdbcType="VARCHAR" property="tradeId" />
     <result column="volume" jdbcType="INTEGER" property="volume" />
     <result column="open_price" jdbcType="DOUBLE" property="openPrice" />

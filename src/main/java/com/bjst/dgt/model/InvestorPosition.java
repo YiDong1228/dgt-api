@@ -1,10 +1,11 @@
 package com.bjst.dgt.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Table(name = "investor_position")
-public class InvestorPosition {
+public class InvestorPosition implements Serializable{
     /**
      * 标识
      */

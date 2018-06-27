@@ -5,8 +5,11 @@ import com.bjst.dgt.core.ProjectConstant;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultCode;
 import com.bjst.dgt.core.ResultGenerator;
+import com.bjst.dgt.dao.InvestorPositionDetailMapper;
+import com.bjst.dgt.dao.InvestorPositionMapper;
 import com.bjst.dgt.dao.TradeMapper;
 import com.bjst.dgt.model.InvestorPosition;
+import com.bjst.dgt.model.InvestorPositionDetail;
 import com.bjst.dgt.model.Trade;
 import com.bjst.dgt.model.TradeClient;
 import com.bjst.dgt.service.RedisService;
@@ -24,7 +27,6 @@ import java.util.Random;
 
 
 public class TradeAPI {
-	private String localUserId; // 本地系统标识，主要用redis存储key
 	private  String name;//userID
 	private  String pwd; // user password
 	private  String brokerID;//经纪公司代码
@@ -54,6 +56,10 @@ public class TradeAPI {
 	private TradeMapper tradeMapper;
 	@Setter
 	private RedisService redisService;
+	@Setter
+	private InvestorPositionMapper investorPositionMapper;
+	@Setter
+	private InvestorPositionDetailMapper investorPositionDetailMapper;
 
 	public TradeAPI(String userId, String password, String brokerID, String tcpUrl) {
 		this.name = userId;
@@ -397,9 +403,36 @@ public class TradeAPI {
 			System.out.println("今日持仓 ： " + pInvestorPosition.Position);
 			System.out.println("InstrumentID : "+ ByteToString(pInvestorPosition.InstrumentID));
 			System.out.println("HedgeFlag 组合投机套保标志 : "+ pInvestorPosition.HedgeFlag);
-			System.out.println();
 			InvestorPosition investorPosition = new InvestorPosition();
-		};
+			investorPosition.setInstrumentId(ByteToString(pInvestorPosition.InstrumentID));
+			investorPosition.setPosiDirection(pInvestorPosition.PosiDirection);
+			investorPosition.setHedgeFlag(pInvestorPosition.HedgeFlag);
+			investorPosition.setPositionDate(pInvestorPosition.PositionDate);
+			investorPosition.setYdPosition(pInvestorPosition.YdPosition);
+			investorPosition.setPosition(pInvestorPosition.Position);
+			investorPosition.setLongFrozen(pInvestorPosition.LongFrozen);
+			investorPosition.setShortFrozen(pInvestorPosition.ShortFrozen);
+			investorPosition.setLongFrozenAmount(pInvestorPosition.LongFrozenAmount);
+			investorPosition.setShortFrozenAmount(pInvestorPosition.ShortFrozenAmount);
+			investorPosition.setOpenVolume(pInvestorPosition.OpenVolume);
+			investorPosition.setCloseVolume(pInvestorPosition.CloseVolume);
+			investorPosition.setOpenAmount(pInvestorPosition.OpenAmount);
+			investorPosition.setCloseAmount(pInvestorPosition.CloseAmount);
+			investorPosition.setPositionCost(pInvestorPosition.PositionCost);
+			investorPosition.setPreMargin(pInvestorPosition.PreMargin);
+			investorPosition.setUseMargin(pInvestorPosition.UseMargin);
+			investorPosition.setFrozenMargin(pInvestorPosition.FrozenMargin);
+			investorPosition.setFrozenCash(pInvestorPosition.FrozenCash);
+			investorPosition.setFrozenCommission(pInvestorPosition.FrozenCommission);
+			investorPosition.setCashIn(pInvestorPosition.CashIn);
+			investorPosition.setCommission(pInvestorPosition.Commission);
+			investorPosition.setCloseProfit(pInvestorPosition.CloseProfit);
+			investorPosition.setPositionProfit(pInvestorPosition.PositionProfit);
+			System.out.println("investorPosition ="+investorPosition);
+			investorPositionMapper.insert(investorPosition);
+			redisService.hmSet(name, ProjectConstant.DGT_TRADE_INVESTOR_POSITION_KEY, investorPosition);
+
+		}
 	};
 
 	TradeApi.cbOnRspQryTradingAccount fOnRspQryTradingAccount = new TradeApi.cbOnRspQryTradingAccount() {
@@ -503,6 +536,18 @@ public class TradeAPI {
 			System.out.println("OpenDate : "+ByteToString(pInvestorPositionDetail.OpenDate));
 			System.out.println();
 
+			InvestorPositionDetail investorPositionDetail = new InvestorPositionDetail();
+			investorPositionDetail.setInstrumentId(ByteToString(pInvestorPositionDetail.InstrumentID));
+			investorPositionDetail.setDirection(pInvestorPositionDetail.Direction);
+			investorPositionDetail.setOpenDate(ByteToString(pInvestorPositionDetail.OpenDate));
+			investorPositionDetail.setTradeId(ByteToString(pInvestorPositionDetail.TradeID));
+			investorPositionDetail.setVolume(pInvestorPositionDetail.Volume);
+			investorPositionDetail.setOpenPrice(pInvestorPositionDetail.OpenPrice);
+			investorPositionDetail.setSettlementId(pInvestorPositionDetail.SettlementID);
+			investorPositionDetail.setCombinstrumentId(ByteToString(pInvestorPositionDetail.CombInstrumentID));
+
+			investorPositionDetailMapper.insert(investorPositionDetail);
+			redisService.hmSet(name, ProjectConstant.DGT_TRADE_INVESTOR_POSITION_DETAIL_KEY, investorPositionDetail);
 			
 		};
 	};
@@ -677,20 +722,20 @@ public class TradeAPI {
 			System.out.println("$$$成交通知-->合约编号 : " + ByteToString(pTrade.InstrumentID) + "， 数量:" + pTrade.Volume + "， 报单编号 ： " + ByteToString(pTrade.OrderSysID));
 
 //			Trade trade = null;
-//			// key localuserId hashkey exchangeid+OrderSysID
+//			// key name hashkey exchangeid+OrderSysID
 //			String hashKey = ByteToString(pTrade.ExchangeID)+ByteToString(pTrade.OrderSysID);
 //			if (pTrade.OffsetFlag == ProjectConstant.TRADE_COMB_OFFSET_FLAG_CLOSE){
-//				trade = (Trade) redisService.hmGet(localUserId,hashKey);
+//				trade = (Trade) redisService.hmGet(name,hashKey);
 //				if (trade != null) {
 //					 // 是否全部平仓，如果是移除，部分平仓显示剩余量
 //					int lastCount = trade.getVolumeTotalOriginal() - pTrade.Volume;
 //					// 已经全部平仓，移除
 //					if (lastCount == 0) {
-//						redisService.hmDel(localUserId, hashKey);
+//						redisService.hmDel(name, hashKey);
 //					} else {
 //						// 部分
 //						trade.setVolumeTotalOriginal(lastCount);
-//						redisService.hmSet(localUserId, hashKey, trade);
+//						redisService.hmSet(name, hashKey, trade);
 //					}
 //				}
 //
@@ -698,12 +743,14 @@ public class TradeAPI {
 //				trade = tradeMapper.getTradeByExchangeIdAndOrderSysId(ByteToString(pTrade.ExchangeID), ByteToString(pTrade.OrderSysID));
 //				trade.setTransactionPrice(pTrade.Price);
 //				trade.setVolumeTotalOriginal(pTrade.Volume);
-//				redisService.hmSet(localUserId, hashKey, trade);
+//				redisService.hmSet(name, hashKey, trade);
 //
 //			}
 			// 查询投资者持仓
 			queryPos();
-		};
+			// 查询持仓明细
+			queryPosition();
+		}
 	};
 
 	TradeApi.cbOnErrRtnOrderInsert fOnErrRtnOrderInsert = new TradeApi.cbOnErrRtnOrderInsert() {
