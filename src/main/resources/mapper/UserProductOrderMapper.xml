@@ -26,7 +26,6 @@
         <result column="order" jdbcType="TINYINT" property="order"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="instrument" jdbcType="VARCHAR" property="instrument"/>
     </resultMap>
 
     <sql id="getUserProductOrder">

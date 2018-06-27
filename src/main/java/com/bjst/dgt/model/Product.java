@@ -73,16 +73,6 @@ public class Product {
     @Column(name = "update_time")
     private Date updateTime;
 
-    private String instrument;
-
-    public String getInstrument() {
-        return instrument;
-    }
-
-    public void setInstrument(String instrument) {
-        this.instrument = instrument;
-    }
-
     public Byte getSystemType() {
         return systemType;
     }

@@ -17,13 +17,12 @@
         <result column="order" jdbcType="TINYINT" property="order"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="instrument" jdbcType="VARCHAR" property="instrument"/>
     </resultMap>
 
 
     <sql id="getProductSql">
       `code`, `code_show`, `name`, `exchange`, `system_type`,`last_price`, `market`, `is_domestic`, `data_status`,
-      `change_count`, `categroy_code`, `order`, `create_time`, `update_time`,`instrument`
+      `change_count`, `categroy_code`, `order`, `create_time`, `update_time`
     </sql>
 
     <select id="getProduct" resultMap="getResultMap">
