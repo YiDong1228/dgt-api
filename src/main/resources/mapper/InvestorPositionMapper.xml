@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.InvestorPositionMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.InvestorPosition">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="instrument_id" jdbcType="VARCHAR" property="instrumentId" />
+    <result column="posi_direction" jdbcType="TINYINT" property="posiDirection" />
+    <result column="hedge_flag" jdbcType="TINYINT" property="hedgeFlag" />
+    <result column="position_date" jdbcType="TINYINT" property="positionDate" />
+    <result column="yd_position" jdbcType="INTEGER" property="ydPosition" />
+    <result column="position" jdbcType="INTEGER" property="position" />
+    <result column="long_frozen" jdbcType="INTEGER" property="longFrozen" />
+    <result column="short_frozen" jdbcType="INTEGER" property="shortFrozen" />
+    <result column="long_frozen_amount" jdbcType="DOUBLE" property="longFrozenAmount" />
+    <result column="short_frozen_amount" jdbcType="DOUBLE" property="shortFrozenAmount" />
+    <result column="open_volume" jdbcType="INTEGER" property="openVolume" />
+    <result column="close_volume" jdbcType="INTEGER" property="closeVolume" />
+    <result column="open_amount" jdbcType="DOUBLE" property="openAmount" />
+    <result column="close_amount" jdbcType="DOUBLE" property="closeAmount" />
+    <result column="position_cost" jdbcType="DOUBLE" property="positionCost" />
+    <result column="pre_margin" jdbcType="DOUBLE" property="preMargin" />
+    <result column="use_margin" jdbcType="DOUBLE" property="useMargin" />
+    <result column="frozen_margin" jdbcType="DOUBLE" property="frozenMargin" />
+    <result column="frozen_cash" jdbcType="DOUBLE" property="frozenCash" />
+    <result column="frozen_commission" jdbcType="DOUBLE" property="frozenCommission" />
+    <result column="cash_in" jdbcType="DOUBLE" property="cashIn" />
+    <result column="commission" jdbcType="DOUBLE" property="commission" />
+    <result column="close_profit" jdbcType="DOUBLE" property="closeProfit" />
+    <result column="position_profit" jdbcType="DOUBLE" property="positionProfit" />
+    <result column="pre_settlement_price" jdbcType="DOUBLE" property="preSettlementPrice" />
+    <result column="settlement_price" jdbcType="DOUBLE" property="settlementPrice" />
+    <result column="settlement_id" jdbcType="INTEGER" property="settlementId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

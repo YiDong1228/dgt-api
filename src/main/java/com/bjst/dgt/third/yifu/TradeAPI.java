@@ -2,7 +2,11 @@ package com.bjst.dgt.third.yifu;
 
 
 import com.bjst.dgt.core.ProjectConstant;
+import com.bjst.dgt.core.Result;
+import com.bjst.dgt.core.ResultCode;
+import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.dao.TradeMapper;
+import com.bjst.dgt.model.InvestorPosition;
 import com.bjst.dgt.model.Trade;
 import com.bjst.dgt.model.TradeClient;
 import com.bjst.dgt.service.RedisService;
@@ -37,6 +41,8 @@ public class TradeAPI {
 	private Map<String, Object> requestIDManager = new HashMap<>();
 
 	private String tcpUrl; // tcp 连接url
+	private Result insertOrderResult;
+	private static final int MAX_WAIT_TIMES = 3; // 最多等待次数
 
 	@Setter
 	private WeakReference<TradeClient> tradeClientWeakReference;
@@ -209,15 +215,23 @@ public class TradeAPI {
 		///报单录入请求响应
 		public void OnRspOrderInsert(CThostFtdcInputOrderField.ByReference pInputOrder, CThostFtdcRspInfoField.ByReference pRspInfo, int nRequestID, boolean bIsLast) {
 			System.out.println("============ 报单录入请求响应   ==============");
+			// 用户报单后，如果正确根本不会“马上收到报单响应 OnRspOrderInsert”，只有报单被 CTP 拒绝才会收到
 			try {
 				System.out.println("ErrorID:" + pRspInfo.ErrorID);
 				System.out.println("ErrorMsg:" + new String(pRspInfo.ErrorMsg,"GBK"));
+				if(pRspInfo.ErrorID != 0 ){
+					if (requestIDManager.containsKey(String.valueOf(nRequestID))) {
+						Trade trade = (Trade)requestIDManager.get(String.valueOf(nRequestID));
+						tradeMapper.delete(trade);
+						requestIDManager.remove(String.valueOf(nRequestID));
+					}
+					insertOrderResult = ResultGenerator.genFailResult( new String(pRspInfo.ErrorMsg,"GBK"),ResultCode.TRADE_ORDER_INSERT_ERROR);
+				}
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			
-			
-		};
+
+		}
 	};
 	
 	//预埋单是证券买卖中的一种下单(委托交易)方式。就是预先估计好一个买卖价，提前填好后，先行递交给证券营业部的交易单。
@@ -384,6 +398,7 @@ public class TradeAPI {
 			System.out.println("InstrumentID : "+ ByteToString(pInvestorPosition.InstrumentID));
 			System.out.println("HedgeFlag 组合投机套保标志 : "+ pInvestorPosition.HedgeFlag);
 			System.out.println();
+			InvestorPosition investorPosition = new InvestorPosition();
 		};
 	};
 
@@ -1074,7 +1089,7 @@ public class TradeAPI {
 	}
 
 	//报单
-	public int plcaeOrder(Trade trade) {
+	public Result placeOrder(Trade trade) {
 		CThostFtdcInputOrderField.ByReference  pInputOrder = new CThostFtdcInputOrderField.ByReference();
 		setBytesData(pInputOrder.BrokerID, brokerID);//经济公司代码
 		setBytesData(pInputOrder.InstrumentID, trade.getInstrumentId());//合约代码 InstrumentID
@@ -1116,7 +1131,28 @@ public class TradeAPI {
 		pInputOrder.VolumeTotalOriginal= trade.getVolumeTotalOriginal(); //数量
 		pInputOrder.StopPrice= trade.getStopPrice();//止损价
 		requestIDManager.put(String.valueOf(trade.getId()), trade);
-		return instance.ReqOrderInsert(handle,pInputOrder, trade.getId());
+		instance.ReqOrderInsert(handle,pInputOrder, trade.getId());
+		// 睡眠三次每次一秒，等待下单结果
+		int i = 0;
+		Result result = ResultGenerator.genFailResult("委托成功", ResultCode.TRADE_ORDER_INSERT_SUCCESS);
+		try {
+			while (insertOrderResult == null) {
+				Thread.sleep(1000);
+				i++;
+				if (i == MAX_WAIT_TIMES) {
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (insertOrderResult != null){
+			result  = insertOrderResult;
+			insertOrderResult = null;
+		}
+
+		return result;
 	}
 
 	//查询资金账号

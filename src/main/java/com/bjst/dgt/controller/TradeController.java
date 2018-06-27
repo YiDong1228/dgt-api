@@ -57,8 +57,7 @@ public class TradeController {
 //            return ResultGenerator.genFailResult("userID 异常",ResultCode.UNAUTHORIZED);
 //        }
 //        tradeService.placeOrder(userId.toString(), trade);
-        tradeService.placeOrder("testwai001", trade);
-        return ResultGenerator.genSuccessResult();
+        return tradeService.placeOrder("testwai001", trade);
     }
 
     /**

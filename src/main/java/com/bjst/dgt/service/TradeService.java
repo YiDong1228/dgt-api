@@ -1,5 +1,8 @@
 package com.bjst.dgt.service;
 
+import com.bjst.dgt.core.Result;
+import com.bjst.dgt.core.ResultCode;
+import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.dao.TradeMapper;
 import com.bjst.dgt.model.Trade;
 import com.bjst.dgt.model.TradeClient;
@@ -90,12 +93,12 @@ public class TradeService {
      * @param trade 交易model
      * @return
      */
-    public int placeOrder(String userId,Trade trade) {
+    public Result placeOrder(String userId, Trade trade) {
         //tradeOuterLogin("testwai001","123456");
-            int result = -1;
+            Result result = ResultGenerator.genFailResult("委托单失败", ResultCode.TRADE_ORDER_INSERT_ERROR);
             if (tradeClient.containsKey(userId)) {
                 tradeMapper.insert(trade);
-                result = tradeClient.get(userId).plcaeOrder(trade);
+                result = tradeClient.get(userId).placeOrder(trade);
             }
             return result;
     }

@@ -19,6 +19,10 @@ public class ResultGenerator {
                 .setData(data);
     }
 
+    public static Result genSuccessResult(String message, ResultCode resultCode) {
+        return genResult(message, resultCode);
+    }
+
     public static Result genFailResult(String message) {
         return new Result()
                 .setCode(ResultCode.FAIL)
@@ -26,6 +30,10 @@ public class ResultGenerator {
     }
 
     public static Result genFailResult(String message, ResultCode resultCode) {
+        return genResult(message, resultCode);
+    }
+
+    public static Result genResult(String message, ResultCode resultCode) {
         return new Result()
                 .setCode(resultCode)
                 .setMessage(message);

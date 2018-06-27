@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.InvestorPositionDetailMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.InvestorPositionDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="instrument_id" jdbcType="VARCHAR" property="instrumentId" />
+    <result column="direction" jdbcType="TINYINT" property="direction" />
+    <result column="open_date" jdbcType="DATE" property="openDate" />
+    <result column="trade_id" jdbcType="VARCHAR" property="tradeId" />
+    <result column="volume" jdbcType="INTEGER" property="volume" />
+    <result column="open_price" jdbcType="DOUBLE" property="openPrice" />
+    <result column="settlement_id" jdbcType="INTEGER" property="settlementId" />
+    <result column="combInstrument_id" jdbcType="VARCHAR" property="combinstrumentId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>
