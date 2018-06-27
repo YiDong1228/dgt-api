@@ -61,8 +61,11 @@ public class DateUtil {
         if (code.equals("SCau0001") || code.equals("SCag0001") || code.equals("DCp0001") || code.equals("DCi0001") || code.equals("SEsc0001")) {
             end_da = df.parse("21:00");
             start_da = df.parse("2:30");
-            ;
         }
+
+
+
+
         //夜盘
         Calendar end_2 = Calendar.getInstance();
         end_2.setTime(end_da);
