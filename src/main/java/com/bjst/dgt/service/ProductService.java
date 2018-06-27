@@ -48,14 +48,14 @@ public class ProductService {
         UserProductOrder userProductOrder = new UserProductOrder();
         userProductOrder.setUserId(products.getUserId());
         List<Product> productList = new ArrayList<Product>();
-        boolean exists = redisService.exists("getProduct");
+        /*boolean exists = redisService.exists("getProduct");
         if (exists) {
             productList = (List<Product>) redisService.get("getProduct");
             return productList;
-        } else {
-            productList = productMapper.getProduct();
-            redisService.set("getProduct", productList, new Long(900), TimeUnit.MILLISECONDS);
-        }
+        } else {*/
+        productList = productMapper.getProduct();
+           /* redisService.set("getProduct", productList, new Long(900), TimeUnit.MILLISECONDS);
+        }*/
         if (products.getOrder() == ProjectConstant.SORT_DEFAULT) {
             //默认排序
             //判断用户是否已经进行自定义排序

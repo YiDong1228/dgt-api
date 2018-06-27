@@ -33,7 +33,7 @@ public class UserProductOrderService {
     private RedisService redisService;
 
     public boolean getUserProducByUserId(UserProductOrder userProductOrder) {
-        boolean exists = redisService.exists("getUserProducByUserId");
+        /*boolean exists = redisService.exists("getUserProducByUserId");
         int i;
         if (exists) {
             i = (int) redisService.get("getUserProducByUserId");
@@ -42,15 +42,15 @@ public class UserProductOrderService {
             } else {
                 return false;
             }
+        } else {*/
+        int i = userProductOrderMapper.getUserProducByUserId(userProductOrder);
+        //redisService.set("getUserProducByUserId", i);
+        if (i == 15) {
+            return true;
         } else {
-            i = userProductOrderMapper.getUserProducByUserId(userProductOrder);
-            redisService.set("getUserProducByUserId", i);
-            if (i == 15) {
-                return true;
-            } else {
-                return false;
-            }
+            return false;
         }
+        //}
     }
 
     public boolean updateUserProductOrderByUserId(UserProductOrder userProductOrder) {

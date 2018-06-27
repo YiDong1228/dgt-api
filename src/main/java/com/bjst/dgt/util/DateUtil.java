@@ -50,10 +50,25 @@ public class DateUtil {
 
     private static String getDate(String code, int str1, int str2, Calendar date, Calendar begin, Calendar end, Calendar endd, String begintime, String endtime) throws ParseException {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+
+        //日盘
         Calendar end_1 = Calendar.getInstance();
         end_1.setTime(df.parse("11:30"));
         Calendar start_1 = Calendar.getInstance();
         start_1.setTime(df.parse("13:30"));
+        Date end_da = new Date();
+        Date start_da = new Date();
+        if (code.equals("SCau0001") || code.equals("SCag0001") || code.equals("DCp0001") || code.equals("DCi0001") || code.equals("SEsc0001")) {
+            end_da = df.parse("21:00");
+            start_da = df.parse("2:30");
+            ;
+        }
+        //夜盘
+        Calendar end_2 = Calendar.getInstance();
+        end_2.setTime(end_da);
+        Calendar start_2 = Calendar.getInstance();
+        start_2.setTime(start_da);
+
         if (code.equals("DCi0001") || code.equals("DCp0001") || code.equals("SCag0001") || code.equals("SCau0001") || code.equals("SCcu0001") || code.equals("SCrb0001") || code.equals("SCru0001") || code.equals("SEsc0001") || code.equals("ZCSR0001")) {
             if (str2 < str1) {
                 if (date.after(begin) || date.before(endd)) {

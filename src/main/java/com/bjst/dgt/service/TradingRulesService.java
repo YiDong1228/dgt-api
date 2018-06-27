@@ -31,18 +31,18 @@ public class TradingRulesService {
 
     public TradingRules getTradingRulesByCode(TradingRules rules) {
         TradingRules tradingRules = new TradingRules();
-        boolean exists = redisService.exists("getTradingRulesByCode");
+        /*boolean exists = redisService.exists("getTradingRulesByCode");
         if (exists) {
             tradingRules = (TradingRules) redisService.get("getTradingRulesByCode");
             return tradingRules;
+        } else {*/
+        tradingRules = tradingRulesMapper.getTradingRulesByCode(rules);
+        //redisService.set("getTradingRulesByCode", tradingRules,new Long(900), TimeUnit.MILLISECONDS);
+        if (tradingRules != null) {
+            return tradingRules;
         } else {
-            tradingRules = tradingRulesMapper.getTradingRulesByCode(rules);
-            redisService.set("getTradingRulesByCode", tradingRules,new Long(900), TimeUnit.MILLISECONDS);
-            if (tradingRules != null) {
-                return tradingRules;
-            } else {
-                return null;
-            }
+            return null;
         }
+        //}
     }
 }
