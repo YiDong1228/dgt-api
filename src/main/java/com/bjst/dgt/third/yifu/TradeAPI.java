@@ -1181,7 +1181,7 @@ public class TradeAPI {
 		instance.ReqOrderInsert(handle,pInputOrder, trade.getId());
 		// 睡眠三次每次一秒，等待下单结果
 		int i = 0;
-		Result result = ResultGenerator.genFailResult("委托成功", ResultCode.TRADE_ORDER_INSERT_SUCCESS);
+		Result result = ResultGenerator.genFailResult("委托成功", ResultCode.SUCCESS);
 		try {
 			while (insertOrderResult == null) {
 				Thread.sleep(1000);
