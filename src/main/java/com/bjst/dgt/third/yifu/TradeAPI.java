@@ -430,7 +430,7 @@ public class TradeAPI {
 			investorPosition.setPositionProfit(pInvestorPosition.PositionProfit);
 			System.out.println("investorPosition ="+investorPosition);
 			investorPositionMapper.insert(investorPosition);
-			redisService.hmSet(name, ProjectConstant.DGT_TRADE_INVESTOR_POSITION_KEY, investorPosition);
+			//redisService.hmSet(name, ProjectConstant.DGT_TRADE_INVESTOR_POSITION_KEY, investorPosition);
 
 		}
 	};
@@ -547,7 +547,7 @@ public class TradeAPI {
 			investorPositionDetail.setCombinstrumentId(ByteToString(pInvestorPositionDetail.CombInstrumentID));
 
 			investorPositionDetailMapper.insert(investorPositionDetail);
-			redisService.hmSet(name, ProjectConstant.DGT_TRADE_INVESTOR_POSITION_DETAIL_KEY, investorPositionDetail);
+			//redisService.hmSet(name, ProjectConstant.DGT_TRADE_INVESTOR_POSITION_DETAIL_KEY, investorPositionDetail);
 			
 		};
 	};
@@ -747,9 +747,9 @@ public class TradeAPI {
 //
 //			}
 			// 查询投资者持仓
-			queryPos();
+			//queryPos();
 			// 查询持仓明细
-			queryPosition();
+			//queryPosition();
 		}
 	};
 
