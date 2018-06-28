@@ -55,6 +55,7 @@ public class UserService {
     }
 
     public boolean loginUser(User user) {
+        user.setPassword(MD5Util.MD5(user.getMobile(), user.getPassword()));
         User loginUser = userMapper.loginUser(user);
         redisService.set("User", loginUser, new Long(7), TimeUnit.DAYS);
         if (loginUser != null) {

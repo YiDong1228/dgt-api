@@ -134,4 +134,20 @@ public class MyController {
             return ResultGenerator.genFailResult("参数错误", ResultCode.FAIL);
         }
     }
+
+    @PostMapping("/login")
+    public Result login(@RequestBody User user) {
+        boolean falg = userService.loginUser(user);
+        if (falg) {
+            return ResultGenerator.genSuccessResult("登录成功！", ResultCode.SUCCESS);
+        } else {
+            return ResultGenerator.genFailResult("登录失败！用户名或密码错误！", ResultCode.FAIL);
+        }
+    }
+
+    @PostMapping("/logout")
+    public Result logout(@RequestBody User user) {
+        redisService.remove("User");
+        return null;
+    }
 }
