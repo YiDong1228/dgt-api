@@ -57,6 +57,8 @@ public class TradeController {
 //            return ResultGenerator.genFailResult("userID 异常",ResultCode.UNAUTHORIZED);
 //        }
 //        tradeService.placeOrder(userId.toString(), trade);
+        //trade.setUserId(userKey);
+        trade.setUserId(1);
         return tradeService.placeOrder("testwai001", trade);
     }
 
@@ -67,13 +69,12 @@ public class TradeController {
      */
     @PostMapping("getPositionList")
     public Result getPositionList(HttpServletRequest request) {
-
-        return ResultGenerator.genSuccessResult();
+        return tradeService.getPositionList("testwai001");
     }
 
     @PostMapping("testlogin")
     public Result testLogin(@RequestParam String userId, @RequestParam String pwd) {
-        tradeService.tradeOuterLogin(userId, pwd);
+        tradeService.tradeOuterLogin("1", userId, pwd);
         return ResultGenerator.genSuccessResult();
     }
 }

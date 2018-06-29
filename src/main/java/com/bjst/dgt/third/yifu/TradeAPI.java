@@ -17,16 +17,17 @@ import com.bjst.dgt.third.yifu.JNA.TradeApi;
 import com.bjst.dgt.third.yifu.struct.*;
 import com.sun.jna.Native;
 import lombok.Setter;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.time.LocalDate;
+import java.util.*;
 
 
 public class TradeAPI {
+	private String localUserID; // 本地用户id
 	private  String name;//userID
 	private  String pwd; // user password
 	private  String brokerID;//经纪公司代码
@@ -41,6 +42,11 @@ public class TradeAPI {
 	private Random random = new Random();
 	private int requestID = random.nextInt();
 	private Map<String, Object> requestIDManager = new HashMap<>();
+
+	// 持仓汇总
+	private Map<String, InvestorPosition> investorPositionMap = new HashMap<>();
+	// 查询是否结束
+	private boolean isInvestorPositionSearchOver = false;
 
 	private String tcpUrl; // tcp 连接url
 	private Result insertOrderResult;
@@ -61,7 +67,16 @@ public class TradeAPI {
 	@Setter
 	private InvestorPositionDetailMapper investorPositionDetailMapper;
 
-	public TradeAPI(String userId, String password, String brokerID, String tcpUrl) {
+	/**
+	 *
+	 * @param localUserID 本地用户标识
+	 * @param userId 用户登录内外盘系统的用户id
+	 * @param password 登录密码
+	 * @param brokerID  经纪公司代码
+	 * @param tcpUrl  内外盘地址
+	 */
+	public TradeAPI(String localUserID, String userId, String password, String brokerID, String tcpUrl) {
+		this.localUserID = localUserID;
 		this.name = userId;
 		this.pwd = password;
 		this.brokerID = brokerID;
@@ -401,35 +416,52 @@ public class TradeAPI {
 			}
 
 			System.out.println("今日持仓 ： " + pInvestorPosition.Position);
+			System.out.println("InvestorID ： " + ByteToString(pInvestorPosition.InvestorID));
 			System.out.println("InstrumentID : "+ ByteToString(pInvestorPosition.InstrumentID));
 			System.out.println("HedgeFlag 组合投机套保标志 : "+ pInvestorPosition.HedgeFlag);
 			InvestorPosition investorPosition = new InvestorPosition();
-			investorPosition.setInstrumentId(ByteToString(pInvestorPosition.InstrumentID));
-			investorPosition.setPosiDirection(pInvestorPosition.PosiDirection);
-			investorPosition.setHedgeFlag(pInvestorPosition.HedgeFlag);
-			investorPosition.setPositionDate(pInvestorPosition.PositionDate);
-			investorPosition.setYdPosition(pInvestorPosition.YdPosition);
-			investorPosition.setPosition(pInvestorPosition.Position);
-			investorPosition.setLongFrozen(pInvestorPosition.LongFrozen);
-			investorPosition.setShortFrozen(pInvestorPosition.ShortFrozen);
-			investorPosition.setLongFrozenAmount(pInvestorPosition.LongFrozenAmount);
-			investorPosition.setShortFrozenAmount(pInvestorPosition.ShortFrozenAmount);
-			investorPosition.setOpenVolume(pInvestorPosition.OpenVolume);
-			investorPosition.setCloseVolume(pInvestorPosition.CloseVolume);
-			investorPosition.setOpenAmount(pInvestorPosition.OpenAmount);
-			investorPosition.setCloseAmount(pInvestorPosition.CloseAmount);
-			investorPosition.setPositionCost(pInvestorPosition.PositionCost);
-			investorPosition.setPreMargin(pInvestorPosition.PreMargin);
-			investorPosition.setUseMargin(pInvestorPosition.UseMargin);
-			investorPosition.setFrozenMargin(pInvestorPosition.FrozenMargin);
-			investorPosition.setFrozenCash(pInvestorPosition.FrozenCash);
-			investorPosition.setFrozenCommission(pInvestorPosition.FrozenCommission);
-			investorPosition.setCashIn(pInvestorPosition.CashIn);
-			investorPosition.setCommission(pInvestorPosition.Commission);
-			investorPosition.setCloseProfit(pInvestorPosition.CloseProfit);
-			investorPosition.setPositionProfit(pInvestorPosition.PositionProfit);
-			System.out.println("investorPosition ="+investorPosition);
-			investorPositionMapper.insert(investorPosition);
+			System.out.println("bIsLast  : "+ bIsLast);
+			if (!isInvestorPositionSearchOver) {
+				investorPosition.setInstrumentId(ByteToString(pInvestorPosition.InstrumentID));
+				investorPosition.setPosiDirection(pInvestorPosition.PosiDirection);
+				investorPosition.setHedgeFlag(pInvestorPosition.HedgeFlag);
+				investorPosition.setPositionDate(pInvestorPosition.PositionDate);
+				investorPosition.setYdPosition(pInvestorPosition.YdPosition);
+				investorPosition.setPosition(pInvestorPosition.Position);
+				investorPosition.setLongFrozen(pInvestorPosition.LongFrozen);
+				investorPosition.setShortFrozen(pInvestorPosition.ShortFrozen);
+				investorPosition.setLongFrozenAmount(pInvestorPosition.LongFrozenAmount);
+				investorPosition.setShortFrozenAmount(pInvestorPosition.ShortFrozenAmount);
+				investorPosition.setOpenVolume(pInvestorPosition.OpenVolume);
+				investorPosition.setCloseVolume(pInvestorPosition.CloseVolume);
+				investorPosition.setOpenAmount(pInvestorPosition.OpenAmount);
+				investorPosition.setCloseAmount(pInvestorPosition.CloseAmount);
+				investorPosition.setPositionCost(pInvestorPosition.PositionCost);
+				investorPosition.setPreMargin(pInvestorPosition.PreMargin);
+				investorPosition.setUseMargin(pInvestorPosition.UseMargin);
+				investorPosition.setFrozenMargin(pInvestorPosition.FrozenMargin);
+				investorPosition.setFrozenCash(pInvestorPosition.FrozenCash);
+				investorPosition.setFrozenCommission(pInvestorPosition.FrozenCommission);
+				investorPosition.setCashIn(pInvestorPosition.CashIn);
+				investorPosition.setCommission(pInvestorPosition.Commission);
+				investorPosition.setCloseProfit(pInvestorPosition.CloseProfit);
+				investorPosition.setPositionProfit(pInvestorPosition.PositionProfit);
+				investorPosition.setPositionTdate(LocalDate.now().toString());
+				investorPosition.setUserId(Integer.valueOf(localUserID));
+				isInvestorPositionSearchOver = bIsLast;
+				// 投资者InvestorID + 合约代码 instrumentId + 持仓多空方向  PosiDirection
+				String key = ByteToString(pInvestorPosition.InvestorID) + investorPosition.getInstrumentId() + investorPosition.getPosiDirection();
+				System.out.println(isInvestorPositionSearchOver +" ==== " +key);
+				investorPositionMap.put(key, investorPosition);
+
+				if (isInvestorPositionSearchOver) {
+					Condition condition = new Condition(InvestorPosition.class);
+					condition.createCriteria().andEqualTo("positionTdate", LocalDate.now());
+					investorPositionMapper.deleteByCondition(condition);
+					investorPositionMapper.insertList(new ArrayList<InvestorPosition>(investorPositionMap.values()));
+				}
+			}
+
 			//redisService.hmSet(name, ProjectConstant.DGT_TRADE_INVESTOR_POSITION_KEY, investorPosition);
 
 		}
@@ -721,33 +753,50 @@ public class TradeAPI {
 		public void OnRtnTrade(CThostFtdcTradeField.ByReference pTrade) {
 			System.out.println("$$$成交通知-->合约编号 : " + ByteToString(pTrade.InstrumentID) + "， 数量:" + pTrade.Volume + "， 报单编号 ： " + ByteToString(pTrade.OrderSysID));
 
-//			Trade trade = null;
-//			// key name hashkey exchangeid+OrderSysID
+			// key name hashkey exchangeid+OrderSysID
+//			Trade trade = tradeMapper.getTradeByExchangeIdAndOrderSysId(ByteToString(pTrade.ExchangeID), ByteToString(pTrade.OrderSysID));
 //			String hashKey = ByteToString(pTrade.ExchangeID)+ByteToString(pTrade.OrderSysID);
 //			if (pTrade.OffsetFlag == ProjectConstant.TRADE_COMB_OFFSET_FLAG_CLOSE){
-//				trade = (Trade) redisService.hmGet(name,hashKey);
+//				//trade = (Trade) redisService.hmGet(name,hashKey);
 //				if (trade != null) {
 //					 // 是否全部平仓，如果是移除，部分平仓显示剩余量
 //					int lastCount = trade.getVolumeTotalOriginal() - pTrade.Volume;
 //					// 已经全部平仓，移除
 //					if (lastCount == 0) {
-//						redisService.hmDel(name, hashKey);
+//						//redisService.hmDel(name, hashKey);
 //					} else {
 //						// 部分
 //						trade.setVolumeTotalOriginal(lastCount);
-//						redisService.hmSet(name, hashKey, trade);
+//						//redisService.hmSet(name, hashKey, trade);
 //					}
 //				}
 //
 //			} else {
-//				trade = tradeMapper.getTradeByExchangeIdAndOrderSysId(ByteToString(pTrade.ExchangeID), ByteToString(pTrade.OrderSysID));
+//
 //				trade.setTransactionPrice(pTrade.Price);
 //				trade.setVolumeTotalOriginal(pTrade.Volume);
-//				redisService.hmSet(name, hashKey, trade);
+//				//redisService.hmSet(name, hashKey, trade);
 //
 //			}
+//
+//			tradeMapper.updateByPrimaryKey(trade);
+
+			List<Trade> trades = getTradeListByLocalUserInstrumentID(localUserID,ByteToString(pTrade.InstrumentID), pTrade.Direction);
+			if (trades.size() > 0) {
+				Trade trade = trades.get(0);
+				trade.setTransactionPrice(pTrade.Price);
+				trade.setExchangeId(ByteToString(pTrade.ExchangeID));
+				trade.setOrderSysId(ByteToString(pTrade.OrderSysID));
+				if ((pTrade.OffsetFlag - '0') == ProjectConstant.TRADE_COMB_OFFSET_FLAG_OPEN) {
+					trade.setOpenVolume(pTrade.Volume);
+				} else {
+					trade.setCloseVolume(pTrade.Volume);
+				}
+
+				tradeMapper.updateByPrimaryKey(trade);
+			}
 			// 查询投资者持仓
-			//queryPos();
+			queryInvestorPositiosn();
 			// 查询持仓明细
 			//queryPosition();
 		}
@@ -1177,6 +1226,7 @@ public class TradeAPI {
 		pInputOrder.LimitPrice=trade.getLimitPrice() + ProjectConstant.TRADE_LIMIT_PRICE_RANGE;//价格范围
 		pInputOrder.VolumeTotalOriginal= trade.getVolumeTotalOriginal(); //数量
 		pInputOrder.StopPrice= trade.getStopPrice();//止损价
+		trade.setUserId(Integer.parseInt(localUserID));
 		requestIDManager.put(String.valueOf(trade.getId()), trade);
 		instance.ReqOrderInsert(handle,pInputOrder, trade.getId());
 		// 睡眠三次每次一秒，等待下单结果
@@ -1222,7 +1272,7 @@ public class TradeAPI {
 	}
 
 	///请求查询投资者持仓明细响应
-	public void queryPosition(){
+	public void queryPositionDetail(){
 		CThostFtdcQryInvestorPositionDetailField.ByReference pQryInvestorPositionDetail = new CThostFtdcQryInvestorPositionDetailField.ByReference ();
 		pQryInvestorPositionDetail.BrokerID = brokerID.getBytes();//经纪公司代码
 		pQryInvestorPositionDetail.InvestorID = name.getBytes();///合约代码
@@ -1278,16 +1328,54 @@ public class TradeAPI {
 	}
 
 	//请求查询投资者持仓
-	public void queryPos(){
+	public void queryInvestorPositiosn(){
+
 		CThostFtdcQryInvestorPositionField.ByReference pQryInvestorPosition = new CThostFtdcQryInvestorPositionField.ByReference();
 		pQryInvestorPosition.BrokerID = brokerID.getBytes();//经纪公司代码
 		pQryInvestorPosition.InvestorID = name.getBytes();///投资者代码
-		//pQryInvestorPosition.InstrumentID = instrumentID.getBytes();///合约代码
-		//pQryInvestorPosition.ExchangeID = ExchangeID.getBytes();///交易所代码
-		//pQryInvestorPosition.InvestUnitID = InvestUnitID.getBytes();///交易所代码
+
 
 		int result =  instance.ReqQryInvestorPosition(handle, pQryInvestorPosition, requestID);
+		isInvestorPositionSearchOver = false;
+		investorPositionMap.clear();
 		System.out.println("###请求查询投资者持仓 : " + result);
+	}
+
+	//请求查询投资者持仓
+	public List<InvestorPosition> queryInvestorPositiosnForResult(){
+		List<InvestorPosition> investorPositionList;
+		if (investorPositionMap.size() > 0) {
+			investorPositionList = new ArrayList<>(investorPositionMap.values());
+			if (investorPositionList.get(0).getPositionTdate() != null && investorPositionList.get(0).getPositionTdate().contains(LocalDate.now().toString())){
+				return investorPositionList;
+			}
+		}
+
+		CThostFtdcQryInvestorPositionField.ByReference pQryInvestorPosition = new CThostFtdcQryInvestorPositionField.ByReference();
+		pQryInvestorPosition.BrokerID = brokerID.getBytes();//经纪公司代码
+		pQryInvestorPosition.InvestorID = name.getBytes();///投资者代码
+
+		int result =  instance.ReqQryInvestorPosition(handle, pQryInvestorPosition, requestID);
+		isInvestorPositionSearchOver = false;
+		investorPositionMap.clear();
+
+		// 睡眠三次每次一秒，等待下单结果
+		int i = 0;
+		try {
+			while (investorPositionMap.size() == 0) {
+				Thread.sleep(1000);
+				i++;
+				if (i == MAX_WAIT_TIMES) {
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		investorPositionList = new ArrayList<>(investorPositionMap.values());
+		System.out.println("###请求查询投资者持仓 : " + result);
+		return  investorPositionList;
 	}
 
 	/////请求查询报单（查询委托）
@@ -1295,7 +1383,7 @@ public class TradeAPI {
 		CThostFtdcQryOrderField.ByReference pQryOrder = new CThostFtdcQryOrderField.ByReference ();
 		pQryOrder.BrokerID = brokerID.getBytes();//经纪公司代码
 		pQryOrder.InvestorID = name.getBytes();///投资者代码
-		pQryOrder.InstrumentID = instrumentID.getBytes();///合约代码
+		//pQryOrder.InstrumentID = instrumentID.getBytes();///合约代码
 		//pQryOrder.ExchangeID = ExchangeID.getBytes();///交易所代码
 		//pQryOrder.OrderSysID = OrderSysID.getBytes();///报单编号
 		int result = instance.ReqQryOrder(handle, pQryOrder, requestID);
@@ -1324,6 +1412,16 @@ public class TradeAPI {
 	}
 
 
+
+	private List<Trade> getTradeListByLocalUserInstrumentID(String localUserID, String instrumentID, byte direction){
+		Condition condition = new Condition(Trade.class);
+		condition.createCriteria()
+				.andEqualTo("userId",localUserID)
+				.andEqualTo("instrumentId", instrumentID)
+				.andEqualTo("direction", (direction - '0'));
+		condition.setOrderByClause("create_time DESC");
+		return  tradeMapper.selectByCondition(condition);
+	}
 }
 
 

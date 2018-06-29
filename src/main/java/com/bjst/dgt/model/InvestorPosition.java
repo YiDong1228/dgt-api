@@ -1,11 +1,10 @@
 package com.bjst.dgt.model;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "investor_position")
-public class InvestorPosition implements Serializable{
+public class InvestorPosition {
     /**
      * 标识
      */
@@ -190,14 +189,20 @@ public class InvestorPosition implements Serializable{
     /**
      * 创建时间
      */
-    @Column(name = "create_time",insertable = false, updatable = false)
+    @Column(name = "create_time")
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @Column(name = "update_time",insertable = false, updatable = false)
+    @Column(name = "update_time")
     private Date updateTime;
+
+    /**
+     * 持仓日期
+     */
+    @Column(name = "position_tdate")
+    private String positionTdate;
 
     /**
      * 获取标识
@@ -787,5 +792,23 @@ public class InvestorPosition implements Serializable{
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    /**
+     * 获取持仓日期
+     *
+     * @return position_tdate - 持仓日期
+     */
+    public String getPositionTdate() {
+        return positionTdate;
+    }
+
+    /**
+     * 设置持仓日期
+     *
+     * @param positionTdate 持仓日期
+     */
+    public void setPositionTdate(String positionTdate) {
+        this.positionTdate = positionTdate;
     }
 }
