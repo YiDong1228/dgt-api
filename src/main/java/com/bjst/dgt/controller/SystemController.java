@@ -39,7 +39,7 @@ public class SystemController {
 
     @GetMapping("test")
     public String test(@RequestParam String name, @RequestParam String pwd) {
-       tradeService.tradeInnerLogin(name,pwd);
+       tradeService.tradeInnerLogin("1", name, pwd);
        //tradeService.tradeOuterLogin(name,pwd);
 
         return "dd";

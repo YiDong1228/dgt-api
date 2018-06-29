@@ -1,7 +1,10 @@
 package com.bjst.dgt.model;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Trade {
     /**
@@ -118,13 +121,13 @@ public class Trade {
     /**
      * 创建时间
      */
-    @Column(name = "create_time")
+    @Column(name = "create_time",insertable = false, updatable = false)
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @Column(name = "update_time")
+    @Column(name = "update_time",insertable = false, updatable = false)
     private Date updateTime;
 
     /**
@@ -158,16 +161,16 @@ public class Trade {
     private String exchangeId;
 
     /**
-     * 买方向没有成交数量（只有部分成交时候）
+     * 开仓量
      */
-    @Column(name = "buy_remaining_volume")
-    private Integer buyRemainingVolume;
+    @Column(name = "open_volume")
+    private Integer openVolume;
 
     /**
-     * 卖方向没有成交数量（只有部分成交时候）
+     * 平仓量
      */
-    @Column(name = "sell_remaining_volume")
-    private Integer sellRemainingVolume;
+    @Column(name = "close_volume")
+    private Integer closeVolume;
 
     /**
      * 保本价
@@ -674,39 +677,39 @@ public class Trade {
     }
 
     /**
-     * 获取买方向没有成交数量（只有部分成交时候）
+     * 获取开仓量
      *
-     * @return buy_remaining_volume - 买方向没有成交数量（只有部分成交时候）
+     * @return open_volume - 开仓量
      */
-    public Integer getBuyRemainingVolume() {
-        return buyRemainingVolume;
+    public Integer getOpenVolume() {
+        return openVolume;
     }
 
     /**
-     * 设置买方向没有成交数量（只有部分成交时候）
+     * 设置开仓量
      *
-     * @param buyRemainingVolume 买方向没有成交数量（只有部分成交时候）
+     * @param openVolume 开仓量
      */
-    public void setBuyRemainingVolume(Integer buyRemainingVolume) {
-        this.buyRemainingVolume = buyRemainingVolume;
+    public void setOpenVolume(Integer openVolume) {
+        this.openVolume = openVolume;
     }
 
     /**
-     * 获取卖方向没有成交数量（只有部分成交时候）
+     * 获取平仓量
      *
-     * @return sell_remaining_volume - 卖方向没有成交数量（只有部分成交时候）
+     * @return close_volume - 平仓量
      */
-    public Integer getSellRemainingVolume() {
-        return sellRemainingVolume;
+    public Integer getCloseVolume() {
+        return closeVolume;
     }
 
     /**
-     * 设置卖方向没有成交数量（只有部分成交时候）
+     * 设置平仓量
      *
-     * @param sellRemainingVolume 卖方向没有成交数量（只有部分成交时候）
+     * @param closeVolume 平仓量
      */
-    public void setSellRemainingVolume(Integer sellRemainingVolume) {
-        this.sellRemainingVolume = sellRemainingVolume;
+    public void setCloseVolume(Integer closeVolume) {
+        this.closeVolume = closeVolume;
     }
 
     /**

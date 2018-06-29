@@ -31,8 +31,8 @@
     <result column="transaction_price" jdbcType="DOUBLE" property="transactionPrice" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="exchange_id" jdbcType="VARCHAR" property="exchangeId" />
-    <result column="buy_remaining_volume" jdbcType="INTEGER" property="buyRemainingVolume" />
-    <result column="sell_remaining_volume" jdbcType="INTEGER" property="sellRemainingVolume" />
+    <result column="open_volume" jdbcType="INTEGER" property="openVolume" />
+    <result column="close_volume" jdbcType="INTEGER" property="closeVolume" />
     <result column="break_even_price" jdbcType="DOUBLE" property="breakEvenPrice" />
     <result column="break_even_num" jdbcType="SMALLINT" property="breakEvenNum" />
     <result column="break_even_spread_price" jdbcType="DOUBLE" property="breakEvenSpreadPrice" />
@@ -62,9 +62,9 @@
     sell_remaining_volume
   </sql>
 
-  <!--&amp;amp;amp;amp;amp;lt;select id="getAppConfig2" parameterType="java.lang.String" resultType="com.bjst.dgt.model.AppConfig"&amp;amp;amp;amp;amp;gt;-->
+  <!--&amp;amp;amp;amp;amp;amp;amp;lt;select id="getAppConfig2" parameterType="java.lang.String" resultType="com.bjst.dgt.model.AppConfig"&amp;amp;amp;amp;amp;amp;amp;gt;-->
   <select id="getTradeByExchangeIdAndOrderSysId" resultMap="BaseResultMap">
     select <include refid="baseSql" /> from trade
-    where exchange_id = #{exchangeId} and order_sys_id = #{orderSysId,jdbcType=VARCHAR}
+    where exchange_id = #{arg0,jdbcType=VARCHAR} and order_sys_id = #{arg1,jdbcType=VARCHAR}
   </select>
 </mapper>

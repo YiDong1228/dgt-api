@@ -6,6 +6,7 @@ import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.dao.InvestorPositionDetailMapper;
 import com.bjst.dgt.dao.InvestorPositionMapper;
 import com.bjst.dgt.dao.TradeMapper;
+import com.bjst.dgt.model.InvestorPosition;
 import com.bjst.dgt.model.Trade;
 import com.bjst.dgt.model.TradeClient;
 import com.bjst.dgt.third.yifu.TradeAPI;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * Created by zll on 2018/6/19.
@@ -49,31 +51,33 @@ public class TradeService {
 
     /**
      *  内盘登录
+     *  @param localUserId 本地用户id
      * @param userId 用户id
      * @param pwd 用户密码
      */
-    public void tradeInnerLogin(String userId, String pwd) {
-        tradeLogin(userId, pwd, false);
+    public void tradeInnerLogin(String localUserId,String userId, String pwd) {
+        tradeLogin(localUserId,userId, pwd, false);
     }
 
     /**
      * 外盘登录
+     * @param localUserId 本地用户id
      * @param userId 用户id
      * @param pwd 用户密码
      */
-    public void tradeOuterLogin(String userId, String pwd) {
-        tradeLogin(userId, pwd, true);
+    public void tradeOuterLogin(String localUserId,String userId, String pwd) {
+        tradeLogin(localUserId,userId, pwd, true);
     }
 
     @Async
-    public void tradeLogin(String userId, String pwd, boolean isOuter) {
+    public void tradeLogin(String localUserId,String userId, String pwd, boolean isOuter) {
         if (!tradeClient.getTradeClient().containsKey(userId)) {
             TradeAPI tradeAPI = null;
             if (isOuter) {
-                tradeAPI = new TradeAPI(userId, pwd, outerDisc, outerUrl);
+                tradeAPI = new TradeAPI(localUserId,userId, pwd, outerDisc, outerUrl);
 
             } else {
-                tradeAPI = new TradeAPI(userId, pwd, innerDisc, innerUrl);
+                tradeAPI = new TradeAPI(localUserId, userId, pwd, innerDisc, innerUrl);
             }
             tradeAPI.setTradeClientWeakReference(new WeakReference<TradeClient>(tradeClient));
             tradeAPI.setRedisService(redisService);
@@ -110,4 +114,16 @@ public class TradeService {
             }
             return result;
     }
+
+    public Result getPositionList(String userId) {
+        // 内外盘都要查, 需等待登录将用户信息存储 **** 暂时 只有吃外盘
+        Result result = ResultGenerator.genFailResult("查询持仓失败", ResultCode.FAIL);
+        if (tradeClient.containsKey(userId)) {
+            List<InvestorPosition> investorPositionList = tradeClient.get(userId).queryInvestorPositiosnForResult();
+            result = ResultGenerator.genSuccessResult(investorPositionList);
+        }
+        return result;
+    }
+
+
 }
