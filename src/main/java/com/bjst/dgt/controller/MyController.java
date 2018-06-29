@@ -177,6 +177,7 @@ public class MyController {
 
     @PostMapping("/alterPwd")
     public Result alterPwd(@RequestBody Map<String, String> map) {
+        //System.out.println(1);
         User user = new User();
         user.setId(Long.getLong(map.get("userId")));
         user.setPassword(map.get("oldPwd"));
