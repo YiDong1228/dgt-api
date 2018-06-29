@@ -11,6 +11,7 @@ import com.bjst.dgt.util.MapToStringSplicing;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
@@ -46,6 +47,19 @@ public class YiFuAPIService {
      * 时间戳
      */
     private static String time = String.valueOf(new Date().getTime());
+
+    @Value("${dgt.web.untie.user-url}")
+    private static String jiebang;
+    @Value("${dgt.web.binding.user-url}")
+    private static String bangding;
+    @Value("${dgt.web.insert.user-url}")
+    private static String insert;
+    @Value("${dgt.web.margin.user-url}")
+    private static String margin;
+    @Value("${dgt.web.recharge.user-url}")
+    private static String recharge;
+    @Value("${dgt.web.reset.user-trl}")
+    private static String reset;
 
 
     /**
@@ -117,9 +131,9 @@ public class YiFuAPIService {
         String result = null;
         try {
             if (in == 0) {
-                result = HttpClientUtil.putProcessRuntimeTask("http://120.55.162.84:8050/api/subaccounts?" + query, registerMap);
+                result = HttpClientUtil.putProcessRuntimeTask(insert + "?" + query, registerMap);
             } else {
-                result = HttpClientUtil.putProcessRuntimeTask("http://106.14.79.191:8050/api/subaccounts?" + query, registerMap);
+                result = HttpClientUtil.putProcessRuntimeTask(insert + "?" + query, registerMap);
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -176,7 +190,7 @@ public class YiFuAPIService {
 
         String result = null;
         try {
-            result = HttpClientUtil.getProcessDefinitionList("http://120.55.162.84:8050/api/subaccounts/fund?" + query, AvailableAndMarginMap);
+            result = HttpClientUtil.getProcessDefinitionList(margin + "?" + query, AvailableAndMarginMap);
             JsonParser parser = new JsonParser();
             JsonObject object = (JsonObject) parser.parse(result);
             JsonArray array = null;
@@ -248,7 +262,7 @@ public class YiFuAPIService {
 
         String result = null;
         try {
-            result = HttpClientUtil.putProcessRuntimeTask("http://120.55.162.84:8050/api/subtransfers?" + query, RechargeAndWithdrawalMap);
+            result = HttpClientUtil.putProcessRuntimeTask(recharge + "?" + query, RechargeAndWithdrawalMap);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -307,7 +321,7 @@ public class YiFuAPIService {
 
         String result = null;
         try {
-            result = HttpClientUtil.postHistoryProcessInstancesList("http://120.55.162.84:8050/api/subaccounts/password?" + query, ResetPasswordMap);
+            result = HttpClientUtil.postHistoryProcessInstancesList(reset + "?" + query, ResetPasswordMap);
             JsonParser parser = new JsonParser();
             JsonObject object = (JsonObject) parser.parse(result);
             JsonArray array = null;
@@ -362,7 +376,7 @@ public class YiFuAPIService {
 
         String result = null;
         try {
-            result = HttpClientUtil.putProcessRuntimeTask("http://120.55.162.84:8050/api/subaccounts/banks?" + query, BindingBankCardMap);
+            result = HttpClientUtil.putProcessRuntimeTask(bangding + "?" + query, BindingBankCardMap);
             JsonParser parser = new JsonParser();
             JsonObject object = (JsonObject) parser.parse(result);
             JsonArray array = null;
@@ -419,7 +433,7 @@ public class YiFuAPIService {
         String query = MapToStringSplicing.createLinkStringByGet(UntieBankCardMap);
 
         try {
-            String result = HttpClientUtil.deleteProcessRuntimeIdentityLink("http://120.55.162.84:8050/api/subaccounts/banks?" + query, UntieBankCardMap);
+            String result = HttpClientUtil.deleteProcessRuntimeIdentityLink(jiebang + "?" + query, UntieBankCardMap);
             JsonParser parser = new JsonParser();
             JsonObject object = (JsonObject) parser.parse(result);
             JsonArray array = null;

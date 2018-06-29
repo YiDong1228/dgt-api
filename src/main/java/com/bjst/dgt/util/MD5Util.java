@@ -1,12 +1,18 @@
 package com.bjst.dgt.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 
 public class MD5Util {
+
+    @Value("${dgt.trade.inner.disc}")
+    private static String md5key_inner;
+    @Value("${dgt.trade.outer.disc}")
+    private static String getMd5key_outer;
 
     public final static String MD5(String s) {
         char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
@@ -122,9 +128,9 @@ public class MD5Util {
         String Origin = builder.toString();
         String str ="";
         if(in == 0){
-           str = Origin + MD5_Key.MD5_FORMAL_KEY;
+           str = Origin + md5key_inner;
         }else{
-           str = Origin + MD5_Key.MD5_OUTER_KEY;
+           str = Origin + getMd5key_outer;
         }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
@@ -146,7 +152,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
@@ -166,7 +172,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
@@ -186,7 +192,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
@@ -215,7 +221,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
@@ -232,7 +238,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
@@ -264,7 +270,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
@@ -290,7 +296,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
@@ -310,7 +316,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
@@ -324,7 +330,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
@@ -344,7 +350,7 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + MD5_Key.MD5_FORMAL_KEY;
+        String str = Origin + md5key_inner;
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }

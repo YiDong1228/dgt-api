@@ -9,8 +9,8 @@ import java.io.IOException;
 /**
  * Created by zll on 2018/6/29.
  */
-@Component
-@WebFilter
+//@Component
+//@WebFilter
 public class TokenAuthorFilter implements Filter{
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
