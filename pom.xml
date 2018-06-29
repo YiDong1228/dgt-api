@@ -94,6 +94,26 @@
 			<version>20180130</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+
+		<!--httpclient-->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.5</version>
+		</dependency>
+
 		<!--阿里 Druid Spring Boot Starter依赖-->
 		<dependency>
 			<groupId>com.alibaba</groupId>
@@ -133,9 +153,15 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 		<dependency>
+<<<<<<< HEAD
 			<groupId>com.alipay.sdk</groupId>
 			<artifactId>alipay-sdk-java</artifactId>
 			<version>3.1.0</version>
+=======
+			<groupId>com.mangofactory</groupId>
+			<artifactId>swagger-springmvc</artifactId>
+			<version>1.0.0</version>
+>>>>>>> 901f27ba5f2c68d181238658499567e4c7ecde8a
 		</dependency>
 	</dependencies>
 

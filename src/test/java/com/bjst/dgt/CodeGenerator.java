@@ -39,7 +39,11 @@ public class CodeGenerator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//@date
 
     public static void main(String[] args) {
+<<<<<<< HEAD
         genCode("trade");
+=======
+        genCode("question_type");
+>>>>>>> 901f27ba5f2c68d181238658499567e4c7ecde8a
         //genCodeByCustomModelName("输入表名","输入自定义Model名称");
     }
 

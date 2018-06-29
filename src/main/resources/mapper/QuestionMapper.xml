@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjst.dgt.dao.QuestionMapper">
+  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.Question">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="question_type_id" jdbcType="VARCHAR" property="questionTypeId" />
+    <result column="subtitle" jdbcType="VARCHAR" property="subtitle" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+  </resultMap>
+</mapper>
