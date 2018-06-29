@@ -53,4 +53,23 @@
         WHERE `user`.mobile = #{mobile} LIMIT 1
     </select>
 
+    <update id="updateUserPwdByMobile" parameterType="com.bjst.dgt.model.User">
+        UPDATE `user`
+        SET `password` = #{password}
+        WHERE `mobile` = #{mobile}
+    </update>
+
+    <select id="getUserList" resultMap="BaseResultMap" parameterType="com.bjst.dgt.model.User">
+        SELECT
+        <include refid="getUserSql"/>
+        FROM `user`
+        WHERE `mobile` = #{mobile}
+    </select>
+
+    <update id="updateUserPwdById" parameterType="com.bjst.dgt.model.User">
+        update `user`
+        set `password` = #{password}
+        where `id` = #{id}
+    </update>
+
 </mapper>

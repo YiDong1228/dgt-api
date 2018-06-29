@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
  * @Author: yd
  * @CreateDate: 2018/06/27 05:20 PM
  * @UpdateUser: yd
- * @UpdateDate: 2018/06/27 05:20 PM
- * @UpdateRemark: 创建UserService
+ * @UpdateDate: 2018年6月28日21:37:49
+ * @UpdateRemark: UserService
  * @Version: 1.0
  */
 @Service
@@ -60,6 +60,56 @@ public class UserService {
         redisService.set("User", loginUser, new Long(7), TimeUnit.DAYS);
         if (loginUser != null) {
             return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean forgetPwd(User user) {
+        user.setPassword(MD5Util.MD5(user.getMobile(), user.getPassword()));
+        int i = userMapper.updateUserPwdByMobile(user);
+        if (i > 0) {
+            boolean exists = redisService.exists("User");
+            if (exists) {
+                redisService.remove("User");
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean alterPwd(User user) {
+        boolean exists = redisService.exists("User");
+        if (exists) {
+            User u = (User) redisService.get("User");
+            user.setPassword(MD5Util.MD5(u.getMobile(), user.getPassword()));
+            userMapper.updateUserPwdById(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public User getUesrList(User user) {
+        User u = userMapper.getUserList(user);
+        if (u != null) {
+            return u;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean checkPwd(User user) {
+        boolean exists = redisService.exists("User");
+        if (exists) {
+            User u = (User) redisService.get("User");
+            user.setPassword(MD5Util.MD5(user.getMobile(), user.getPassword()));
+            if (u.getPassword().equalsIgnoreCase(user.getPassword())) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
