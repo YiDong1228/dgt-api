@@ -3,6 +3,7 @@ package com.bjst.dgt.controller;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultCode;
 import com.bjst.dgt.core.ResultGenerator;
+import com.bjst.dgt.model.TokenModel;
 import com.bjst.dgt.model.User;
 import com.bjst.dgt.model.yifu.RegisterBack;
 import com.bjst.dgt.model.yifu.ResetPassword;
@@ -12,13 +13,16 @@ import com.bjst.dgt.service.YiFuAPIService;
 import com.bjst.dgt.util.CodeUtils;
 import com.bjst.dgt.util.ShortMessageUtil;
 import net.sf.json.JSONObject;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -140,18 +144,52 @@ public class MyController {
 
     @PostMapping("/login")
     public Result login(@RequestBody User user) {
-        boolean falg = userService.loginUser(user);
-        if (falg) {
-            return ResultGenerator.genSuccessResult("登录成功！", ResultCode.SUCCESS);
+        if (user.getMobile() != null && user.getPassword() != null) {
+            boolean falg = userService.loginUser(user);
+            if (falg) {
+                User u = (User) redisService.get("User");
+                String token = (String) redisService.get("token");
+                Long userId = u.getId();
+                TokenModel tokenMode = new TokenModel(userId, token);
+                return ResultGenerator.genSuccessResult(tokenMode);
+            } else {
+                return ResultGenerator.genFailResult("登录失败！用户名或密码错误！", ResultCode.FAIL);
+            }
         } else {
-            return ResultGenerator.genFailResult("登录失败！用户名或密码错误！", ResultCode.FAIL);
+            return ResultGenerator.genFailResult("参数错误", ResultCode.FAIL);
         }
     }
 
     @PostMapping("/logout")
-    public Result logout(@RequestBody User user) {
-        redisService.remove("User");
-        return ResultGenerator.genSuccessResult("退出登录成功！");
+    public Result logout(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        String userId = request.getHeader("userId");
+        if (token != null && userId != null) {
+            User user = (User) redisService.get("User");
+            if (token.equals(redisService.get("token"))) {
+                if (userId.equals(user.getId())) {
+                    boolean exists = redisService.exists("User");
+                    if (exists) {
+                        redisService.remove("User");
+                    } else {
+                        return ResultGenerator.genFailResult("登录信息已过期，如需要，请重新登录", ResultCode.FAIL);
+                    }
+                    exists = redisService.exists("token");
+                    if (exists) {
+                        redisService.remove("toekn");
+                    } else {
+                        return ResultGenerator.genFailResult("登录信息已过期，如需要，请重新登录", ResultCode.FAIL);
+                    }
+                    return ResultGenerator.genSuccessResult("退出登录成功！");
+                } else {
+                    return ResultGenerator.genFailResult("userId错误", ResultCode.FAIL);
+                }
+            } else {
+                return ResultGenerator.genFailResult("token错误", ResultCode.FAIL);
+            }
+        } else {
+            return ResultGenerator.genFailResult("参数错误", ResultCode.FAIL);
+        }
     }
 
     @PostMapping("/forgetPwd")
@@ -174,13 +212,12 @@ public class MyController {
     @PostMapping("/alterPwd")
     public Result alterPwd(@RequestBody Map<String, String> map) {
         User user = new User();
-        boolean falg;
         user.setId(Long.getLong(map.get("userId")));
         user.setPassword(map.get("newPwd"));
         user.setType(2);
         Result result = checkSMS(user);
         if (result.getCode() == Integer.parseInt(ResultCode.SUCCESS.toString())) {
-            falg = userService.checkPwd(user);
+            boolean falg = userService.checkPwd(user);
             if (falg) {
                 falg = userService.alterPwd(user);
                 if (falg) {
