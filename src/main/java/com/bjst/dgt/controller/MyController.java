@@ -48,7 +48,7 @@ public class MyController {
     public Result register(@RequestBody User user) {
         if (user != null) {
             user.setType(1);
-            Result result = checkSMS(user);
+            Result result = userService.checkSMS(user);
             if (result.getCode() == Integer.parseInt(ResultCode.SUCCESS.toString())) {
                 //内盘注册
                 RegisterBack registerBack = YiFuAPIService.registerAPI(user, 0);
@@ -105,40 +105,6 @@ public class MyController {
             }
         } else {
             return ResultGenerator.genFailResult("参数错误！", ResultCode.FAIL);
-        }
-    }
-
-    public Result checkSMS(User user) {
-        if ((user.getType() == 1 || user.getType() == 2) && user.getSms() != null) {
-            boolean exists = false;
-            String sms = "";
-            if (user.getType() == 1) {
-                exists = redisService.exists("registerSMS");
-                if (exists) {
-                    sms = (String) redisService.get("registerSMS");
-                    if (user.getSms().equals(sms)) {
-                        return ResultGenerator.genSuccessResult("验证码正确", ResultCode.SUCCESS);
-                    } else {
-                        return ResultGenerator.genFailResult("验证码错误", ResultCode.FAIL);
-                    }
-                } else {
-                    return ResultGenerator.genFailResult("验证码已过期", ResultCode.FAIL);
-                }
-            } else {
-                exists = redisService.exists("passwordSMS");
-                if (exists) {
-                    redisService.get("passwordSMS");
-                    if (user.getSms().equals(sms)) {
-                        return ResultGenerator.genSuccessResult("验证码正确", ResultCode.SUCCESS);
-                    } else {
-                        return ResultGenerator.genFailResult("验证码错误", ResultCode.FAIL);
-                    }
-                } else {
-                    return ResultGenerator.genFailResult("验证码已过期", ResultCode.FAIL);
-                }
-            }
-        } else {
-            return ResultGenerator.genFailResult("参数错误", ResultCode.FAIL);
         }
     }
 
@@ -215,7 +181,7 @@ public class MyController {
         user.setId(Long.getLong(map.get("userId")));
         user.setPassword(map.get("newPwd"));
         user.setType(2);
-        Result result = checkSMS(user);
+        Result result = userService.checkSMS(user);
         if (result.getCode() == Integer.parseInt(ResultCode.SUCCESS.toString())) {
             boolean falg = userService.checkPwd(user);
             if (falg) {

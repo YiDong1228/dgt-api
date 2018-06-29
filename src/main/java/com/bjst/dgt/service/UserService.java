@@ -1,5 +1,8 @@
 package com.bjst.dgt.service;
 
+import com.bjst.dgt.core.Result;
+import com.bjst.dgt.core.ResultCode;
+import com.bjst.dgt.core.ResultGenerator;
 import com.bjst.dgt.dao.UserMapper;
 import com.bjst.dgt.model.User;
 import com.bjst.dgt.util.MD5Util;
@@ -144,4 +147,37 @@ public class UserService {
         }
     }
 
+    public Result checkSMS(User user) {
+        if ((user.getType() == 1 || user.getType() == 2) && user.getSms() != null) {
+            boolean exists = false;
+            String sms = "";
+            if (user.getType() == 1) {
+                exists = redisService.exists("registerSMS");
+                if (exists) {
+                    sms = (String) redisService.get("registerSMS");
+                    if (user.getSms().equals(sms)) {
+                        return ResultGenerator.genSuccessResult("验证码正确", ResultCode.SUCCESS);
+                    } else {
+                        return ResultGenerator.genFailResult("验证码错误", ResultCode.FAIL);
+                    }
+                } else {
+                    return ResultGenerator.genFailResult("验证码已过期", ResultCode.FAIL);
+                }
+            } else {
+                exists = redisService.exists("passwordSMS");
+                if (exists) {
+                    redisService.get("passwordSMS");
+                    if (user.getSms().equals(sms)) {
+                        return ResultGenerator.genSuccessResult("验证码正确", ResultCode.SUCCESS);
+                    } else {
+                        return ResultGenerator.genFailResult("验证码错误", ResultCode.FAIL);
+                    }
+                } else {
+                    return ResultGenerator.genFailResult("验证码已过期", ResultCode.FAIL);
+                }
+            }
+        } else {
+            return ResultGenerator.genFailResult("参数错误", ResultCode.FAIL);
+        }
+    }
 }
