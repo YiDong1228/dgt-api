@@ -179,12 +179,13 @@ public class MyController {
     public Result alterPwd(@RequestBody Map<String, String> map) {
         User user = new User();
         user.setId(Long.getLong(map.get("userId")));
-        user.setPassword(map.get("newPwd"));
+        user.setPassword(map.get("oldPwd"));
         user.setType(2);
         Result result = userService.checkSMS(user);
         if (result.getCode() == Integer.parseInt(ResultCode.SUCCESS.toString())) {
             boolean falg = userService.checkPwd(user);
             if (falg) {
+                user.setPassword(map.get("newPwd"));
                 falg = userService.alterPwd(user);
                 if (falg) {
                     return ResultGenerator.genSuccessResult("修改密码成功");
