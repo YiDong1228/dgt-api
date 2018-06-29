@@ -153,15 +153,14 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 		<dependency>
-<<<<<<< HEAD
 			<groupId>com.alipay.sdk</groupId>
 			<artifactId>alipay-sdk-java</artifactId>
 			<version>3.1.0</version>
-=======
+        </dependency>
+		<dependency>
 			<groupId>com.mangofactory</groupId>
 			<artifactId>swagger-springmvc</artifactId>
 			<version>1.0.0</version>
->>>>>>> 901f27ba5f2c68d181238658499567e4c7ecde8a
 		</dependency>
 	</dependencies>
 
