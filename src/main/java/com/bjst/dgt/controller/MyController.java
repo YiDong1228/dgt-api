@@ -28,45 +28,37 @@ import java.util.concurrent.TimeUnit;
  * @Author: yd
  * @CreateDate: 2018/06/27 05:54 PM
  * @UpdateUser: yd
- * @UpdateDate: 2018年6月28日21:00:36
+ * @UpdateDate:  2018年6月30日21:19:58
  * @UpdateRemark: 我的模块controller层
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/my/user")
+@RequestMapping("/my")
 public class MyController {
 
     @Resource
     private UserService userService;
-
     @Resource
     private RedisService redisService;
-
     @Resource
     private YiFuAPIService yiFuAPIService;
-
     @Resource
     private TradeService tradeService;
-
     @Resource
     private BankCardTypeService bankCardTypeService;
-
     @Resource
     private BankCardService bankCardService;
-
     @Resource
     private MessageQuotationService messageQuotationService;
-
     @Resource
     private MessageSystemService messageSystemService;
-
     @Resource
     private QuestionService questionService;
-
     @Resource
     private QuestionTypeService questionTypeService;
 
-    @PostMapping("/register")
+
+    @PostMapping("/user/register")
     public Result register(@RequestBody User user) {
         if (user != null) {
             user.setType(ProjectConstant.SENDSMS_TYPE_1);
@@ -92,7 +84,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/checkMobile")
+    @PostMapping("/user/checkMobile")
     public Result checkMobile(@RequestBody User user) {
         if (user.getMobile() != null) {
             boolean exists = userService.existsUserByMobile(user);
@@ -106,7 +98,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/sendSMS")
+    @PostMapping("/user/sendSMS")
     public Result sendSMS(@RequestBody User user) {
         if (user.getMobile() != null && (user.getType() == ProjectConstant.SENDSMS_TYPE_1 || user.getType() == ProjectConstant.SENDSMS_TYPE_2)) {
             // 生成验证码
@@ -131,7 +123,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public Result login(@RequestBody User user) {
         if (user.getMobile() != null && user.getPassword() != null) {
             //本地登录
@@ -156,7 +148,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/user/logout")
     public Result logout(HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
@@ -196,7 +188,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/forgetPwd")
+    @PostMapping("/user/forgetPwd")
     public Result forgetPwd(@RequestBody Map<String, String> map) {
         User user = new User();
         user.setPassword(map.get("newPwd"));
@@ -232,7 +224,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/alterPwd")
+    @PostMapping("/user/alterPwd")
     public Result alterPwd(@RequestBody Map<String, String> map, HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
@@ -277,7 +269,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/getBankTypeList")
+    @PostMapping("/user/getBankTypeList")
     public Result getBankTypeList(HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
@@ -294,7 +286,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/bindingBank")
+    @PostMapping("/user/bindingBank")
     public Result bindingBank(@RequestBody BankCard bankCard, HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
@@ -331,7 +323,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/getBankList")
+    @PostMapping("/user/getBankList")
     public Result getBankList(HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
@@ -350,7 +342,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/removeBank")
+    @PostMapping("/user/removeBank")
     public Result removeBank(@RequestBody BankCard bankCard, HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
@@ -391,7 +383,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/getPriceWarning")
+    @PostMapping("/message/getPriceWarning")
     public Result getPriceWarning(HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
@@ -410,7 +402,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/getSystemNotic")
+    @PostMapping("/message/getSystemNotic")
     public Result getSystemNotic(HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
@@ -427,7 +419,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/getCommonProblems")
+    @PostMapping("/question/getCommonProblems")
     public Result getCommonProblems(@RequestBody Question question, HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
@@ -444,7 +436,7 @@ public class MyController {
         }
     }
 
-    @PostMapping("/getCommonProblemsById")
+    @PostMapping("/question/getCommonProblemsById")
     public Result getCommonProblemsById(HttpServletRequest request) {
         String token = request.getHeader("token");
         String userId = request.getHeader("userId");
