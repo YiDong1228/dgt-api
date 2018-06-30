@@ -18,9 +18,28 @@ public final class ProjectConstant {
     public static final int PLATFORM_IOS = 2;   // ios 平台类型
     public static final int PLATFORM_RAPE = 1;   // 强制更新
 
+    public static final int YIFU_TYPE_INNER = 0;   //接口地址类型 内盘
+    public static final int YIFU_TYPE_OUTER = 1;   //接口地址类型 外盘
+
+    public static final String REGISTER_SMS = "registerSMS";//注册验证码缓存
+    public static final String PASSWORD_SMS = "passwordSMS";//忘记验证码缓存
+    public static final String SMS_ERROR_CODE = "error_code";//验证码错误标签
+
+    public static final String MARKET_GETPRODUCT = "getProduct";//行情缓存
+    public static final String MARKET_GETUSERPRODUCTORDER = "getUserProductOrder";//自定义排序缓存
+
+    public static final int SENDSMS_TYPE_1 = 1;//验证码类型 注册
+    public static final int SENDSMS_TYPE_2 = 2;//验证码类型 忘记密码
+
+    public static final int RECHARGEANDWITHDRAWAL_CODE_0 = 0;//status状态值
+    public static final int RECHARGEANDWITHDRAWAL_CODE_2003 = 2003;//status状态值
+    public static final int RECHARGEANDWITHDRAWAL_CODE_2004 = 2004;//status状态值
+    public static final int RECHARGEANDWITHDRAWAL_CODE_200 = 200;//status状态值
+
     public static final int SORT_DEFAULT = 0;   // 默认顺序
     public static final int SORT_ZHENGXU = 1;   // 正序
     public static final int SORT_DAOXU = 2;   // 倒序
+
     public static final int TRADE_DIRECTION_BUY = 0; // 买
     public static final int TRADE_DIRECTION_SELL = 1; // 卖
     public static final int TRADE_COMB_OFFSET_FLAG_OPEN = 0; // 开

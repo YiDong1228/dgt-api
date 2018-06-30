@@ -12,6 +12,12 @@ public class MessageQuotation {
     private Integer id;
 
     /**
+     * 用户id
+     */
+    @Column(name = "user_id")
+    private String userId;
+
+    /**
      * 消息内容
      */
     private String content;
@@ -32,6 +38,14 @@ public class MessageQuotation {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     /**

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bjst.dgt.dao.MessageSystemMapper">
-  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.MessageSystem">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="content" jdbcType="VARCHAR" property="content" />
-  </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.bjst.dgt.model.MessageSystem">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+    </resultMap>
+
+    <sql id="getMessageSystemSql">
+    `id`,`content`
+  </sql>
+
+    <select id="getSystemNotic" resultMap="BaseResultMap">
+        SELECT
+        <include refid="getMessageSystemSql"/>
+        FROM `message_system`
+    </select>
+
 </mapper>

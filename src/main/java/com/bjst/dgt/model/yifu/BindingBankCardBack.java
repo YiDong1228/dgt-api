@@ -10,9 +10,34 @@ package com.bjst.dgt.model.yifu;
  * @Version: 1.0
  */
 public class BindingBankCardBack {
-   private String bankName;//	string	银行名称
-   private String name;//	string	姓名
-   private String bankAccount;//	string	银行卡号
+    private String bankName;//	string	银行名称
+    private String name;//	string	姓名
+    private String bankAccount;//	string	银行卡号
+    /**
+     * 状态码
+     */
+    private Integer status;
+    /**
+     * 信息
+     */
+    private String message;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
 
     public String getBankName() {
         return bankName;

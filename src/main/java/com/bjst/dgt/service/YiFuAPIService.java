@@ -1,5 +1,6 @@
 package com.bjst.dgt.service;
 
+import com.bjst.dgt.core.ProjectConstant;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultCode;
 import com.bjst.dgt.core.ResultGenerator;
@@ -11,7 +12,16 @@ import com.bjst.dgt.util.MapToStringSplicing;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
@@ -29,53 +39,76 @@ import java.util.Map;
  * @UpdateRemark: 逸富API接口
  * @Version: 1.0
  */
+@Service
 public class YiFuAPIService {
 
-    @Resource
-    private static RedisService redisService;
+    @Value("${dgt.web.version}")
+    private String version;
 
     /**
-     * 状态码
+     * 逸富内盘接口地址
      */
-    private static Integer status;
+
+    @Value("${dgt.web.untie.user.inner-url}")
+    private String jiebang_inner;
+    @Value("${dgt.web.binding.user.inner-url}")
+    private String bangding_inner;
+    @Value("${dgt.web.insert.user.inner-url}")
+    private String insert_inner;
+    @Value("${dgt.web.margin.user.inner-url}")
+    private String margin_inner;
+    @Value("${dgt.web.recharge.user.inner-url}")
+    private String recharge_inner;
+    @Value("${dgt.web.reset.user.inner-trl}")
+    private String reset_inner;
+
     /**
-     * 信息
+     * 逸富外盘接口地址
      */
-    private static String message;
+
+    @Value("${dgt.web.untie.user.outer-url}")
+    private String jiebang_outer;
+    @Value("${dgt.web.binding.user.outer-url}")
+    private String bangding_outer;
+    @Value("${dgt.web.insert.user.outer-url}")
+    private String insert_outer;
+    @Value("${dgt.web.margin.user.outer-url}")
+    private String margin_outer;
+    @Value("${dgt.web.recharge.user.outer-url}")
+    private String recharge_outer;
+    @Value("${dgt.web.reset.user.outer-trl}")
+    private String reset_outer;
+
+
+    @Resource
+    private RedisService redisService;
 
     /**
      * 时间戳
      */
-    private static String time = String.valueOf(new Date().getTime());
+    private String time = String.valueOf(System.currentTimeMillis());
 
-    @Value("${dgt.web.untie.user-url}")
-    private static String jiebang;
-    @Value("${dgt.web.binding.user-url}")
-    private static String bangding;
-    @Value("${dgt.web.insert.user-url}")
-    private static String insert;
-    @Value("${dgt.web.margin.user-url}")
-    private static String margin;
-    @Value("${dgt.web.recharge.user-url}")
-    private static String recharge;
-    @Value("${dgt.web.reset.user-trl}")
-    private static String reset;
+    /**
+     * MD5工具类
+     */
+    @Resource
+    private MD5Util md5Util;
 
 
     /**
      * 逸富新增子账户
      *
-     * @param user User对象
-     * @param in   内外盘
-     * @return RegisterBack对象
+     * @param user 逸富新增子账户参数
+     * @param type 内外盘:0-内盘 1-外盘
+     * @return 逸富新增子账户接口返回参数封装
      */
-    public static RegisterBack registerAPI(User user, Integer in) {
+    public RegisterBack registerAPI(User user, Integer type) {
         Register register = new Register();
         RegisterBack registerBack = new RegisterBack();
         Map<String, String> registerMap = new LinkedHashMap<String, String>();
-        String SignMsg = "";
+        String SignMsg;
         //内外盘 0内 1外
-        if (in == 0) {
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
             register.setOrgID("lxw");
             register.setAgentID("test");
             register.setPhone(user.getMobile());
@@ -89,8 +122,9 @@ public class YiFuAPIService {
             register.setRiskTemplateID("68");
             register.setMonitorID("test");
             register.setTimeStamp(time);
-            register.setVersion("1.0");
-            SignMsg = MD5Util.MD5_Register(0, register.getOrgID(), register.getAgentID(), register.getPhone(), register.getSubAccountName(), register.getPassword(), register.getParentAccountID(), register.getSystemID(), register.getAccountType(), register.getMarginTemplateID(), register.getCommissionTemplateID(), register.getRiskTemplateID(), register.getMonitorID(), register.getTimeStamp(), register.getVersion());
+            register.setVersion(version);
+            SignMsg = md5Util.MD5_Register(type, register.getOrgID(), register.getAgentID(), register.getPhone(), register.getSubAccountName(), register.getPassword(), register.getParentAccountID(), register.getSystemID(), register.getAccountType(), register.getMarginTemplateID(), register.getCommissionTemplateID(), register.getRiskTemplateID(), register.getMonitorID(), register.getTimeStamp(), register.getVersion());
+            register.setSignMsg(SignMsg);
         } else {
             register.setOrgID("lxw");
             register.setAgentID("");
@@ -105,10 +139,10 @@ public class YiFuAPIService {
             register.setRiskTemplateID("357");
             register.setMonitorID("0001");
             register.setTimeStamp(time);
-            register.setVersion("1.0");
-            SignMsg = MD5Util.MD5_Register(1, register.getOrgID(), register.getAgentID(), register.getPhone(), register.getSubAccountName(), register.getPassword(), register.getParentAccountID(), register.getSystemID(), register.getAccountType(), register.getMarginTemplateID(), register.getCommissionTemplateID(), register.getRiskTemplateID(), register.getMonitorID(), register.getTimeStamp(), register.getVersion());
+            register.setVersion(version);
+            SignMsg = md5Util.MD5_Register(type, register.getOrgID(), register.getAgentID(), register.getPhone(), register.getSubAccountName(), register.getPassword(), register.getParentAccountID(), register.getSystemID(), register.getAccountType(), register.getMarginTemplateID(), register.getCommissionTemplateID(), register.getRiskTemplateID(), register.getMonitorID(), register.getTimeStamp(), register.getVersion());
+            register.setSignMsg(SignMsg);
         }
-        register.setSignMsg(SignMsg);
 
         registerMap.put("OrgID", register.getOrgID());
         registerMap.put("AgentID", register.getAgentID());
@@ -130,10 +164,10 @@ public class YiFuAPIService {
 
         String result = null;
         try {
-            if (in == 0) {
-                result = HttpClientUtil.putProcessRuntimeTask(insert + "?" + query, registerMap);
+            if (type == ProjectConstant.YIFU_TYPE_INNER) {
+                result = HttpClientUtil.putProcessRuntimeTask(insert_inner + "?" + query, registerMap);
             } else {
-                result = HttpClientUtil.putProcessRuntimeTask(insert + "?" + query, registerMap);
+                result = HttpClientUtil.putProcessRuntimeTask(insert_outer + "?" + query, registerMap);
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -142,8 +176,8 @@ public class YiFuAPIService {
         JsonObject object = (JsonObject) parser.parse(result);
         JsonArray array = null;
         JsonObject subObject = null;
-        status = object.get("status").getAsInt();
-        if (status == 0) {
+        registerBack.setStatus(object.get("status").getAsInt());
+        if (registerBack.getStatus() == ProjectConstant.RECHARGEANDWITHDRAWAL_CODE_0) {
             array = object.get("data").getAsJsonArray();
             for (int i = 0; i < array.size(); i++) {
                 subObject = array.get(i).getAsJsonObject();
@@ -152,7 +186,7 @@ public class YiFuAPIService {
                 registerBack.setPassword(subObject.get("Password").getAsString());
             }
         } else {
-            message = object.get("message").getAsString();
+            registerBack.setMessage(object.get("message").getAsString());
         }
         return registerBack;
     }
@@ -160,24 +194,31 @@ public class YiFuAPIService {
     /**
      * 查询子账户可出资金和保证金
      *
-     * @param availableAndMargin AvailableAndMargin对象
-     * @return AvailableAndMarginBack对象
+     * @param availableAndMargin 查询子账户可出资金和保证金所需呀的参数
+     * @param type               内外盘:0-内盘 1-外盘
+     * @return 查询子账户可出资金和保证金接口返回参数封装
      */
-    public static AvailableAndMarginBack getAvailableAndMargin(AvailableAndMargin availableAndMargin) {
+    public AvailableAndMarginBack getAvailableAndMargin(AvailableAndMargin availableAndMargin, Integer type) {
         AvailableAndMarginBack availableAndMarginBack = new AvailableAndMarginBack();
         Map<String, String> AvailableAndMarginMap = new LinkedHashMap<String, String>();
-        boolean exists = redisService.exists("User");
-        User user = new User();
+        boolean exists = redisService.exists(ProjectConstant.DGT_LOGIN_USER_ID_KEY + availableAndMargin.getUserId());
+        User user;
         if (exists) {
-            user = (User) redisService.get("User");
+            user = (User) redisService.get(ProjectConstant.DGT_LOGIN_USER_ID_KEY + availableAndMargin.getUserId());
         } else {
             return null;
         }
-        availableAndMargin.setSubAccountID(user.getSubAccountIdInner());
         availableAndMargin.setCurrency("CNY");
         availableAndMargin.setTimeStamp(time);
-        availableAndMargin.setVersion("1.0");
-        String SignMsg = MD5Util.MD5_money(availableAndMargin.getSubAccountID(), availableAndMargin.getCurrency(), availableAndMargin.getTimeStamp(), availableAndMargin.getVersion());
+        availableAndMargin.setVersion(version);
+        String SignMsg;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            availableAndMargin.setSubAccountID(user.getSubAccountIdInner());
+            SignMsg = md5Util.MD5_money(type, availableAndMargin.getSubAccountID(), availableAndMargin.getCurrency(), availableAndMargin.getTimeStamp(), availableAndMargin.getVersion());
+        } else {
+            availableAndMargin.setSubAccountID(user.getSubAccountIdOuter());
+            SignMsg = md5Util.MD5_money(type, availableAndMargin.getSubAccountID(), availableAndMargin.getCurrency(), availableAndMargin.getTimeStamp(), availableAndMargin.getVersion());
+        }
         availableAndMargin.setSignMsg(SignMsg);
 
         AvailableAndMarginMap.put("SubAccountID", availableAndMargin.getSubAccountID());
@@ -188,54 +229,60 @@ public class YiFuAPIService {
 
         String query = MapToStringSplicing.createLinkStringByGet(AvailableAndMarginMap);
 
-        String result = null;
+        String result;
         try {
-            result = HttpClientUtil.getProcessDefinitionList(margin + "?" + query, AvailableAndMarginMap);
+            if (type == ProjectConstant.YIFU_TYPE_INNER) {
+                result = HttpClientUtil.getProcessDefinitionList(margin_inner + "?" + query, AvailableAndMarginMap);
+            } else {
+                result = HttpClientUtil.getProcessDefinitionList(margin_outer + "?" + query, AvailableAndMarginMap);
+            }
             JsonParser parser = new JsonParser();
             JsonObject object = (JsonObject) parser.parse(result);
-            JsonArray array = null;
-            JsonObject subObject = null;
-            status = object.get("status").getAsInt();
-            if (status == 0) {
+            JsonArray array;
+            JsonObject subObject;
+            availableAndMarginBack.setStatus(object.get("status").getAsInt());
+            if (availableAndMarginBack.getStatus() == ProjectConstant.RECHARGEANDWITHDRAWAL_CODE_0) {
                 array = object.get("data").getAsJsonArray();
                 for (int i = 0; i < array.size(); i++) {
                     subObject = array.get(i).getAsJsonObject();
-                    availableAndMarginBack.setAvailableFund(BigDecimal.valueOf(subObject.get("AvailableFund").getAsLong()));//可出资金(单位:基础币种)
-                    availableAndMarginBack.setMarginFund(BigDecimal.valueOf(subObject.get("MarginFund").getAsLong()));//占用保证金(单位:子账户的基础币种)
-                    availableAndMarginBack.setBaseCurrency(subObject.get("BaseCurrency").getAsString());//	子账户的基础币种
-                    availableAndMarginBack.setExecRate(BigDecimal.valueOf(subObject.get("ExecRate").getAsLong()));//	执行汇率
+                    //可出资金(单位:基础币种)
+                    availableAndMarginBack.setAvailableFund(BigDecimal.valueOf(subObject.get("AvailableFund").getAsLong()));
+                    //占用保证金(单位:子账户的基础币种)
+                    availableAndMarginBack.setMarginFund(BigDecimal.valueOf(subObject.get("MarginFund").getAsLong()));
+                    //子账户的基础币种
+                    availableAndMarginBack.setBaseCurrency(subObject.get("BaseCurrency").getAsString());
+                    //执行汇率
+                    availableAndMarginBack.setExecRate(BigDecimal.valueOf(subObject.get("ExecRate").getAsLong()));
                 }
             } else {
-                message = object.get("message").getAsString();
+                availableAndMarginBack.setMessage(object.get("message").getAsString());
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
         return availableAndMarginBack;
     }
+
 
     /**
      * 出入金
      *
-     * @param rechargeAndWithdrawal RechargeAndWithdrawal对象
-     * @return RechargeAndWithdrawalBack对象
+     * @param rechargeAndWithdrawal 出入金参数
+     * @param type                  内外盘:0-内盘 1-外盘
+     * @return 出入金接口返回参数封装
      */
-    public static RechargeAndWithdrawalBack setRechargeAndWithdrawal(RechargeAndWithdrawal rechargeAndWithdrawal) {
+    public RechargeAndWithdrawalBack setRechargeAndWithdrawal(RechargeAndWithdrawal rechargeAndWithdrawal, Integer type) {
         RechargeAndWithdrawalBack rechargeAndWithdrawalBack = new RechargeAndWithdrawalBack();
         Map<String, String> RechargeAndWithdrawalMap = new LinkedHashMap<String, String>();
-        boolean exists = redisService.exists("User");
-        User user = new User();
+        boolean exists = redisService.exists(ProjectConstant.DGT_LOGIN_USER_ID_KEY + rechargeAndWithdrawal.getUserId());
+        User user;
         if (exists) {
-            user = (User) redisService.get("User");
-            //内
-            rechargeAndWithdrawal.setSubAccountID(user.getSubAccountIdInner());
-            //TODO 外
+            user = (User) redisService.get(ProjectConstant.DGT_LOGIN_USER_ID_KEY + rechargeAndWithdrawal.getUserId());
         } else {
             return null;
         }
         rechargeAndWithdrawal.setCurrency("CNY");
-        if (rechargeAndWithdrawal.getDirection().equals("1")) {
+        if (rechargeAndWithdrawal.getDirection().equals(ProjectConstant.SENDSMS_TYPE_1)) {
             // 当Direction为1时 判断占用保证金是否大于0，如果大于0则不能出金
             if (BigDecimal.valueOf(new Long(user.getMarginFund().toString())).compareTo(new BigDecimal(1)) > 0) {
                 rechargeAndWithdrawal.setPosition(false);
@@ -244,8 +291,15 @@ public class YiFuAPIService {
             rechargeAndWithdrawal.setPosition(true);
         }
         rechargeAndWithdrawal.setTimeStamp(time);
-        rechargeAndWithdrawal.setVersion("1.0");
-        String str = MD5Util.MD5_rujin(rechargeAndWithdrawal.getSubAccountID(), rechargeAndWithdrawal.getCurrency(), rechargeAndWithdrawal.getDirection(), String.valueOf(rechargeAndWithdrawal.getAmount()), String.valueOf(rechargeAndWithdrawal.isPosition()), rechargeAndWithdrawal.getTimeStamp(), rechargeAndWithdrawal.getVersion());
+        rechargeAndWithdrawal.setVersion(version);
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            rechargeAndWithdrawal.setSubAccountID(user.getSubAccountIdInner());
+            str = md5Util.MD5_rujin(type, rechargeAndWithdrawal.getSubAccountID(), rechargeAndWithdrawal.getCurrency(), rechargeAndWithdrawal.getDirection(), String.valueOf(rechargeAndWithdrawal.getAmount()), String.valueOf(rechargeAndWithdrawal.isPosition()), rechargeAndWithdrawal.getTimeStamp(), rechargeAndWithdrawal.getVersion());
+        } else {
+            rechargeAndWithdrawal.setSubAccountID(user.getSubAccountIdOuter());
+            str = md5Util.MD5_rujin(type, rechargeAndWithdrawal.getSubAccountID(), rechargeAndWithdrawal.getCurrency(), rechargeAndWithdrawal.getDirection(), String.valueOf(rechargeAndWithdrawal.getAmount()), String.valueOf(rechargeAndWithdrawal.isPosition()), rechargeAndWithdrawal.getTimeStamp(), rechargeAndWithdrawal.getVersion());
+        }
         rechargeAndWithdrawal.setSignMsg(str);
 
 
@@ -262,16 +316,20 @@ public class YiFuAPIService {
 
         String result = null;
         try {
-            result = HttpClientUtil.putProcessRuntimeTask(recharge + "?" + query, RechargeAndWithdrawalMap);
+            if (type == ProjectConstant.YIFU_TYPE_INNER) {
+                result = HttpClientUtil.putProcessRuntimeTask(recharge_inner + "?" + query, RechargeAndWithdrawalMap);
+            } else {
+                result = HttpClientUtil.putProcessRuntimeTask(recharge_outer + "?" + query, RechargeAndWithdrawalMap);
+            }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         JsonParser parser = new JsonParser();
         JsonObject object = (JsonObject) parser.parse(result);
-        JsonArray array = null;
-        JsonObject subObject = null;
-        status = object.get("status").getAsInt();
-        if (status == 0 || status == 2003 || status == 2004) {
+        JsonArray array;
+        JsonObject subObject;
+        rechargeAndWithdrawalBack.setStatus(object.get("status").getAsInt());
+        if (rechargeAndWithdrawalBack.getStatus() == ProjectConstant.RECHARGEANDWITHDRAWAL_CODE_0 || rechargeAndWithdrawalBack.getStatus() == ProjectConstant.RECHARGEANDWITHDRAWAL_CODE_2003 || rechargeAndWithdrawalBack.getStatus() == ProjectConstant.RECHARGEANDWITHDRAWAL_CODE_2004) {
             array = object.get("data").getAsJsonArray();
             for (int i = 0; i < array.size(); i++) {
                 subObject = array.get(i).getAsJsonObject();
@@ -282,33 +340,39 @@ public class YiFuAPIService {
                 rechargeAndWithdrawalBack.setExecRate(BigDecimal.valueOf(subObject.get("ExecRate").getAsLong()));
             }
         } else {
-            message = object.get("message").getAsString();
+            rechargeAndWithdrawalBack.setMessage(object.get("message").getAsString());
         }
-
         return rechargeAndWithdrawalBack;
     }
+
 
     /**
      * 重置密码
      *
-     * @param resetPassword ResetPassword对象
-     * @return Result结果
+     * @param resetPassword 重置密码参数
+     * @param type          内外盘:0-内盘 1-外盘
+     * @return 重置密码接口返回参数封装
      */
-    public static Result ResetPassword(ResetPassword resetPassword) {
+    public ResetPasswordBack setResetPassword(ResetPassword resetPassword, Integer type) {
+        ResetPasswordBack resetPasswordBack = new ResetPasswordBack();
         Map<String, String> ResetPasswordMap = new LinkedHashMap<String, String>();
-        boolean exists = redisService.exists("User");
-        User user = new User();
+        boolean exists = redisService.exists(ProjectConstant.DGT_LOGIN_USER_ID_KEY + resetPassword.getUserId());
+        User user;
         if (exists) {
-            user = (User) redisService.get("User");
-            //内
-            resetPassword.setSubAccountID(user.getSubAccountIdInner());
-            //TODO 外
+            user = (User) redisService.get(ProjectConstant.DGT_LOGIN_USER_ID_KEY + resetPassword.getUserId());
         } else {
             return null;
         }
         resetPassword.setTimeStamp(time);
-        resetPassword.setVersion("1.0");
-        String str = MD5Util.MD5_password(resetPassword.getPassword(), resetPassword.getSubAccountID(), resetPassword.getTimeStamp(), resetPassword.getVersion());
+        resetPassword.setVersion(version);
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            resetPassword.setSubAccountID(user.getSubAccountIdInner());
+            str = md5Util.MD5_password(type, resetPassword.getPassword(), resetPassword.getSubAccountID(), resetPassword.getTimeStamp(), resetPassword.getVersion());
+        } else {
+            resetPassword.setSubAccountID(user.getSubAccountIdOuter());
+            str = md5Util.MD5_password(type, resetPassword.getPassword(), resetPassword.getSubAccountID(), resetPassword.getTimeStamp(), resetPassword.getVersion());
+        }
         resetPassword.setSignMsg(str);
 
         ResetPasswordMap.put("Password", resetPassword.getPassword());
@@ -319,48 +383,51 @@ public class YiFuAPIService {
 
         String query = MapToStringSplicing.createLinkStringByGet(ResetPasswordMap);
 
-        String result = null;
+        String result;
         try {
-            result = HttpClientUtil.postHistoryProcessInstancesList(reset + "?" + query, ResetPasswordMap);
+            if (type == ProjectConstant.YIFU_TYPE_INNER) {
+                result = HttpClientUtil.postHistoryProcessInstancesList(reset_inner + "?" + query, ResetPasswordMap);
+            } else {
+                result = HttpClientUtil.postHistoryProcessInstancesList(reset_outer + "?" + query, ResetPasswordMap);
+            }
             JsonParser parser = new JsonParser();
             JsonObject object = (JsonObject) parser.parse(result);
-            JsonArray array = null;
-            JsonObject subObject = null;
-            status = object.get("status").getAsInt();
-            message = object.get("message").getAsString();
+            resetPasswordBack.setStatus(object.get("status").getAsInt());
+            resetPasswordBack.setMessage(object.get("message").getAsString());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if (status == 0) {
-            redisService.remove("User");
-            return ResultGenerator.genSuccessResult("重置密码成功", ResultCode.SUCCESS);
-        } else {
-            return ResultGenerator.genSuccessResult("重置密码失败", ResultCode.FAIL);
-        }
+        return resetPasswordBack;
     }
+
 
     /**
      * 绑定银行卡
      *
-     * @param bindingBankCard BindingBankCard对象
-     * @return BindingBankCardBack对象
+     * @param bindingBankCard 绑定银行卡参数
+     * @param type            内外盘:0-内盘 1-外盘
+     * @return 绑定银行卡接口返回参数封装
      */
-    public static BindingBankCardBack setBindingBankCard(BindingBankCard bindingBankCard) {
+    public BindingBankCardBack setBindingBankCard(BindingBankCard bindingBankCard, Integer type) {
         BindingBankCardBack bindingBankCardBack = new BindingBankCardBack();
         Map<String, String> BindingBankCardMap = new LinkedHashMap<String, String>();
-        boolean exists = redisService.exists("User");
-        User user = new User();
+        boolean exists = redisService.exists(ProjectConstant.DGT_LOGIN_USER_ID_KEY + bindingBankCard.getUserId());
+        User user;
         if (exists) {
-            user = (User) redisService.get("User");
-            //内
-            bindingBankCard.setSubAccountID(user.getSubAccountIdInner());
-            //TODO 外
+            user = (User) redisService.get(ProjectConstant.DGT_LOGIN_USER_ID_KEY + bindingBankCard.getUserId());
         } else {
             return null;
         }
         bindingBankCard.setTimeStamp(time);
-        bindingBankCard.setVersion("1.0");
-        String str = MD5Util.MD5_bangding(bindingBankCard.getBankName(), bindingBankCard.getName(), bindingBankCard.getBankAccount(), bindingBankCard.getSubAccountID(), bindingBankCard.getTimeStamp(), bindingBankCard.getVersion());
+        bindingBankCard.setVersion(version);
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            bindingBankCard.setSubAccountID(user.getSubAccountIdInner());
+            str = md5Util.MD5_bangding(type, bindingBankCard.getBankName(), bindingBankCard.getName(), bindingBankCard.getBankAccount(), bindingBankCard.getSubAccountID(), bindingBankCard.getTimeStamp(), bindingBankCard.getVersion());
+        } else {
+            bindingBankCard.setSubAccountID(user.getSubAccountIdOuter());
+            str = md5Util.MD5_bangding(type, bindingBankCard.getBankName(), bindingBankCard.getName(), bindingBankCard.getBankAccount(), bindingBankCard.getSubAccountID(), bindingBankCard.getTimeStamp(), bindingBankCard.getVersion());
+        }
         bindingBankCard.setSignMsg(str);
 
         BindingBankCardMap.put("BankName", bindingBankCard.getBankName());
@@ -374,24 +441,31 @@ public class YiFuAPIService {
 
         String query = MapToStringSplicing.createLinkStringByGet(BindingBankCardMap);
 
-        String result = null;
+        String result;
         try {
-            result = HttpClientUtil.putProcessRuntimeTask(bangding + "?" + query, BindingBankCardMap);
+            if (type == ProjectConstant.YIFU_TYPE_INNER) {
+                result = HttpClientUtil.putProcessRuntimeTask(bangding_inner + "?" + query, BindingBankCardMap);
+            } else {
+                result = HttpClientUtil.putProcessRuntimeTask(bangding_outer + "?" + query, BindingBankCardMap);
+            }
             JsonParser parser = new JsonParser();
             JsonObject object = (JsonObject) parser.parse(result);
-            JsonArray array = null;
-            JsonObject subObject = null;
-            status = object.get("status").getAsInt();
-            if (status == 0) {
+            JsonArray array;
+            JsonObject subObject;
+            bindingBankCardBack.setStatus(object.get("status").getAsInt());
+            if (bindingBankCardBack.getStatus() == ProjectConstant.RECHARGEANDWITHDRAWAL_CODE_0) {
                 array = object.get("data").getAsJsonArray();
                 for (int i = 0; i < array.size(); i++) {
                     subObject = array.get(i).getAsJsonObject();
-                    bindingBankCardBack.setBankName(subObject.get("BankName").getAsString());//	银行名称
-                    bindingBankCardBack.setName(subObject.get("Name").getAsString());//	姓名
-                    bindingBankCardBack.setBankAccount(subObject.get("BankAccount").getAsString());//	银行卡号
+                    //	银行名称
+                    bindingBankCardBack.setBankName(subObject.get("BankName").getAsString());
+                    //	姓名
+                    bindingBankCardBack.setName(subObject.get("Name").getAsString());
+                    //	银行卡号
+                    bindingBankCardBack.setBankAccount(subObject.get("BankAccount").getAsString());
                 }
             } else {
-                message = object.get("message").getAsString();
+                bindingBankCardBack.setMessage(object.get("message").getAsString());
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -402,26 +476,31 @@ public class YiFuAPIService {
     /**
      * 解绑银行卡
      *
-     * @param untieBankCard UntieBankCard对象
-     * @return UntieBankCardBack对象
+     * @param untieBankCard 解绑银行卡参数
+     * @param type          内外盘:0-内盘 1-外盘
+     * @return 解绑银行卡接口返回参数封装
      */
-    public static UntieBankCardBack setUntieBankCard(UntieBankCard untieBankCard) {
+    public UntieBankCardBack setUntieBankCard(UntieBankCard untieBankCard, Integer type) {
         UntieBankCardBack untieBankCardBack = new UntieBankCardBack();
         Map<String, String> UntieBankCardMap = new LinkedHashMap<String, String>();
-        boolean exists = redisService.exists("User");
-        User user = new User();
+        boolean exists = redisService.exists(ProjectConstant.DGT_LOGIN_USER_ID_KEY + untieBankCard.getUserId());
+        User user;
         if (exists) {
-            user = (User) redisService.get("User");
-            //内
-            untieBankCard.setSubAccountID(user.getSubAccountIdInner());
-            //TODO 外
+            user = (User) redisService.get(ProjectConstant.DGT_LOGIN_USER_ID_KEY + untieBankCard.getUserId());
         } else {
             return null;
         }
         untieBankCard.setBankAccount(untieBankCard.getBankAccount().replace(" ", ""));
         untieBankCard.setTimeStamp(time);
-        untieBankCard.setVersion("1.0");
-        String str = MD5Util.MD5_jiebang(untieBankCard.getBankAccount(), untieBankCard.getSubAccountID(), untieBankCard.getTimeStamp(), untieBankCard.getVersion());
+        untieBankCard.setVersion(version);
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            untieBankCard.setSubAccountID(user.getSubAccountIdInner());
+            str = md5Util.MD5_jiebang(type, untieBankCard.getBankAccount(), untieBankCard.getSubAccountID(), untieBankCard.getTimeStamp(), untieBankCard.getVersion());
+        } else {
+            untieBankCard.setSubAccountID(user.getSubAccountIdOuter());
+            str = md5Util.MD5_jiebang(type, untieBankCard.getBankAccount(), untieBankCard.getSubAccountID(), untieBankCard.getTimeStamp(), untieBankCard.getVersion());
+        }
         untieBankCard.setSignMsg(str);
 
         UntieBankCardMap.put("BankAccount", untieBankCard.getBankAccount());
@@ -433,22 +512,30 @@ public class YiFuAPIService {
         String query = MapToStringSplicing.createLinkStringByGet(UntieBankCardMap);
 
         try {
-            String result = HttpClientUtil.deleteProcessRuntimeIdentityLink(jiebang + "?" + query, UntieBankCardMap);
+            String result;
+            if (type == ProjectConstant.YIFU_TYPE_INNER) {
+                result = HttpClientUtil.deleteProcessRuntimeIdentityLink(jiebang_inner + "?" + query, UntieBankCardMap);
+            } else {
+                result = HttpClientUtil.deleteProcessRuntimeIdentityLink(jiebang_outer + "?" + query, UntieBankCardMap);
+            }
             JsonParser parser = new JsonParser();
             JsonObject object = (JsonObject) parser.parse(result);
-            JsonArray array = null;
-            JsonObject subObject = null;
-            status = object.get("status").getAsInt();
-            if (status == 0) {
+            JsonArray array;
+            JsonObject subObject;
+            untieBankCardBack.setStatus(object.get("status").getAsInt());
+            if (untieBankCardBack.getStatus() == ProjectConstant.RECHARGEANDWITHDRAWAL_CODE_0) {
                 array = object.get("data").getAsJsonArray();
                 for (int i = 0; i < array.size(); i++) {
                     subObject = array.get(i).getAsJsonObject();
-                    untieBankCardBack.setBankName(subObject.get("BankName").getAsString());//	银行名称
-                    untieBankCardBack.setName(subObject.get("Name").getAsString());//	姓名
-                    untieBankCardBack.setBankAccount(subObject.get("BankAccount").getAsString());//	银行卡号
+                    //银行名称
+                    untieBankCardBack.setBankName(subObject.get("BankName").getAsString());
+                    //姓名
+                    untieBankCardBack.setName(subObject.get("Name").getAsString());
+                    //银行卡号
+                    untieBankCardBack.setBankAccount(subObject.get("BankAccount").getAsString());
                 }
             } else {
-                message = object.get("message").getAsString();
+                untieBankCardBack.setMessage(object.get("message").getAsString());
             }
         } catch (Exception e) {
             e.printStackTrace();

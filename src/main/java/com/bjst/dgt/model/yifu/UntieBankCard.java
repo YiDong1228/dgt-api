@@ -20,6 +20,17 @@ public class UntieBankCard implements Serializable {
     private String Version;//	string	10	是	版本号，默认值：1.0
     private String SignMsg;//	string	32	是	签名串
 
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+
     public String getBankAccount() {
         return BankAccount;
     }

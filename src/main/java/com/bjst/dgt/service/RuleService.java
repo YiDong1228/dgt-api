@@ -26,24 +26,13 @@ public class RuleService {
     @Resource
     private RuleMapper ruleMapper;
 
-    @Resource
-    private RedisService redisService;
-
     public Rule getRuleById(Rule rule) {
-        Rule ru = new Rule();
-        /*boolean exists = redisService.exists("getRuleById");
-        if (exists) {
-            ru = (Rule) redisService.get("getRuleById");
-            return ru;
-        } else {*/
-        ru = ruleMapper.getRuleById(rule);
+        Rule ru = ruleMapper.getRuleById(rule);
         if (ru != null) {
             ru.setTradeStatus(DateUtil.isBelong(Integer.parseInt(ru.getIsDomestic()), ru.getCode(), ru.getStartTime(), ru.getEndTime()));
-            //redisService.set("getRuleById", ru,new Long(1*30), TimeUnit.HOURS);
             return ru;
         } else {
             return null;
         }
-        //}
     }
 }

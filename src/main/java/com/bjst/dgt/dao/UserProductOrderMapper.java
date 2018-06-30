@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserProductOrderMapper extends Mapper<UserProductOrder> {
     /**
      * 新增用户自定义排序
+     *
      * @param userProductOrder UserProductOrder对象
      * @return 受影响行数
      */

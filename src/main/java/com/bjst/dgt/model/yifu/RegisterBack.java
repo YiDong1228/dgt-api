@@ -14,6 +14,32 @@ public class RegisterBack {
    private String subLink;//	string	子账户手机号
    private String password;//	string	子账户密码
 
+    /**
+     * 状态码
+     */
+    private Integer status;
+    /**
+     * 信息
+     */
+    private String message;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+
     public String getSubAccountID() {
         return subAccountID;
     }

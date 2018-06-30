@@ -1,20 +1,23 @@
 package com.bjst.dgt.util;
 
+import com.bjst.dgt.core.ProjectConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
+@Service
 public class MD5Util {
 
     @Value("${dgt.trade.inner.disc}")
-    private static String md5key_inner;
+    private String md5key_inner;
     @Value("${dgt.trade.outer.disc}")
-    private static String getMd5key_outer;
+    private String getMd5key_outer;
 
-    public final static String MD5(String s) {
+
+    public static final String MD5(String s) {
         char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
         try {
@@ -47,7 +50,7 @@ public class MD5Util {
      * @param password
      * @return
      */
-    public static String md5Sign(String password) {
+    public String md5Sign(String password) {
         // 得到一个信息摘要器
         MessageDigest digest;
         try {
@@ -81,7 +84,7 @@ public class MD5Util {
         return passWardMd5;
     }
 
-    public static final String MD5_Register(int in,String OrgID, String AgentID, String Phone, String SubAccountName, String Password, String ParentAccountID, String SystemID, String AccountType, String MarginTemplateID, String CommissionTemplateID, String RiskTemplateID, String MonitorID, String TimeStamp, String Version) {
+    public final String MD5_Register(int type, String OrgID, String AgentID, String Phone, String SubAccountName, String Password, String ParentAccountID, String SystemID, String AccountType, String MarginTemplateID, String CommissionTemplateID, String RiskTemplateID, String MonitorID, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(OrgID)) {
             builder.append(OrgID + "|");
@@ -126,18 +129,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str ="";
-        if(in == 0){
-           str = Origin + md5key_inner;
-        }else{
-           str = Origin + getMd5key_outer;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
         }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-
-    public static final String MD5(String Params, String Type, String TimeStamp, String Version) {
+    public final String MD5(Integer type, String Params, String Type, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(Params)) {
             builder.append(Params + "|");
@@ -152,12 +154,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-    public static final String MD5_money(String SubAccountID, String Currency, String TimeStamp, String Version) {
+    public final String MD5_money(Integer type, String SubAccountID, String Currency, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(SubAccountID)) {
             builder.append(SubAccountID + "|");
@@ -172,12 +179,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-    public static final String MD5_login(String Password, String SubAccountID, String TimeStamp, String Version) {
+    public final String MD5_login(Integer type, String Password, String SubAccountID, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(Password)) {
             builder.append(Password + "|");
@@ -192,12 +204,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-    public static final String MD5_rujin(String SubAccountID, String Currency, String Direction, String Amount, String Position, String TimeStamp, String Version) {
+    public final String MD5_rujin(Integer type, String SubAccountID, String Currency, String Direction, String Amount, String Position, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(SubAccountID)) {
             builder.append(SubAccountID + "|");
@@ -221,12 +238,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-    public static final String MD5_bank(String SubAccountID, String TimeStamp, String Version) {
+    public final String MD5_bank(Integer type, String SubAccountID, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(SubAccountID)) {
             builder.append(SubAccountID + "|");
@@ -238,12 +260,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-    public static final String MD5_subtransferaudits(String BankName, String Name, String BankAccount, String SubAccountID, String Amount, String Position, String TimeStamp, String Version) {
+    public final String MD5_subtransferaudits(Integer type, String BankName, String Name, String BankAccount, String SubAccountID, String Amount, String Position, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(BankName)) {
             builder.append(BankName + "|");
@@ -270,12 +297,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-    public static final String MD5_bangding(String BankName, String Name, String BankAccount, String SubAccountID, String TimeStamp, String Version) {
+    public final String MD5_bangding(Integer type, String BankName, String Name, String BankAccount, String SubAccountID, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(BankName)) {
             builder.append(BankName + "|");
@@ -296,12 +328,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-    public static final String MD5_jiebang(String BankAccount, String SubAccountID, String TimeStamp, String Version) {
+    public final String MD5_jiebang(Integer type, String BankAccount, String SubAccountID, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(BankAccount)) {
             builder.append(BankAccount + "|");
@@ -316,12 +353,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-    public static final String MD5_aa(String TimeStamp, String Version) {
+    public final String MD5_aa(Integer type, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(TimeStamp)) {
             builder.append(TimeStamp + "|");
@@ -330,12 +372,17 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }
 
-    public static final String MD5_password(String Password,String SubAccountID,String TimeStamp, String Version) {
+    public final String MD5_password(Integer type, String Password, String SubAccountID, String TimeStamp, String Version) {
         StringBuilder builder = new StringBuilder();
         if (StringUtils.isNotEmpty(Password)) {
             builder.append(Password + "|");
@@ -350,7 +397,12 @@ public class MD5Util {
             builder.append(Version + "|");
         }
         String Origin = builder.toString();
-        String str = Origin + md5key_inner;
+        String str;
+        if (type == ProjectConstant.YIFU_TYPE_INNER) {
+            str = Origin + md5key_inner;
+        } else {
+            str = Origin + getMd5key_outer;
+        }
         String Md5 = MD5Util.MD5(str);
         return Md5.toLowerCase();
     }

@@ -17,6 +17,31 @@ public class AvailableAndMarginBack {
     private String BaseCurrency;//	string	子账户的基础币种
     private BigDecimal ExecRate;//	number	执行汇率
 
+    /**
+     * 状态码
+     */
+    private Integer status;
+    /**
+     * 信息
+     */
+    private String message;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public BigDecimal getAvailableFund() {
         return AvailableFund;
     }

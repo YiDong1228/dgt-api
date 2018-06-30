@@ -48,12 +48,12 @@ public class ProductService {
         UserProductOrder userProductOrder = new UserProductOrder();
         userProductOrder.setUserId(products.getUserId());
         List<Product> productList = new ArrayList<Product>();
-        boolean exists = redisService.exists("getProduct");
+        boolean exists = redisService.exists(ProjectConstant.MARKET_GETPRODUCT + products.getUserId());
         if (exists) {
-            productList = (List<Product>) redisService.get("getProduct");
+            productList = (List<Product>) redisService.get(ProjectConstant.MARKET_GETPRODUCT + products.getUserId());
         } else {
             productList = productMapper.getProduct();
-            redisService.set("getProduct", productList, new Long(100), TimeUnit.MILLISECONDS);
+            redisService.set(ProjectConstant.MARKET_GETPRODUCT + products.getUserId(), productList, new Long(100), TimeUnit.MILLISECONDS);
         }
         if (products.getOrder() == ProjectConstant.SORT_DEFAULT) {
             //默认排序
@@ -102,7 +102,6 @@ public class ProductService {
      */
     public List<Product> setOrder(Map<String, String> map) {
         UserProductOrder userProductOrder = new UserProductOrder();
-        String token = map.get("token");
         int userId = Integer.parseInt(map.get("userId"));
         String order = map.get("orders");
         String code = map.get("codes");

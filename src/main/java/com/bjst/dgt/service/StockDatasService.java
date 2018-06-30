@@ -72,22 +72,14 @@ public class StockDatasService {
     }
 
     public StockDatas getStockDatas(StockDatas stockDatas) {
-        StockDatas datas = new StockDatas();
-        /*boolean exists = redisService.exists("getStockDatas");
-        if (exists) {
-            datas = (StockDatas) redisService.get("getStockDatas");
+        StockDatas datas = stockDatasMapper.getStockDatas(stockDatas);
+        if (stockDatas != null) {
+            datas.setUndulate(datas.getHigh().subtract(datas.getLow()));
+            datas.setUpsDowns(datas.getLastPrice().subtract(datas.getClose()));
+            datas.setVelocity(datas.getChangeCount().setScale(2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)).intValue());
             return datas;
-        } else {*/
-            datas = stockDatasMapper.getStockDatas(stockDatas);
-            if (stockDatas != null) {
-                datas.setUndulate(datas.getHigh().subtract(datas.getLow()));
-                datas.setUpsDowns(datas.getLastPrice().subtract(datas.getClose()));
-                datas.setVelocity(datas.getChangeCount().setScale(2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)).intValue());
-                //redisService.set("getStockDatas", stockDatas,new Long(900), TimeUnit.MILLISECONDS);
-                return datas;
-            } else {
-                return null;
-            }
-        //}
+        } else {
+            return null;
+        }
     }
 }

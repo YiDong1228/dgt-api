@@ -26,24 +26,13 @@ public class RemindService {
     @Resource
     private RemindMapper remindMapper;
 
-    @Resource
-    private RedisService redisService;
-
     public Remind getRemindById(Remind remind) {
         Remind re = new Remind();
-        /*boolean exists = redisService.exists("getRemindById");
-        if (exists) {
-            re = (Remind) redisService.get("getRemindById");
-            return re;
-        } else {*/
-        re = remindMapper.getRemindById(remind);
-        //redisService.set("getRemindById", re, new Long(900), TimeUnit.MILLISECONDS);
         if (re != null) {
             return re;
         } else {
             return null;
         }
-        //}
     }
 
     public boolean insertRemindByUserId(Remind remind) {

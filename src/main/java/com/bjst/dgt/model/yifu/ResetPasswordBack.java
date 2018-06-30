@@ -10,5 +10,29 @@ package com.bjst.dgt.model.yifu;
  * @Version: 1.0
  */
 public class ResetPasswordBack {
+    /**
+     * 状态码
+     */
+    private Integer status;
+    /**
+     * 信息
+     */
+    private String message;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
 }

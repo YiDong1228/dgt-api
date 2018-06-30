@@ -1,5 +1,6 @@
 package com.bjst.dgt.service;
 
+import com.bjst.dgt.core.ProjectConstant;
 import com.bjst.dgt.core.Result;
 import com.bjst.dgt.core.ResultCode;
 import com.bjst.dgt.core.ResultGenerator;
@@ -33,6 +34,12 @@ public class UserService {
     @Resource
     private RedisService redisService;
 
+    /**
+     * 是否存在该用户
+     *
+     * @param user 手机号
+     * @return 是否存在
+     */
     public boolean existsUserByMobile(User user) {
         int i = userMapper.existsUserByMobile(user);
         if (i > 0) {
@@ -42,11 +49,17 @@ public class UserService {
         }
     }
 
+    /**
+     * 注册
+     *
+     * @param user User对象
+     * @return 是否注册成功
+     */
     public boolean registerUser(User user) {
         user.setPassword(MD5Util.MD5(user.getMobile(), user.getPassword()));
         user.setAvailableFund("0");
-        user.setBaseCurrency("0");
-        user.setDataStatus(0);
+        user.setBaseCurrency("CNY");
+        user.setDataStatus(2);
         user.setExecRate("0");
         user.setBalance(BigDecimal.valueOf(0));
         user.setMarginFund("0");
@@ -58,34 +71,51 @@ public class UserService {
         }
     }
 
+    /**
+     * 登录
+     *
+     * @param user User对象
+     * @return 是否登录成功
+     */
     public boolean loginUser(User user) {
-        user.setPassword(MD5Util.MD5(user.getMobile(), user.getPassword()));
+        String passwprd = user.getPassword();
+        user.setPassword(MD5Util.MD5(user.getMobile(), passwprd));
         User loginUser = userMapper.loginUser(user);
+        System.out.println(loginUser);
         if (loginUser != null) {
             //使用uuid作为源token
             String token = UUID.randomUUID().toString().replace("-", "");
             //存储到redis并设置过期时间
-            redisService.set("token", token, new Long(7), TimeUnit.DAYS);
-            redisService.set("User", loginUser, new Long(7), TimeUnit.DAYS);
+            loginUser.setPassword(passwprd);
+            redisService.set(ProjectConstant.DGT_LOGIN_TOKEN_KEY + loginUser.getId(), token, new Long(7), TimeUnit.DAYS);
+            redisService.set(ProjectConstant.DGT_LOGIN_USER_ID_KEY + loginUser.getId(), loginUser, new Long(7), TimeUnit.DAYS);
             return true;
         } else {
             return false;
         }
     }
 
+    /**
+     * 忘记密码
+     *
+     * @param user User对象
+     * @return 是否重置成功
+     */
     public boolean forgetPwd(User user) {
+        User use = getUesrList(user);
+        user.setId(use.getId());
         user.setPassword(MD5Util.MD5(user.getMobile(), user.getPassword()));
         int i = userMapper.updateUserPwdByMobile(user);
         if (i > 0) {
-            boolean exists = redisService.exists("User");
+            boolean exists = redisService.exists(ProjectConstant.DGT_LOGIN_USER_ID_KEY + user.getId());
             if (exists) {
-                redisService.remove("User");
+                redisService.remove(ProjectConstant.DGT_LOGIN_USER_ID_KEY + user.getId());
             } else {
                 return false;
             }
-            exists = redisService.exists("token");
+            exists = redisService.exists(ProjectConstant.DGT_LOGIN_TOKEN_KEY + user.getId());
             if (exists) {
-                redisService.remove("token");
+                redisService.remove(ProjectConstant.DGT_LOGIN_TOKEN_KEY + user.getId());
             } else {
                 return false;
             }
@@ -95,22 +125,28 @@ public class UserService {
         }
     }
 
+    /**
+     * 修改密码
+     *
+     * @param user User对象
+     * @return 是否修改成功
+     */
     public boolean alterPwd(User user) {
-        boolean exists = redisService.exists("User");
+        boolean exists = redisService.exists(ProjectConstant.DGT_LOGIN_USER_ID_KEY + user.getId());
         if (exists) {
-            User u = (User) redisService.get("User");
+            User u = (User) redisService.get(ProjectConstant.DGT_LOGIN_USER_ID_KEY + user.getId());
             user.setPassword(MD5Util.MD5(u.getMobile(), user.getPassword()));
             int i = userMapper.updateUserPwdById(user);
             if (i > 0) {
-                exists = redisService.exists("User");
+                exists = redisService.exists(ProjectConstant.DGT_LOGIN_USER_ID_KEY + user.getId());
                 if (exists) {
-                    redisService.remove("User");
+                    redisService.remove(ProjectConstant.DGT_LOGIN_USER_ID_KEY + user.getId());
                 } else {
                     return false;
                 }
-                exists = redisService.exists("token");
+                exists = redisService.exists(ProjectConstant.DGT_LOGIN_TOKEN_KEY + user.getId());
                 if (exists) {
-                    redisService.remove("token");
+                    redisService.remove(ProjectConstant.DGT_LOGIN_TOKEN_KEY + user.getId());
                 } else {
                     return false;
                 }
@@ -123,6 +159,12 @@ public class UserService {
         }
     }
 
+    /**
+     * 查询某个用户信息
+     *
+     * @param user User对象
+     * @return 用户信息
+     */
     public User getUesrList(User user) {
         User u = userMapper.getUserList(user);
         if (u != null) {
@@ -132,11 +174,17 @@ public class UserService {
         }
     }
 
+
+    /**
+     * 检查旧密码是否一致
+     *
+     * @param user User对象
+     * @return 是否一致
+     */
     public boolean checkPwd(User user) {
-        boolean exists = redisService.exists("User");
+        boolean exists = redisService.exists(ProjectConstant.DGT_LOGIN_USER_ID_KEY + user.getId());
         if (exists) {
-            User u = (User) redisService.get("User");
-            user.setPassword(MD5Util.MD5(user.getMobile(), user.getPassword()));
+            User u = (User) redisService.get(ProjectConstant.DGT_LOGIN_USER_ID_KEY + user.getId());
             if (u.getPassword().equalsIgnoreCase(user.getPassword())) {
                 return true;
             } else {
@@ -147,14 +195,20 @@ public class UserService {
         }
     }
 
+    /**
+     * 检查验证码是否正确
+     *
+     * @param user User
+     * @return 验证码状态结果集
+     */
     public Result checkSMS(User user) {
-        if ((user.getType() == 1 || user.getType() == 2) && user.getSms() != null) {
-            boolean exists = false;
+        if (user.getType() != 0 && user.getSms() != null) {
+            boolean exists;
             String sms = "";
-            if (user.getType() == 1) {
-                exists = redisService.exists("registerSMS");
+            if (user.getType() == ProjectConstant.SENDSMS_TYPE_1) {
+                exists = redisService.exists(ProjectConstant.REGISTER_SMS + user.getMobile());
                 if (exists) {
-                    sms = (String) redisService.get("registerSMS");
+                    sms = (String) redisService.get(ProjectConstant.REGISTER_SMS + user.getMobile());
                     if (user.getSms().equals(sms)) {
                         return ResultGenerator.genSuccessResult("验证码正确", ResultCode.SUCCESS);
                     } else {
@@ -164,9 +218,9 @@ public class UserService {
                     return ResultGenerator.genFailResult("验证码已过期", ResultCode.FAIL);
                 }
             } else {
-                exists = redisService.exists("passwordSMS");
+                exists = redisService.exists(ProjectConstant.PASSWORD_SMS + user.getMobile());
                 if (exists) {
-                    redisService.get("passwordSMS");
+                    redisService.get(ProjectConstant.PASSWORD_SMS + user.getMobile());
                     if (user.getSms().equals(sms)) {
                         return ResultGenerator.genSuccessResult("验证码正确", ResultCode.SUCCESS);
                     } else {

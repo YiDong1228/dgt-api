@@ -1,5 +1,6 @@
 package com.bjst.dgt.service;
 
+import com.bjst.dgt.core.ProjectConstant;
 import com.bjst.dgt.dao.UserProductOrderMapper;
 import com.bjst.dgt.model.Product;
 import com.bjst.dgt.model.UserProductOrder;
@@ -32,27 +33,27 @@ public class UserProductOrderService {
     @Resource
     private RedisService redisService;
 
+    /**
+     * 获取用户是否已经自定义排序
+     *
+     * @param userProductOrder UserProductOrder对象
+     * @return 用户自定义排序行数
+     */
     public boolean getUserProducByUserId(UserProductOrder userProductOrder) {
-        /*boolean exists = redisService.exists("getUserProducByUserId");
-        int i;
-        if (exists) {
-            i = (int) redisService.get("getUserProducByUserId");
-            if (i == 15) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {*/
         int i = userProductOrderMapper.getUserProducByUserId(userProductOrder);
-        //redisService.set("getUserProducByUserId", i);
         if (i == 15) {
             return true;
         } else {
             return false;
         }
-        //}
     }
 
+    /**
+     * 当用户已经自定义排序时再进行自定义排序时的更新操作
+     *
+     * @param userProductOrder UserProductOrder对象
+     * @return 是否更新
+     */
     public boolean updateUserProductOrderByUserId(UserProductOrder userProductOrder) {
         int j = userProductOrderMapper.updateUserProductOrderByUserId(userProductOrder);
         if (j > 0) {
@@ -62,6 +63,12 @@ public class UserProductOrderService {
         }
     }
 
+    /**
+     * 新增用户自定义排序
+     *
+     * @param userProductOrder UserProductOrder对象
+     * @return 是否新增成功
+     */
     public boolean insertUserProductOrderByUserId(UserProductOrder userProductOrder) {
         int i = userProductOrderMapper.insertUserProductOrderByUserId(userProductOrder);
         if (i > 0) {
@@ -71,14 +78,20 @@ public class UserProductOrderService {
         }
     }
 
+    /**
+     * 获取用户自定义排序
+     *
+     * @param userProductOrder UserProductOrder对象
+     * @return 自定义排序的产品列表
+     */
     public List<Product> getUserProductOrderByUserId(UserProductOrder userProductOrder) {
         List<Product> productList = new ArrayList<Product>();
-        boolean exists = redisService.exists("getUserProductOrder");
+        boolean exists = redisService.exists(ProjectConstant.MARKET_GETUSERPRODUCTORDER + userProductOrder.getUserId());
         if (exists) {
-            productList = (List<Product>) redisService.get("getUserProductOrder");
+            productList = (List<Product>) redisService.get(ProjectConstant.MARKET_GETUSERPRODUCTORDER + userProductOrder.getUserId());
         } else {
             productList = userProductOrderMapper.getUserProductOrderByUserId(userProductOrder);
-            redisService.set("getUserProductOrder", productList, new Long(800), TimeUnit.MILLISECONDS);
+            redisService.set(ProjectConstant.MARKET_GETUSERPRODUCTORDER + userProductOrder.getUserId(), productList, new Long(800), TimeUnit.MILLISECONDS);
         }
         if (productList != null && productList.size() > 0) {
             return productList;

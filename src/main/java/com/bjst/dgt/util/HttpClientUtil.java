@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
 /**
  * @author HttpClientUtil通用类
  */
@@ -63,6 +64,8 @@ public class HttpClientUtil {
         String responseContent = null;
         //2、创建一个Http请求对象并设置请求的URL，比如GET请求就创建一个HttpGet对象，POST请求就创建一个HttpPost对象;
         HttpRequestBase request = requestMethod.createRequest(url);
+
+
         request.setConfig(requestConfig);
         //3、如果需要可以设置请求对象的请求头参数，也可以往请求对象中添加请求参数;
         if (header != null) {

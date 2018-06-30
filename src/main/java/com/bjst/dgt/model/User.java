@@ -305,4 +305,27 @@ public class User {
     public void setToken(String token) {
         this.token = token;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", mobile='" + mobile + '\'' +
+                ", password='" + password + '\'' +
+                ", balance=" + balance +
+                ", availableFund='" + availableFund + '\'' +
+                ", marginFund='" + marginFund + '\'' +
+                ", baseCurrency='" + baseCurrency + '\'' +
+                ", execRate='" + execRate + '\'' +
+                ", dataStatus=" + dataStatus +
+                ", subAccountIdInner='" + subAccountIdInner + '\'' +
+                ", subAccountIdOuter='" + subAccountIdOuter + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", sms='" + sms + '\'' +
+                ", type=" + type +
+                ", userId='" + userId + '\'' +
+                ", token='" + token + '\'' +
+                '}';
+    }
 }

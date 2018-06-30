@@ -357,7 +357,7 @@ public class Rule {
     }
 
     /**
-     * 	交易状态	例如：交易中（交易时间18:00-次日17:00）
+     * 交易状态	例如：交易中（交易时间18:00-次日17:00）
      */
     private String tradeStatus;
 
@@ -404,5 +404,15 @@ public class Rule {
 
     public void setShuoming2(String shuoming2) {
         this.shuoming2 = shuoming2;
+    }
+
+    private int userId;
+
+    public int getUserId(int i) {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

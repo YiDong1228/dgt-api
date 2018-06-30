@@ -1,12 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bjst.dgt.dao.BankCardMapper">
-  <resultMap id="BaseResultMap" type="com.bjst.dgt.model.BankCard">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="bank_id" jdbcType="INTEGER" property="bankId" />
-    <result column="icon" jdbcType="VARCHAR" property="icon" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount" />
-  </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.bjst.dgt.model.BankCard">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="bank_id" jdbcType="INTEGER" property="bankId"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="bank_account" jdbcType="VARCHAR" property="bankAccount"/>
+    </resultMap>
+
+    <sql id="BankCardSql">
+    `id`,`user_id`,`bank_id`,`icon`,`name`,`bank_account`
+  </sql>
+    <insert id="bindingBank" parameterType="com.bjst.dgt.model.BankCard">
+        INSERT INTO `bank_card`(`user_id`,`bank_id`,`icon`,`name`,`bank_account`)
+        VALUES(#{userId},#{bankId},#{icon},#{name},#{bankAccount})
+    </insert>
+
+    <select id="getBankListByUserId" resultMap="BaseResultMap" parameterType="com.bjst.dgt.model.BankCard">
+        SELECT
+        <include refid="BankCardSql"/>
+        FROM `bank_card`
+        WHERE `user_id` = #{userId}
+    </select>
+
+    <delete id="removeBank" parameterType="com.bjst.dgt.model.BankCard">
+      DELETE FROM `bank_card`
+      WHERE `user_id` = #{userId}
+    </delete>
 </mapper>

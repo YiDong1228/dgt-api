@@ -1,10 +1,12 @@
 package com.bjst.dgt.service;
 
 import com.bjst.dgt.dao.QuestionTypeMapper;
+import com.bjst.dgt.model.QuestionType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Description: QuestionTypeService层
@@ -22,6 +24,13 @@ public class QuestionTypeService {
     @Resource
     private QuestionTypeMapper questionTypeMapper;
 
-
+    public List<QuestionType> getCommonProblemsById() {
+        List<QuestionType> questionTypeList = questionTypeMapper.getCommonProblemsById();
+        if (questionTypeList != null && questionTypeList.size() > 0) {
+            return questionTypeList;
+        } else {
+            return null;
+        }
+    }
 
 }

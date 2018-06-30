@@ -1,10 +1,12 @@
 package com.bjst.dgt.service;
 
 import com.bjst.dgt.dao.MessageQuotationMapper;
+import com.bjst.dgt.model.MessageQuotation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Description: MessageQuotationService层
@@ -22,5 +24,13 @@ public class MessageQuotationService {
     @Resource
     private MessageQuotationMapper messageQuotationMapper;
 
+    public List<MessageQuotation> getPriceWarning(MessageQuotation messageQuotation) {
+        List<MessageQuotation> messageQuotationList = messageQuotationMapper.getPriceWarning(messageQuotation);
+        if (messageQuotationList != null && messageQuotationList.size() > 0) {
+            return messageQuotationList;
+        } else {
+            return null;
+        }
+    }
 
 }
