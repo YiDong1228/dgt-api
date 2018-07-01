@@ -91,7 +91,7 @@ public class MyController {
             if (exists) {
                 return ResultGenerator.genFailResult("该手机号已注册", ResultCode.FAIL);
             } else {
-                return ResultGenerator.genFailResult("该手机号可以注册", ResultCode.SUCCESS);
+                return ResultGenerator.genFailResult("该手机号未注册", ResultCode.SUCCESS);
             }
         } else {
             return ResultGenerator.genFailResult("参数错误", ResultCode.FAIL);
